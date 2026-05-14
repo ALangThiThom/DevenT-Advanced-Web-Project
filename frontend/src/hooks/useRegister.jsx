@@ -36,7 +36,10 @@ export const useRegister = (initialRole) => {
       if (error.response?.status === 422) {
         setErrors(error.response.data.errors);
       } else {
-        alert("Đăng ký thất bại, vui lòng thử lại.");
+        // In lỗi ra màn hình Alert và Console để biết chính xác bệnh
+        const errorMessage = error.response?.data?.message || error.message;
+        console.error("Chi tiết lỗi API:", error.response || error);
+        alert(`Đăng ký thất bại! Lỗi: ${errorMessage}`);
       }
     } finally {
       setLoading(false);

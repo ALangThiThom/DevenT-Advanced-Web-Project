@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -15,14 +14,14 @@ const Home = () => {
 
       <div className="flex gap-6">
         <button
-          onClick={() => navigate("/register/attendee")}
+          onClick={() => navigate("/attendee/register")}
           className="px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition"
         >
           Tôi là Người tham gia (Attendee)
         </button>
 
         <button
-          onClick={() => navigate("/register/organizer")}
+          onClick={() => navigate("/organizer/register")}
           className="px-8 py-4 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition"
         >
           Tôi là Ban tổ chức (Organizer)
