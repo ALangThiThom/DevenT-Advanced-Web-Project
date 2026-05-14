@@ -93,7 +93,7 @@ export default function AttendeeRegister() {
             <div className="col-lg-5 offset-lg-1">
               <div className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-light">
                 <h3 className="fw-bold text-center mb-4 text-attendee">
-                  Create your Attendee Account
+                  Tạo tài khoản tham gia của bạn
                 </h3>
                 <form onSubmit={onSubmit}>
                   <div className="mb-3">
@@ -138,7 +138,7 @@ export default function AttendeeRegister() {
                   </div>
                   <button
                     type="submit"
-                    className="btn btn-attendee w-100 py-2 fw-bold shadow-sm"
+                    className="btn btn-attendee text-white w-100 py-2 fw-bold shadow-sm"
                     disabled={loading}
                   >
                     {loading ? "Đang xử lý..." : "Tạo tài khoản"}
