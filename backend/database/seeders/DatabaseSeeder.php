@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Tạo 1 Organizer tĩnh để bạn test và bypass Auth
+        // Bypass authentiaction (for no login feature)
         $organizer = User::updateOrCreate(
             ['email' => 'organizer@dev.com'],
             [
@@ -30,6 +30,9 @@ class DatabaseSeeder extends Seeder
         $token = $organizer->createToken('dev-bypass-token')->plainTextToken;
 
         $this->command->info($token);
+
+
+
 
         $attendees = User::factory(10)->create(['role' => 'attendee']);
 
@@ -57,7 +60,5 @@ class DatabaseSeeder extends Seeder
 
             $event->update(['registered_count' => $registeredCount]);
         }
-
-        $this->command->info('Seed dữ liệu mẫu thành công: 1 Organizer, 10 Attendees, 5 Events kèm Registrations và Reviews!');
     }
 }
