@@ -94,7 +94,7 @@ export default function OrganizerRegister() {
                     <input
                       type="text"
                       className={`form-control bg-light py-2 ${errors.name ? "is-invalid" : ""}`}
-                      placeholder="Tên tố chức"
+                      placeholder="Tên tổ chức"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
