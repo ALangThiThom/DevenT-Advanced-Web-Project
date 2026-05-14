@@ -28,7 +28,7 @@ export default function AttendeeRegister() {
           <div className="ms-auto d-none d-md-block">
             <span className="text-muted me-2">Đã có tài khoản?</span>
             <Link
-              to="/login"
+              to="/attendee/login"
               className="text-attendee fw-bold text-decoration-none"
             >
               Đăng nhập ngay

@@ -28,7 +28,7 @@ export default function OrganizerRegister() {
           <div className="ms-auto d-none d-md-block">
             <span className="text-muted me-2">Đã có tài khoản?</span>
             <Link
-              to="/login"
+              to="/organizer/login"
               className="text-success fw-bold text-decoration-none"
             >
               Đăng nhập ngay
