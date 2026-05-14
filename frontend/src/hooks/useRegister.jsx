@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerService } from "../services/authService";
+import { useAuthStore } from "../store/authStore";
 
 export const useRegister = (initialRole) => {
   const navigate = useNavigate();
+  const login = useAuthStore((state) => state.login);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,7 +27,8 @@ export const useRegister = (initialRole) => {
     setErrors({});
     try {
       const data = await registerService(formData);
-      localStorage.setItem("token", data.access_token);
+      // Sử dụng Zustand để tự động lưu Token và User
+      login(data.user, data.access_token);
       alert("Đăng ký thành công!");
       // Chuyển hướng dựa trên role
       const path =

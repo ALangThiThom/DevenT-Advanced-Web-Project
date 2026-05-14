@@ -26,6 +26,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
       window.location.href = "/"; // Đẩy về trang chủ để người dùng chọn lại Role đăng nhập
     }
     return Promise.reject(error);
@@ -38,6 +39,10 @@ export const registerService = async (userData) => {
 };
 export const loginService = async (credentials) => {
   const response = await api.post("/login", credentials);
+  return response.data;
+};
+export const logoutService = async () => {
+  const response = await api.delete("/logout");
   return response.data;
 };
 
