@@ -1,14 +1,18 @@
 import { Routes, Route } from "react-router-dom";
-import OrganizerRegister from "./pages/Organizer/Register"; // Đường dẫn tới file của bạn
+import OrganizerRegister from "./pages/Organizer/Register";
 import Home from "./pages/home";
+import AttendeeRegister from "./pages/Attendee/Register";
 
 function App() {
   return (
     <Routes>
-      {/* Đường dẫn trang chủ hiển thị file home.jsx */}
+      {/* Đường dẫn trang chủ */}
       <Route path="/" element={<Home />} />
 
-      {/* Định nghĩa đường dẫn để truy cập vào trang đăng ký */}
+      {/* Đăng ký attendee */}
+      <Route path="/attendee/register" element={<AttendeeRegister />} />
+
+      {/* Đăng ký organizer */}
       <Route path="/organizer/register" element={<OrganizerRegister />} />
     </Routes>
   );
