@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useRegister } from "../../hooks/useRegister";
-import "../styles/Register.css";
+import "../styles/organizerRegister.css";
 
 export default function OrganizerRegister() {
   const { formData, handleChange, handleRegister, loading, errors } =
@@ -94,7 +94,7 @@ export default function OrganizerRegister() {
                     <input
                       type="text"
                       className={`form-control bg-light py-2 ${errors.name ? "is-invalid" : ""}`}
-                      placeholder="Họ và tên"
+                      placeholder="Tên tố chức"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
