@@ -18,6 +18,8 @@ return new class extends Migration
 
             $table->enum('status', ['confirmed', 'waitlisted', 'cancelled'])->default('confirmed');
 
+            $table->integer('queue_position')->nullable();
+
             $table->timestamps();
 
             $table->unique(['user_id', 'event_id']);
