@@ -1,17 +1,9 @@
-import { useAuthStore } from "../../store/authStore";
+import styles from "./Organizer.module.css";
 
 export default function OrganizerDashboard() {
-  const { user, logout } = useAuthStore();
-
   return (
-    <div className="container py-5 text-center mt-5">
-      <h1 className="text-success fw-bold">Trang Quản trị Ban tổ chức</h1>
-      <p className="lead">
-        Xin chào, <strong>{user?.name}</strong>!
-      </p>
-      <button onClick={logout} className="btn btn-danger mt-4 px-4 shadow-sm">
-        Đăng xuất
-      </button>
+    <div className={styles.cardDesign} style={{ padding: "2rem" }}>
+      <h5 className="fw-bold mb-3">Dashboard</h5>
     </div>
   );
 }
