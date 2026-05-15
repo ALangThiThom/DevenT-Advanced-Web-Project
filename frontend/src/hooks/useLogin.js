@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginService } from "../services/authService";
+import { login } from "../services/authService";
 import { useAuthStore } from "../store/authStore";
 
 export const useLogin = (expectedRole) => {
   const navigate = useNavigate();
-  const login = useAuthStore((state) => state.login);
+  const loginAction = useAuthStore((state) => state.login);
 
   const [credentials, setCredentials] = useState({
     email: "",
@@ -23,17 +23,17 @@ export const useLogin = (expectedRole) => {
     setLoading(true);
     setError("");
     try {
-      const data = await loginService(credentials);
+      const data = await login(credentials);
 
-      // Kiểm tra chéo phân quyền theo yêu cầu của PRD
-      if (data.user.role !== expectedRole) {
+      if (data.user.role !== expectedRole.toLowerCase()) {
         setError("Sai cổng đăng nhập. Vui lòng kiểm tra lại vai trò của bạn.");
         return;
       }
 
-      login(data.user, data.access_token);
+      loginAction(data.user, data.access_token);
+      
       const path =
-        expectedRole === "Attendee"
+        expectedRole.toLowerCase() === "attendee"
           ? "/attendee/dashboard"
           : "/organizer/dashboard";
       navigate(path);

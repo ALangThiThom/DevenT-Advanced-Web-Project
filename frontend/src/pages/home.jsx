@@ -4,27 +4,30 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <h1 className="text-4xl font-bold mb-10 text-gray-800">
-        Chào mừng bạn đến với DevenT
-      </h1>
-      <p className="text-gray-600 mb-8">
-        Vui lòng chọn loại tài khoản bạn muốn đăng ký
-      </p>
+    <div className="min-vh-100 bg-light d-flex flex-column align-items-center justify-content-center">
+      <div className="text-center mb-5">
+        <h1 className="display-4 fw-bold text-dark mb-3">
+          Chào mừng bạn đến với DevenT
+        </h1>
+        <p className="lead text-muted">
+          Vui lòng chọn cổng đăng nhập dành cho bạn
+        </p>
+      </div>
 
-      <div className="flex gap-6">
+      <div className="d-flex gap-4">
         <button
-          onClick={() => navigate("/attendee/register")}
-          className="px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition"
+          onClick={() => navigate("/attendee/login")}
+          className="btn btn-primary btn-lg px-5 py-3 fw-bold rounded-4 shadow-sm"
         >
-          Tôi là Người tham gia (Attendee)
+          Người tham gia (Attendee)
         </button>
 
         <button
-          onClick={() => navigate("/organizer/register")}
-          className="px-8 py-4 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition"
+          onClick={() => navigate("/organizer/login")}
+          className="btn btn-success btn-lg px-5 py-3 fw-bold rounded-4 shadow-sm"
+          style={{ backgroundColor: '#004d3d', borderColor: '#004d3d' }}
         >
-          Tôi là Ban tổ chức (Organizer)
+          Ban tổ chức (Organizer)
         </button>
       </div>
     </div>

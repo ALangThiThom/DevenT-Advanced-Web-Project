@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useRegister } from "../../hooks/useRegister";
-import "../styles/attendeeRegister.css";
+import "./Register.css";
 
 export default function AttendeeRegister() {
   const { formData, handleChange, handleRegister, loading, errors } =

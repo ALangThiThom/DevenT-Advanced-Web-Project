@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import OrganizerRegister from "./pages/Organizer/Register";
-import Home from "./pages/home";
+import Home from "./pages/Home";
 import AttendeeRegister from "./pages/Attendee/Register";
 import OrganizerLogin from "./pages/Organizer/Login";
 import AttendeeLogin from "./pages/Attendee/Login";
@@ -11,26 +11,17 @@ import AttendeeDashboard from "./pages/Attendee/Dashboard";
 function App() {
   return (
     <Routes>
-      {/* Đường dẫn trang chủ */}
       <Route path="/" element={<Home />} />
 
-      {/* Đăng ký attendee */}
       <Route path="/attendee/register" element={<AttendeeRegister />} />
-
-      {/* Đăng nhập attendee */}
       <Route path="/attendee/login" element={<AttendeeLogin />} />
-
-      {/* Đăng ký organizer */}
       <Route path="/organizer/register" element={<OrganizerRegister />} />
-
-      {/* Đăng nhập organizer */}
       <Route path="/organizer/login" element={<OrganizerLogin />} />
 
-      {/* --- CÁC TRANG BẢO MẬT BỞI PRIVATE ROUTE --- */}
       <Route
         path="/organizer/dashboard"
         element={
-          <PrivateRoute allowedRole="Organizer">
+          <PrivateRoute allowedRole="organizer">
             <OrganizerDashboard />
           </PrivateRoute>
         }
@@ -38,7 +29,7 @@ function App() {
       <Route
         path="/attendee/dashboard"
         element={
-          <PrivateRoute allowedRole="Attendee">
+          <PrivateRoute allowedRole="attendee">
             <AttendeeDashboard />
           </PrivateRoute>
         }
