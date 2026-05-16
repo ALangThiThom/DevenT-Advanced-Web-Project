@@ -1,0 +1,126 @@
+/* Khung bọc ngoài cùng để tạo khoảng cách với các phần khác trên trang */
+.organizer-cta {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+/* Chiếc hộp Banner màu xanh lá sẫm */
+.organizer-cta__container {
+  background-color: #0b4a3a; /* Màu xanh lá đậm trứ danh DeVenT */
+  border-radius: 20px;       /* Bo tròn góc mượt mà */
+  padding: 50px 60px;        /* Tạo khoảng đệm thoáng rộng bên trong */
+  display: flex;
+  justify-content: space-between; /* Đẩy chữ sang trái, icon lịch sang phải */
+  align-items: center;
+  gap: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Khối nội dung chữ bên trái */
+.organizer-cta__content {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+}
+
+/* Dòng chữ nhỏ "DÀNH CHO BAN TỔ CHỨC" */
+.organizer-cta__subtitle {
+  color: #a8eed1; /* Màu xanh mint nhẹ */
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px; /* Giãn chữ ra một chút cho sang */
+  margin-bottom: 12px;
+}
+
+/* Tiêu đề chính "Bạn muốn tổ chức sự kiện?" */
+.organizer-cta__title {
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+/* Dòng mô tả ngắn */
+.organizer-cta__description {
+  color: #ffffff;
+  font-size: 15px;
+  opacity: 0.85;
+  margin: 0 0 30px 0;
+}
+
+/* Khung bọc 2 nút bấm */
+.organizer-cta__actions {
+  display: flex;
+  gap: 16px;
+}
+
+/* Style chung cho cả 2 nút */
+.btn-cta {
+  padding: 12px 28px;
+  border-radius: 12px; /* Bo góc nút chuẩn figma */
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+/* Nút thứ nhất: Màu xanh mint chữ xanh đậm */
+.btn-cta--primary {
+  background-color: #a8eed1;
+  color: #0b4a3a;
+}
+
+.btn-cta--primary:hover {
+  background-color: #8be0be;
+  transform: translateY(-2px);
+}
+
+/* Nút thứ hai: Nút viền trong suốt */
+.btn-cta--outline {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.btn-cta--outline:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Khối chứa hình Icon chiếc lịch bên phải */
+.organizer-cta__icon {
+  color: #ffffff;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.9;
+}
+
+/* Giúp hình SVG co giãn mượt theo khung */
+.organizer-cta__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive: Màn hình điện thoại nhỏ thì tự xếp dọc */
+@media (max-width: 768px) {
+  .organizer-cta__container {
+    flex-direction: column;
+    text-align: center;
+    padding: 40px 30px;
+  }
+  .organizer-cta__actions {
+    justify-content: center;
+  }
+  .organizer-cta__icon {
+    order: -1; /* Đẩy icon lên trên chữ khi dùng điện thoại */
+    width: 100px;
+    height: 100px;
+  }
+}
