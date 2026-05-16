@@ -3,33 +3,33 @@ import { useState } from "react";
 const MOCK_EVENTS = [
   {
     id: 1,
-    title: "Đêm nhạc Neon Nights",
-    date: "20 Th11, 10:00",
-    location: "Sân vận động Quốc gia",
+    name: "Đêm nhạc Neon Nights",
+    date_time: "24 Th10 • 19:00", 
+    location: "Sân vận động Skyline",
     category: "Âm nhạc",
-    image: "https://via.placeholder.com/300x200",
-    price: "200.000đ",
-    status: "Còn vé",
+    status: "Còn 48 / 150 chỗ", 
+    description: "Hành trình âm thanh hình ảnh đắm chìm với các nghệ sĩ điện tử quốc tế.",
+    
   },
   {
     id: 2,
-    title: "Hội nghị Công nghệ Tương lai",
-    date: "22 Th11, 09:00",
-    location: "Trung tâm Hội nghị Quốc tế",
-    category: "Công nghệ",
-    image: "https://via.placeholder.com/300x200",
-    price: "Free",
-    status: "Miễn phí",
+    name: "Hội nghị Công nghệ Tương lai",
+    date_time: "02 Th11 • 09:00",
+    location: "Trung tâm Hội nghị Quốc gia",
+    category: "Giáo dục",
+    status: "Còn 5 / 60 chỗ",
+    description: "Khám phá thập kỷ đổi mới tiếp theo cùng các nhà lãnh đạo ngành.",
+
   },
   {
     id: 3,
-    title: "Workshop Làm Pasta",
-    date: "25 Th11, 14:00",
-    location: "The Pep Kitchen",
+    name: "Xưởng làm Pasta Thủ công",
+    date_time: "15 Th11 • 18:30",
+    location: "Phòng bếp The Kitchen Lab",
     category: "Ẩm thực",
-    image: "https://via.placeholder.com/300x200",
-    price: "350.000đ",
-    status: "Hết vé",
+    status: "Còn 20 / 30 chỗ", 
+    description: "Học bí quyết làm pasta truyền thống từ các đầu bếp nổi tiếng địa phương.",
+
   },
 ];
 
