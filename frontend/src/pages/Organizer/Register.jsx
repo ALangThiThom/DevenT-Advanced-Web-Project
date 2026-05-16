@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useRegister } from "../../hooks/useRegister";
-import "./Register.css";
+import "./Register.css"; // ĐÃ ĐỒNG BỘ
 
 export default function OrganizerRegister() {
   const { formData, handleChange, handleRegister, loading, errors } =

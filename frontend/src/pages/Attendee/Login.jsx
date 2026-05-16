@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLogin } from "../../hooks/useLogin";
-import "./Register.css"; // ĐÃ SỬA: Trỏ đúng vào file CSS cùng thư mục
+import "./Register.css"; // ĐÃ ĐỒNG BỘ
 
 export default function AttendeeLogin() {
   const { credentials, handleChange, handleLogin, loading, error } =
