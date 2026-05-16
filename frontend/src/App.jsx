@@ -7,12 +7,17 @@ import AttendeeLogin from "./pages/Attendee/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import OrganizerDashboard from "./pages/Organizer/Dashboard";
 import AttendeeDashboard from "./pages/Attendee/Dashboard";
+import Homepage from "./pages/Home/index";
+
 
 function App() {
   return (
     <Routes>
       {/* Đường dẫn trang chủ */}
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Home />} /> 
+      {/* Development-only homepage route (non-breaking) */}
+      <Route path="/new-home" element={<Homepage />} />
+      
 
       {/* Đăng ký attendee */}
       <Route path="/attendee/register" element={<AttendeeRegister />} />
