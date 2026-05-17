@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLogin } from "../../hooks/useLogin";
-import "../styles/organizerRegister.css";
+import "./styles/Register.css";
 
 export default function OrganizerLogin() {
   const { credentials, handleChange, handleLogin, loading, error } =

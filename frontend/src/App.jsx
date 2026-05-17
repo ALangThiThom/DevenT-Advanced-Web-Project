@@ -7,10 +7,14 @@ import AttendeeLogin from "./pages/Attendee/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import OrganizerDashboard from "./pages/Organizer/Dashboard";
 import AttendeeDashboard from "./pages/Attendee/Dashboard";
+import EventDetail from "./pages/Attendee/EventDetail";
 
 function App() {
   return (
     <Routes>
+      {/* Trang chi tiết sự kiện tạm thời*/}
+      <Route path="/event-detail-test" element={<EventDetail />} />
+
       {/* Đường dẫn trang chủ */}
       <Route path="/" element={<Home />} />
 
