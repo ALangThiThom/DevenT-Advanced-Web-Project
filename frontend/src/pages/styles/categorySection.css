@@ -1,14 +1,23 @@
-
+/* ==========================================================================
+   1. KHUNG BAO NGOÀI: ĐÃ ĐƯỢC NỚI RỘNG RA 1400PX BẰNG VỚI SỰ KIỆN NỔI BẬT
+   ========================================================================== */
 .category-section {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1400px;     /* Tăng từ 1200px lên 1400px để rộng bằng khối dưới */
   margin: 50px auto;
-  padding: 0 20px;
+  padding: 0 16px;       /* Căn chỉnh padding 16px đồng bộ với khối dưới */
+  box-sizing: border-box;
 }
+
+/* ==========================================================================
+   2. TIÊU ĐỀ SECTION
+   ========================================================================== */
 .category-section__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 35px;
+  width: 100%;
 }
 
 .category-section__header h2 {
@@ -17,6 +26,7 @@
   color: #1a202c;
   margin: 0;
 }
+
 .category-section__view-all {
   color: #0b4a3a;
   text-decoration: none;
@@ -26,17 +36,24 @@
   align-items: center;
   gap: 6px;
   transition: opacity 0.2s ease;
+  white-space: nowrap;
 }
 
 .category-section__view-all:hover {
   opacity: 0.8;
 }
+
+/* ==========================================================================
+   3. DANH SÁCH VÀ THẺ CATEGORY ITEM (Giữ nguyên cấu trúc chạy mượt của bạn)
+   ========================================================================== */
 .category-section__list {
   display: flex;
   justify-content: space-between; 
   align-items: center;
   gap: 15px;
+  width: 100%;
 }
+
 .category-item {
   display: flex;
   flex-direction: column;
@@ -48,6 +65,7 @@
   transition: transform 0.2s ease;
   width: 100px;
 }
+
 .category-item__icon-wrapper {
   width: 76px;
   height: 76px;
@@ -60,9 +78,11 @@
   transition: all 0.3s ease;
   margin-bottom: 14px;
 }
+
 .category-item__icon-wrapper svg {
   stroke: currentColor;
 }
+
 .category-item__name {
   font-size: 13px;
   font-weight: 600;
@@ -72,6 +92,7 @@
   margin: 0;
   transition: color 0.3s ease;
 }
+
 .category-item:hover {
   transform: translateY(-4px);
 }
