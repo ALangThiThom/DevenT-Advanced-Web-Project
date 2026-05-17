@@ -1,17 +1,11 @@
-/* ==========================================================================
-   1. KHUNG BAO NGOÀI: ĐÃ ĐƯỢC NỚI RỘNG RA 1400PX BẰNG VỚI SỰ KIỆN NỔI BẬT
-   ========================================================================== */
+
 .category-section {
   width: 100%;
-  max-width: 1400px;     /* Tăng từ 1200px lên 1400px để rộng bằng khối dưới */
+  max-width: 1400px;     
   margin: 50px auto;
-  padding: 0 16px;       /* Căn chỉnh padding 16px đồng bộ với khối dưới */
+  padding: 0 16px;       
   box-sizing: border-box;
 }
-
-/* ==========================================================================
-   2. TIÊU ĐỀ SECTION
-   ========================================================================== */
 .category-section__header {
   display: flex;
   justify-content: space-between;
@@ -42,10 +36,6 @@
 .category-section__view-all:hover {
   opacity: 0.8;
 }
-
-/* ==========================================================================
-   3. DANH SÁCH VÀ THẺ CATEGORY ITEM (Giữ nguyên cấu trúc chạy mượt của bạn)
-   ========================================================================== */
 .category-section__list {
   display: flex;
   justify-content: space-between; 
