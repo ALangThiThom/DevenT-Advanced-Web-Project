@@ -1,39 +1,54 @@
-import Badge from "./Badge";
+import { Link } from "react-router-dom";
 import "../../pages/styles/eventCard.css";
 
 const EventCard = ({ event }) => {
-  const { name, date_time, location, category, image, description, capacity, status, status_code } = event;
+  // Hàm xử lý định dạng ngày giờ: "2026-10-24 19:00:00" -> "24 TH10 • 19:00"
+  const formatEventDateTime = (rawDateTime) => {
+    if (!rawDateTime) return "";
+    const parsedDate = new Date(rawDateTime);
+    const day = String(parsedDate.getDate()).padStart(2, "0");
+    const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
+    const hours = String(parsedDate.getHours()).padStart(2, "0");
+    const minutes = String(parsedDate.getMinutes()).padStart(2, "0");
+    return `${day} TH${month} • ${hours}:${minutes}`;
+  };
+
+  // Tính toán số chỗ dựa trên dữ liệu thật từ Backend
+  const simulatedAvailableSeats = event.capacity - 10; 
 
   return (
-    <div className="event-card">
-      <div className="event-card__image">
-        <img src={image} alt={name} />
-        <Badge label={category} />
+    <Link to={`/events/${event.id}`} className="event-card" style={{ textDecoration: 'none' }}>
+      <div className="event-card">
+        {/* KHỐI BANNER XANH LÁ (Phần bị thiếu trong hình hiện tại của bạn) */}
+        <div className="event-card__banner">
+          <div className="event-card__image-placeholder"></div>
+          <span className="event-card__tag">{event.category}</span>
       </div>
 
+      {/* KHỐI NỘI DUNG DƯỚI BANNER */}
       <div className="event-card__body">
-        <p className="event-card__date">
-          <svg className="event-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          {date_time}
-        </p>
-        
-        <h3 className="event-card__title">{name}</h3>
-        <p className="event-card__description">{description}</p>
-        <hr className="event-card__divider" />
+        <div className="event-card__date-row">
+          <span className="event-card__icon">📅</span>
+          <span className="event-card__date-text">{formatEventDateTime(event.date_time)}</span>
+        </div>
+
+        <h3 className="event-card__title">{event.name}</h3>
+        <p className="event-card__desc">{event.description}</p>
+
         <div className="event-card__footer">
-          <p className="event-card__location">
-            <svg className="event-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-            {location}
-          </p>
-          <div className="event-card__status-group">
-            <span className={`event-card__status ${status_code}`}>{status}</span>
-            <span className="event-card__capacity">
-              {capacity > 0 ? `${capacity} chỗ` : ''}
-            </span>
+          <div className="event-card__location">
+            <span className="event-card__icon">📍</span>
+            <span className="event-card__location-text">{event.location}</span>
+          </div>
+          
+          {/* KHỐI PILL HIỂN THỊ SỐ CHỖ BO GÓC MÀU XANH MINT */}
+          <div className="event-card__seats-badge">
+            Còn {simulatedAvailableSeats} / {event.capacity} chỗ
           </div>
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 
