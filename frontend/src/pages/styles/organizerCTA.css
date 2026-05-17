@@ -1,17 +1,24 @@
-/* Khung bọc ngoài cùng để tạo khoảng cách với các phần khác trên trang */
+/* ==========================================================================
+   1. KHUNG BỌC NGOÀI CÙNG: ĐÃ ĐƯỢC NỚI RỘNG LÊN 1400PX ĐỒNG BỘ TOÀN TRANG
+   ========================================================================== */
 .organizer-cta {
-  max-width: 1200px;
-  margin: 60px auto;
-  padding: 0 20px;
+  width: 100%;
+  max-width: 1400px;     /* Nới rộng từ 1200px lên 1400px để bằng với các khối khác */
+  margin: 60px auto;     /* Căn giữa banner ra chính giữa màn hình */
+  padding: 0 16px;       /* Đổi thành 16px để khoảng đệm lề khớp hoàn toàn với các section trên */
+  box-sizing: border-box;
 }
 
+/* ==========================================================================
+   CÁC PHẦN DƯỚI GIỮ NGUYÊN 100% CODE GỐC ĐANG CHẠY MƯỢT CỦA BẠN
+   ========================================================================== */
 /* Chiếc hộp Banner màu xanh lá sẫm */
 .organizer-cta__container {
-  background-color: #0b4a3a; /* Màu xanh lá đậm trứ danh DeVenT */
-  border-radius: 20px;       /* Bo tròn góc mượt mà */
-  padding: 50px 60px;        /* Tạo khoảng đệm thoáng rộng bên trong */
+  background-color: #0b4a3a; 
+  border-radius: 20px;       
+  padding: 50px 60px;        
   display: flex;
-  justify-content: space-between; /* Đẩy chữ sang trái, icon lịch sang phải */
+  justify-content: space-between; 
   align-items: center;
   gap: 40px;
   position: relative;
@@ -27,10 +34,10 @@
 
 /* Dòng chữ nhỏ "DÀNH CHO BAN TỔ CHỨC" */
 .organizer-cta__subtitle {
-  color: #a8eed1; /* Màu xanh mint nhẹ */
+  color: #a8eed1; 
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 1.5px; /* Giãn chữ ra một chút cho sang */
+  letter-spacing: 1.5px; 
   margin-bottom: 12px;
 }
 
@@ -59,7 +66,7 @@
 /* Style chung cho cả 2 nút */
 .btn-cta {
   padding: 12px 28px;
-  border-radius: 12px; /* Bo góc nút chuẩn figma */
+  border-radius: 12px; 
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -119,7 +126,7 @@
     justify-content: center;
   }
   .organizer-cta__icon {
-    order: -1; /* Đẩy icon lên trên chữ khi dùng điện thoại */
+    order: -1; 
     width: 100px;
     height: 100px;
   }
