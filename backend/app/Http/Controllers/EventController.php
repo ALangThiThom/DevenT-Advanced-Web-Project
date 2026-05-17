@@ -171,19 +171,19 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::with('organizer:id,name')
-                       ->where('status', 'Published')
-                       ->orderBy('date_time', 'asc')
+                       ->where('status', 'published')
+                       ->orderBy('start_time', 'asc')
                        ->get();
 
         return response()->json([
-            'success' => true,
-            'data'    => $events
-        ]);
+            'success' => true, // Thêm trạng thái đồng bộ với các hàm trên
+            'data'    => $events   // Đảm bảo bọc trong trường data chuẩn để React hốt trọn bộ
+        ], 200);
     }
 
     public function categories()
     {
-        $categories = Event::where('status', 'Published')
+        $categories = Event::where('status', 'published')
                            ->distinct()
                            ->pluck('category');
 
