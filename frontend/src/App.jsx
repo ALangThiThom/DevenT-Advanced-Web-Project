@@ -8,6 +8,7 @@ import OrganizerLogin from "./pages/Organizer/Login";
 import OrganizerDashboard from "./pages/Organizer/Dashboard";
 import Layout from "./pages/Organizer/Layout";
 import PrivateRoute from "./components/PrivateRoute";
+import EventList from "./pages/Organizer/EventList";
 
 function App() {
   return (
@@ -37,7 +38,7 @@ function App() {
         }
       >
         <Route path="dashboard" element={<OrganizerDashboard />} />
-        {/* <Route path="events" element={<EventList />} /> */}
+        <Route path="events" element={<EventList />} />
       </Route>
     </Routes>
   );
