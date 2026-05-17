@@ -1,7 +1,10 @@
 
-import "../../pages/styles/navbar.css"; 
+import "../../pages/styles/navbar.css";
+import { useAuthStore } from "../../store/authStore";
 
 const NavBar = () => {
+  const { user, logout } = useAuthStore();
+
   return (
     <nav className="site-navbar">
       <div className="navbar__container">
@@ -15,8 +18,19 @@ const NavBar = () => {
           <li><a href="/contact">Liên hệ</a></li>
         </ul>
         <div className="navbar__actions">
-          <a href="/attendee/login" className="btn-login">Đăng nhập</a>
-          <a href="/attendee/register" className="btn-register">Đăng ký</a>
+          {user?.name !== null ? (
+            <>
+              <p className="navbar__welcome">Xin chào, {user?.name}!</p>
+              <button className="btn-logout" onClick={logout}>
+                Đăng xuất
+              </button>
+            </>
+          ) : (
+            <>
+              <a href="/attendee/login" className="btn-login">Đăng nhập</a>
+              <a href="/attendee/register" className="btn-register">Đăng ký</a>
+            </>
+          )}
         </div>
       </div>
     </nav>

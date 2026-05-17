@@ -34,7 +34,7 @@ export const useLogin = (expectedRole) => {
       
       const path =
         expectedRole.toLowerCase() === "attendee"
-          ? "/attendee/dashboard"
+          ? "/new-home"
           : "/organizer/dashboard";
       navigate(path);
     } catch (err) {
