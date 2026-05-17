@@ -36,6 +36,7 @@ class EventFactory extends Factory
         return [
             'organizer_id' => User::factory(),
             'title' => fake()->sentence(6),
+            'category' => fake()->randomElement(['music', 'education', 'sports', 'food', 'art', 'community']),
             'description' => fake()->paragraphs(3, true),
             'location' => fake()->address(),
             'start_time' => $startTime,

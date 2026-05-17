@@ -40,20 +40,20 @@ class EventController extends Controller
         ], 200);
     }
 
-    public function index(Request $request)
-    {
-        $user = $request->user();
+    // public function index(Request $request)
+    // {
+    //     $user = $request->user();
 
-        $events = $user->organizedEvents()
-            ->withCount('registrations')
-            ->latest()
-            ->paginate(10);
+    //     $events = $user->organizedEvents()
+    //         ->withCount('registrations')
+    //         ->latest()
+    //         ->paginate(10);
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $events
-        ], 200);
-    }
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'data' => $events
+    //     ], 200);
+    // }
 
     public function store(Request $request)
     {
@@ -166,5 +166,30 @@ class EventController extends Controller
             'status' => 'success',
             'data' => $event
         ], 200);
+    }
+
+    public function index()
+    {
+        $events = Event::with('organizer:id,name')
+                       ->where('status', 'Published')
+                       ->orderBy('date_time', 'asc')
+                       ->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $events
+        ]);
+    }
+
+    public function categories()
+    {
+        $categories = Event::where('status', 'Published')
+                           ->distinct()
+                           ->pluck('category');
+
+        return response()->json([
+            'success' => true,
+            'data'    => $categories
+        ]);
     }
 }

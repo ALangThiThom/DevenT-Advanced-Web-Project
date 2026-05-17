@@ -53,18 +53,30 @@
 
 body {
   margin: 0;
+  background: #f7f9fb;
 }
 
 #root {
-  width: 1126px;
+  width: 100%;
   max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  margin: 0;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+.homepage-hero-card {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.navbar-nav .nav-link {
+  font-weight: 500;
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
 }
 
 h1,

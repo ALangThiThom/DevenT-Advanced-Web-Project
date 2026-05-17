@@ -10,6 +10,8 @@ import OrganizerDashboard from "./pages/Organizer/Dashboard";
 import Layout from "./pages/Organizer/Layout";
 import PrivateRoute from "./components/PrivateRoute";
 import EventList from "./pages/Organizer/EventList";
+import Homepage from "./pages/Home/index";
+
 
 function App() {
   return (
@@ -18,7 +20,10 @@ function App() {
       <Route path="/event-detail/:id" element={<EventDetail />} />
 
       {/* Đường dẫn trang chủ */}
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Home />} /> 
+      {/* Development-only homepage route (non-breaking) */}
+      <Route path="/new-home" element={<Homepage />} />
+      
 
       <Route path="/attendee/register" element={<AttendeeRegister />} />
       <Route path="/attendee/login" element={<AttendeeLogin />} />
