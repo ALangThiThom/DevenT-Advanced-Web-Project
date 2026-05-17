@@ -27,3 +27,23 @@ export const getOrganizerEvents = async (page = 1) => {
     throw error;
   }
 };
+
+export const getOrganizerEventById = async (id) => {
+  try {
+    const response = await api.get(`/organizer/events/${id}`);
+    return response.data.data;
+  } catch (error) {
+    console.error(`Lỗi khi fetch chi tiết event ${id}:`, error);
+    throw error;
+  }
+};
+
+export const getPublicEventById = async (id) => {
+  try {
+    const response = await api.get(`/events/${id}`);
+    return response.data.data;
+  } catch (error) {
+    console.error(`Lỗi khi fetch public event ${id}:`, error);
+    throw error;
+  }
+};

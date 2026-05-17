@@ -8,6 +8,9 @@ use App\Http\Controllers\EventController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+// Public event detail route (only non-draft events will be visible)
+Route::get('/events/{id}', [EventController::class, 'showPublic']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);

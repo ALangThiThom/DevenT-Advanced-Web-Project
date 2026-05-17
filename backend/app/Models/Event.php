@@ -15,11 +15,18 @@ class Event extends Model
         'title',
         'description',
         'location',
+        'schedule',
         'start_time',
         'end_time',
         'capacity',
         'registered_count',
         'status',
+    ];
+
+    protected $casts = [
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
+        'schedule' => 'array',
     ];
 
     public function organizer()

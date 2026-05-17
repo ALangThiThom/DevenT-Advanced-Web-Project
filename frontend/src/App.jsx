@@ -14,8 +14,8 @@ import EventList from "./pages/Organizer/EventList";
 function App() {
   return (
     <Routes>
-      {/* Trang chi tiết sự kiện tạm thời*/}
-      <Route path="/event-detail-test" element={<EventDetail />} />
+      {/* Trang chi tiết sự kiện */}
+      <Route path="/event-detail/:id" element={<EventDetail />} />
 
       {/* Đường dẫn trang chủ */}
       <Route path="/" element={<Home />} />

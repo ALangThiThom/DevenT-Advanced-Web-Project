@@ -147,4 +147,24 @@ class EventController extends Controller
             'message' => 'Event deleted successfully'
         ], 200);
     }
+
+    /**
+     * Public show for event details. Only non-draft events are visible publicly.
+     */
+    public function showPublic($id)
+    {
+        $event = Event::withCount('registrations')->find($id);
+
+        if (!$event || $event->status === 'draft') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Event not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $event
+        ], 200);
+    }
 }
