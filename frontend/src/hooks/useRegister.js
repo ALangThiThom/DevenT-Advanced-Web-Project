@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerService } from "../services/authService";
+import { register } from "../services/authService";
 import { useAuthStore } from "../store/authStore";
 
 export const useRegister = (initialRole) => {
   const navigate = useNavigate();
-  const login = useAuthStore((state) => state.login);
+  const loginAction = useAuthStore((state) => state.login);
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    password_confirmation: "", // Quan trọng cho logic 'confirmed' của Laravel
-    role: initialRole,
+    password_confirmation: "", 
+    role: initialRole.toLowerCase(),
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -26,13 +26,13 @@ export const useRegister = (initialRole) => {
     setLoading(true);
     setErrors({});
     try {
-      const data = await registerService(formData);
-      // Sử dụng Zustand để tự động lưu Token và User
-      login(data.user, data.access_token);
+      const data = await register(formData);
+      
+      loginAction(data.user, data.access_token);
       alert("Đăng ký thành công!");
-      // Chuyển hướng dựa trên role
+      
       const path =
-        formData.role === "Attendee"
+        formData.role === "attendee"
           ? "/attendee/dashboard"
           : "/organizer/dashboard";
       navigate(path);
@@ -40,7 +40,6 @@ export const useRegister = (initialRole) => {
       if (error.response?.status === 422) {
         setErrors(error.response.data.errors);
       } else {
-        // In lỗi ra màn hình Alert và Console để biết chính xác bệnh
         const errorMessage = error.response?.data?.message || error.message;
         console.error("Chi tiết lỗi API:", error.response || error);
         alert(`Đăng ký thất bại! Lỗi: ${errorMessage}`);

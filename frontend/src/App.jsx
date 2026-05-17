@@ -1,13 +1,15 @@
 import { Routes, Route } from "react-router-dom";
-import OrganizerRegister from "./pages/Organizer/Register";
-import Home from "./pages/home";
+import Home from "./pages/Home";
 import AttendeeRegister from "./pages/Attendee/Register";
-import OrganizerLogin from "./pages/Organizer/Login";
 import AttendeeLogin from "./pages/Attendee/Login";
-import PrivateRoute from "./components/PrivateRoute";
-import OrganizerDashboard from "./pages/Organizer/Dashboard";
 import AttendeeDashboard from "./pages/Attendee/Dashboard";
 import EventDetail from "./pages/Attendee/EventDetail";
+import OrganizerRegister from "./pages/Organizer/Register";
+import OrganizerLogin from "./pages/Organizer/Login";
+import OrganizerDashboard from "./pages/Organizer/Dashboard";
+import Layout from "./pages/Organizer/Layout";
+import PrivateRoute from "./components/PrivateRoute";
+import EventList from "./pages/Organizer/EventList";
 
 function App() {
   return (
@@ -18,35 +20,31 @@ function App() {
       {/* Đường dẫn trang chủ */}
       <Route path="/" element={<Home />} />
 
-      {/* Đăng ký attendee */}
       <Route path="/attendee/register" element={<AttendeeRegister />} />
-
-      {/* Đăng nhập attendee */}
       <Route path="/attendee/login" element={<AttendeeLogin />} />
-
-      {/* Đăng ký organizer */}
-      <Route path="/organizer/register" element={<OrganizerRegister />} />
-
-      {/* Đăng nhập organizer */}
-      <Route path="/organizer/login" element={<OrganizerLogin />} />
-
-      {/* --- CÁC TRANG BẢO MẬT BỞI PRIVATE ROUTE --- */}
-      <Route
-        path="/organizer/dashboard"
-        element={
-          <PrivateRoute allowedRole="Organizer">
-            <OrganizerDashboard />
-          </PrivateRoute>
-        }
-      />
       <Route
         path="/attendee/dashboard"
         element={
-          <PrivateRoute allowedRole="Attendee">
+          <PrivateRoute allowedRole="attendee">
             <AttendeeDashboard />
           </PrivateRoute>
         }
       />
+
+      <Route path="/organizer/register" element={<OrganizerRegister />} />
+      <Route path="/organizer/login" element={<OrganizerLogin />} />
+      
+      <Route
+        path="/organizer"
+        element={
+          <PrivateRoute allowedRole="organizer">
+            <Layout />
+          </PrivateRoute>
+        }
+      >
+        <Route path="dashboard" element={<OrganizerDashboard />} />
+        <Route path="events" element={<EventList />} />
+      </Route>
     </Routes>
   );
 }

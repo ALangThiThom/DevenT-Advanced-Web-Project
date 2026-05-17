@@ -14,14 +14,35 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password_hash',
+        'password',
         'role',
     ];
+
     protected $hidden = [
-        'password_hash',
+        'password',
+        'remember_token',
     ];
-    public function getAuthPassword()
+
+    protected function casts(): array
     {
-        return $this->password_hash;
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    public function organizedEvents()
+    {
+        return $this->hasMany(Event::class, 'organizer_id');
+    }
+
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }
