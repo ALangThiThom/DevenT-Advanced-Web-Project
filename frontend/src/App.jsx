@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
 import AttendeeRegister from "./pages/Attendee/Register";
 import AttendeeLogin from "./pages/Attendee/Login";
 import AttendeeDashboard from "./pages/Attendee/Dashboard";
@@ -12,7 +11,6 @@ import PrivateRoute from "./components/PrivateRoute";
 import EventList from "./pages/Organizer/EventList";
 import Homepage from "./pages/Home/index";
 
-
 function App() {
   return (
     <Routes>
@@ -20,10 +18,7 @@ function App() {
       <Route path="/events/:id" element={<EventDetail />} />
 
       {/* Đường dẫn trang chủ */}
-      <Route path="/" element={<Home />} /> 
-      {/* Development-only homepage route (non-breaking) */}
-      <Route path="/new-home" element={<Homepage />} />
-      
+      <Route path="/" element={<Homepage />} />
 
       <Route path="/attendee/register" element={<AttendeeRegister />} />
       <Route path="/attendee/login" element={<AttendeeLogin />} />
@@ -38,7 +33,7 @@ function App() {
 
       <Route path="/organizer/register" element={<OrganizerRegister />} />
       <Route path="/organizer/login" element={<OrganizerLogin />} />
-      
+
       <Route
         path="/organizer"
         element={
