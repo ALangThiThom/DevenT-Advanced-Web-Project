@@ -33,7 +33,7 @@ export const useRegister = (initialRole) => {
       
       const path =
         formData.role === "attendee"
-          ? "/new-home"
+          ? "/attendee/dashboard"
           : "/organizer/dashboard";
       navigate(path);
     } catch (error) {

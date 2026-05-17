@@ -31,10 +31,10 @@ export const useLogin = (expectedRole) => {
       }
 
       loginAction(data.user, data.access_token);
-      
+
       const path =
         expectedRole.toLowerCase() === "attendee"
-          ? "/new-home"
+          ? "/attendee/dashboard"
           : "/organizer/dashboard";
       navigate(path);
     } catch (err) {
