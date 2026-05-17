@@ -17,7 +17,7 @@ function App() {
   return (
     <Routes>
       {/* Trang chi tiết sự kiện */}
-      <Route path="/event-detail/:id" element={<EventDetail />} />
+      <Route path="/events/:id" element={<EventDetail />} />
 
       {/* Đường dẫn trang chủ */}
       <Route path="/" element={<Home />} /> 

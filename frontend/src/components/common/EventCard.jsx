@@ -29,10 +29,10 @@ const EventCard = ({ event }) => {
       <div className="event-card__body">
         <div className="event-card__date-row">
           <span className="event-card__icon">📅</span>
-          <span className="event-card__date-text">{formatEventDateTime(event.date_time)}</span>
+          <span className="event-card__date-text">{formatEventDateTime(event.start_time)}</span>
         </div>
 
-        <h3 className="event-card__title">{event.name}</h3>
+        <h3 className="event-card__title">{event.title}</h3>
         <p className="event-card__desc">{event.description}</p>
 
         <div className="event-card__footer">
