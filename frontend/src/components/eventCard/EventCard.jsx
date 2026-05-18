@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../../pages/styles/eventCard.css";
+import "./eventCard.css";
 
 const EventCard = ({ event }) => {
   // Hàm xử lý định dạng ngày giờ: "2026-10-24 19:00:00" -> "24 TH10 • 19:00"

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "../../pages/styles/organizerCTA.css";
+import "./organizerCTA.css";
 
 const OrganizerCTA = () => {
   const navigate = useNavigate();

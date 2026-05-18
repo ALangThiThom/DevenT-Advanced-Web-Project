@@ -1,5 +1,5 @@
-import "../../pages/styles/navbar.css";
-import { useAuthStore } from "../../store/authStore";
+import "./navbar.css";
+import { useAuthStore } from "../../../store/authStore";
 
 const NavBar = () => {
   const { user, logout } = useAuthStore();

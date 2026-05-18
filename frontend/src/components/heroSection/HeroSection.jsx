@@ -1,5 +1,5 @@
-import SearchBar from "../common/Search";
-import "../../pages/styles/heroSection.css";
+import SearchBar from "../search/Search";
+import "./heroSection.css";
 
 const HeroSection = () => (
   <section className="hero">

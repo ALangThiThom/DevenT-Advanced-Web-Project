@@ -1,4 +1,4 @@
-import EventCard from "../common/EventCard";
+import EventCard from "../eventCard/EventCard";
 import useEvents from "../../hooks/useEvents";
 
 const FeaturedEvents = () => {
