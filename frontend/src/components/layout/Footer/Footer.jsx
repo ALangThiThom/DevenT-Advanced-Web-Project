@@ -6,7 +6,7 @@ const Footer = () => (
       <div className="footer__column">
         <h3 className="footer__logo">Devent</h3>
         <p className="footer__description">
-          Nền tảng kết nối cộng đồng qua các sự kiện ý nghĩa
+          A platform connecting the community through meaningful events
         </p>
         <div className="footer__socials">
           <a href="#" className="footer__social-link">
@@ -24,38 +24,38 @@ const Footer = () => (
         </div>
       </div>
 
-      {/* Cột 2: Liên kết nhanh */}
+      {/* Column 2: Quick Links */}
       <div className="footer__column">
-        <h4 className="footer__title">LIÊN KẾT NHANH</h4>
+        <h4 className="footer__title">QUICK LINKS</h4>
         <ul className="footer__list">
           <li>
-            <Link to="/">Trang chủ</Link>
+            <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/events">Khám phá sự kiện</Link>
+            <Link to="/events">Explore Events</Link>
           </li>
           <li>
-            <Link to="/categories">Danh mục</Link>
+            <Link to="/categories">Categories</Link>
           </li>
           <li>
-            <Link to="/about">Về chúng tôi</Link>
+            <Link to="/about">About Us</Link>
           </li>
         </ul>
       </div>
       <div className="footer__column">
-        <h4 className="footer__title">HỖ TRỢ</h4>
+        <h4 className="footer__title">SUPPORT</h4>
         <ul className="footer__list">
           <li>
-            <Link to="/support">Trung tâm trợ giúp</Link>
+            <Link to="/support">Help Center</Link>
           </li>
           <li>
-            <Link to="/safety">Quy tắc an toàn</Link>
+            <Link to="/safety">Safety Center</Link>
           </li>
           <li>
-            <Link to="/terms">Điều khoản dịch vụ</Link>
+            <Link to="/terms">Terms of Service</Link>
           </li>
           <li>
-            <Link to="/privacy">Chính sách bảo mật</Link>
+            <Link to="/privacy">Privacy Policy</Link>
           </li>
         </ul>
       </div>
@@ -64,7 +64,7 @@ const Footer = () => (
         <div className="footer__newsletter">
           <input
             type="email"
-            placeholder="Địa chỉ email"
+            placeholder="Email Address"
             className="footer__input"
           />
           <button type="button" className="footer__submit-btn">
@@ -76,7 +76,7 @@ const Footer = () => (
     <hr className="footer__divider" />
     <div className="footer__bottom">
       <p className="footer__copy">
-        © 2026 DevenT. Kết nối cộng đồng thông qua các trải nghiệm trực tiếp.
+        © 2026 DevenT. Connecting communities through live experiences.
       </p>
     </div>
   </footer>

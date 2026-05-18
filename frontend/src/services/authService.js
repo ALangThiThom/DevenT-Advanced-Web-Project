@@ -11,7 +11,7 @@ export const register = async (data) => {
 };
 
 export const logout = async () => {
-    // Sửa lại thành POST theo đúng chuẩn Laravel Sanctum thay vì DELETE
+    // Use POST as per Laravel Sanctum instead of DELETE
     const response = await api.post('/logout');
     return response.data;
 };

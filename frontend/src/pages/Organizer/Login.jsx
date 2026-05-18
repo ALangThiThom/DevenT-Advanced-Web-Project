@@ -25,12 +25,12 @@ export default function OrganizerLogin() {
             DevenT
           </Link>
           <div className="ms-auto d-none d-md-block">
-            <span className="text-muted me-2">Chưa có tài khoản?</span>
+            <span className="text-muted me-2">Don't have an account?</span>
             <Link
               to="/organizer/register"
               className="text-success fw-bold text-decoration-none"
             >
-              Đăng ký ngay
+              Register now
             </Link>
           </div>
         </div>
@@ -42,16 +42,15 @@ export default function OrganizerLogin() {
             <div className="col-lg-6 text-white pe-lg-5 mb-5 mb-lg-0">
               <h1 className="display-4 fw-bold mb-4">DevenT</h1>
               <p className="lead mb-5 opacity-75">
-                Đăng nhập vào không gian làm việc của Ban tổ chức để tiếp tục
-                quản lý các sự kiện tuyệt vời của bạn.
+                Log in to your Organizer workspace to continue managing your amazing events.
               </p>
 
               <div className="d-flex mb-4">
                 <div className="feature-icon me-3">📅</div>
                 <div>
-                  <h5 className="fw-bold mb-1">500+ Sự kiện</h5>
+                  <h5 className="fw-bold mb-1">500+ Events</h5>
                   <p className="small opacity-75 mb-0">
-                    Tổ chức các sự kiện hiệu quả hơn, nhiều người...
+                    Organize events more efficiently, reach more people...
                   </p>
                 </div>
               </div>
@@ -59,9 +58,9 @@ export default function OrganizerLogin() {
               <div className="d-flex mb-4">
                 <div className="feature-icon me-3">👤</div>
                 <div>
-                  <h5 className="fw-bold mb-1">12K+ Thành viên</h5>
+                  <h5 className="fw-bold mb-1">12K+ Members</h5>
                   <p className="small opacity-75 mb-0">
-                    Cộng đồng người dùng đông đảo và năng động...
+                    A large and active user community...
                   </p>
                 </div>
               </div>
@@ -69,9 +68,9 @@ export default function OrganizerLogin() {
               <div className="d-flex">
                 <div className="feature-icon me-3">✨</div>
                 <div>
-                  <h5 className="fw-bold mb-1">Trải nghiệm tuyệt vời</h5>
+                  <h5 className="fw-bold mb-1">Great Experience</h5>
                   <p className="small opacity-75 mb-0">
-                    Dễ dàng quản lý và tương tác với người tham gia...
+                    Easily manage and interact with participants...
                   </p>
                 </div>
               </div>
@@ -83,7 +82,7 @@ export default function OrganizerLogin() {
                   className="fw-bold text-center mb-4"
                   style={{ color: "#004d3d" }}
                 >
-                  Đăng nhập Ban tổ chức
+                  Organizer Login
                 </h3>
                 {error && (
                   <div className="alert alert-danger py-2">{error}</div>
@@ -104,7 +103,7 @@ export default function OrganizerLogin() {
                     <input
                       type="password"
                       className="form-control bg-light py-2"
-                      placeholder="Mật khẩu"
+                      placeholder="Password"
                       name="password"
                       value={credentials.password}
                       onChange={handleChange}
@@ -116,7 +115,7 @@ export default function OrganizerLogin() {
                     className="btn btn-eventhub bg-eventhub text-white w-100 py-2 fw-bold shadow-sm"
                     disabled={loading}
                   >
-                    {loading ? "Đang xử lý..." : "Đăng nhập"}
+                    {loading ? "Processing..." : "Log in"}
                   </button>
                 </form>
                 <div className="text-center mt-3">
@@ -124,7 +123,7 @@ export default function OrganizerLogin() {
                     to="#"
                     className="text-muted small text-decoration-none"
                   >
-                    Quên mật khẩu?
+                    Forgot password?
                   </Link>
                 </div>
               </div>

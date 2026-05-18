@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"; // Đã thêm useEffect ở đây
-import axios from "axios";                   // Đã thêm import axios ở đây
+import { useState, useEffect } from "react"; // Added useEffect here
+import axios from "axios";                   // Added axios import here
 
 const useCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -13,7 +13,7 @@ const useCategories = () => {
         }
       })
       .catch(err => {
-        console.error("Lỗi khi lấy danh mục từ Backend:", err);
+        console.error("Error fetching categories from Backend:", err);
       })
       .finally(() => {
         setLoading(false);

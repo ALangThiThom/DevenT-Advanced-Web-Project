@@ -12,7 +12,7 @@ export default function EventDetail() {
   useEffect(() => {
     const fetchEvent = async () => {
       if (!id) {
-        setError("Event ID không được cung cấp.");
+        setError("Event ID is not provided.");
         setLoading(false);
         return;
       }
@@ -24,7 +24,7 @@ export default function EventDetail() {
       } catch (fetchError) {
         setError(
           fetchError?.response?.data?.message ||
-            "Không thể tải chi tiết sự kiện.",
+            "Unable to load event details.",
         );
       } finally {
         setLoading(false);
@@ -36,7 +36,7 @@ export default function EventDetail() {
 
   const formatDate = (dateString) => {
     if (!dateString) return "-";
-    return new Date(dateString).toLocaleDateString("vi-VN", {
+    return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "2-digit",
@@ -45,11 +45,11 @@ export default function EventDetail() {
 
   const formatTimeRange = (start, end) => {
     if (!start || !end) return "-";
-    const startTime = new Date(start).toLocaleTimeString("vi-VN", {
+    const startTime = new Date(start).toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
     });
-    const endTime = new Date(end).toLocaleTimeString("vi-VN", {
+    const endTime = new Date(end).toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -78,7 +78,7 @@ export default function EventDetail() {
     return (
       <div className="w-100 bg-light min-vh-100 pb-5 event-detail-wrapper">
         <div className="container py-5 text-center">
-          Đang tải thông tin sự kiện...
+          Loading event information...
         </div>
       </div>
     );
@@ -94,10 +94,10 @@ export default function EventDetail() {
 
   const seatsTotal = event.capacity || 0;
   const seatsAvailable = seatsTotal - (event.registrations_count || 0);
-  const eventCategory = event.category || "Sự kiện";
-  const eventLocation = event.location || "Địa điểm chưa xác định";
+  const eventCategory = event.category || "Event";
+  const eventLocation = event.location || "Unknown location";
   const eventAddress =
-    event.address || event.location || "Không có địa chỉ chi tiết";
+    event.address || event.location || "No detailed address";
   const eventDate = formatDate(event.start_time);
   const eventTime = formatTimeRange(event.start_time, event.end_time);
 
@@ -120,16 +120,16 @@ export default function EventDetail() {
               <hr className="my-4 opacity-25 event-divider" />
 
               <h3 className="fw-bold mb-3 event-section-heading">
-                Giới thiệu sự kiện
+                About this event
               </h3>
               <p className="text-secondary lh-lg mb-0 event-description-text">
-                {event.description || "Mô tả sự kiện chưa được cập nhật."}
+                {event.description || "Event description has not been updated."}
               </p>
             </div>
 
             <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white text-start">
               <h3 className="fw-bold mb-4 event-section-heading">
-                Lịch trình sự kiện
+                Event schedule
               </h3>
               <div className="position-relative ps-4 border-start border-2 timeline-container">
                 {Array.isArray(event.schedule) && event.schedule.length > 0 ? (
@@ -137,7 +137,7 @@ export default function EventDetail() {
                     <div className="mb-4 position-relative" key={idx}>
                       <div className="position-absolute start-0 translate-middle rounded-circle timeline-dot"></div>
                       <span className="fw-bold d-block small mb-1 timeline-time">
-                        {new Date(item.time).toLocaleTimeString("vi-VN", {
+                        {new Date(item.time).toLocaleTimeString("en-US", {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
@@ -157,9 +157,9 @@ export default function EventDetail() {
                       <span className="fw-bold d-block small mb-1 timeline-time">
                         {eventTime.split(" - ")[0]}
                       </span>
-                      <h5 className="fw-bold mb-1 timeline-title">Bắt đầu</h5>
+                      <h5 className="fw-bold mb-1 timeline-title">Start</h5>
                       <p className="text-muted small mb-0">
-                        Sự kiện bắt đầu vào lúc {eventTime.split(" - ")[0]}.
+                        Event starts at {eventTime.split(" - ")[0]}.
                       </p>
                     </div>
 
@@ -168,27 +168,13 @@ export default function EventDetail() {
                       <span className="fw-bold d-block small mb-1 timeline-time">
                         {eventTime.split(" - ")[1]}
                       </span>
-                      <h5 className="fw-bold mb-1 timeline-title">Kết thúc</h5>
+                      <h5 className="fw-bold mb-1 timeline-title">End</h5>
                       <p className="text-muted small mb-0">
-                        Dự kiến kết thúc lúc {eventTime.split(" - ")[1]}.
+                        Expected to end at {eventTime.split(" - ")[1]}.
                       </p>
                     </div>
                   </>
                 )}
-                
-                {/* Trạng thái sự kiện */}
-
-                {/* <div className="position-relative">
-                  <div className="position-absolute start-0 translate-middle rounded-circle timeline-dot"></div>
-                  <span className="fw-bold d-block small mb-1 timeline-time">
-                    {event.status ? event.status.toUpperCase() : "N/A"}
-                  </span>
-                  <h5 className="fw-bold mb-1 timeline-title">Trạng thái</h5>
-                  <p className="text-muted small mb-0">
-                    Sự kiện hiện đang ở trạng thái{" "}
-                    {event.status || "chưa xác định"}.
-                  </p>
-                </div> */}
               </div>
             </div>
           </div>
@@ -201,7 +187,7 @@ export default function EventDetail() {
                 </span>
                 <div>
                   <small className="text-muted d-block text-uppercase fw-bold widget-label">
-                    Ngày tổ chức
+                    Date
                   </small>
                   <span className="fw-bold text-dark widget-value-main">
                     {eventDate}
@@ -215,7 +201,7 @@ export default function EventDetail() {
                 </span>
                 <div>
                   <small className="text-muted d-block text-uppercase fw-bold widget-label">
-                    Giờ diễn ra
+                    Time
                   </small>
                   <span className="fw-bold text-dark widget-value-main">
                     {eventTime}
@@ -229,7 +215,7 @@ export default function EventDetail() {
                 </span>
                 <div>
                   <small className="text-muted d-block text-uppercase fw-bold widget-label">
-                    Địa điểm
+                    Location
                   </small>
                   <span className="fw-bold text-dark d-block widget-value-main">
                     {eventLocation}
@@ -245,29 +231,17 @@ export default function EventDetail() {
               <div className="mb-4">
                 <div className="d-flex justify-content-between align-items-center mb-2">
                   <span className="text-secondary small fw-medium">
-                    Trạng thái chỗ
+                    Seat status
                   </span>
                   <span className="badge fw-bold px-2 py-1 seats-badge">
-                    Còn {seatsAvailable >= 0 ? seatsAvailable : 0} /{" "}
-                    {seatsTotal} chỗ
+                    {seatsAvailable >= 0 ? seatsAvailable : 0} /{" "}
+                    {seatsTotal} seats left
                   </span>
                 </div>
-                {/* <div
-                  className="progress"
-                  style={{ height: "6px", backgroundColor: "#e5e7eb" }}
-                >
-                  <div
-                    className="progress-bar rounded-pill progress-bar-fill"
-                    role="progressbar"
-                    style={{
-                      width: `${seatsTotal ? (Math.max(seatsAvailable, 0) / seatsTotal) * 100 : 0}%`,
-                    }}
-                  ></div>
-                </div> */}
               </div>
 
               <button className="btn w-100 py-3 fw-bold border-0 shadow-sm rounded-3 text-white btn-register-submit">
-                Đăng ký tham gia
+                Register
               </button>
             </div>
           </div>

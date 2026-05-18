@@ -2,15 +2,16 @@ import { Link } from "react-router-dom";
 import "./eventCard.css";
 
 const EventCard = ({ event }) => {
-  // Hàm xử lý định dạng ngày giờ: "2026-10-24 19:00:00" -> "24 TH10 • 19:00"
+  // Hàm xử lý định dạng ngày giờ: "2026-10-24 19:00:00" -> "24 OCT • 19:00"
   const formatEventDateTime = (rawDateTime) => {
     if (!rawDateTime) return "";
     const parsedDate = new Date(rawDateTime);
     const day = String(parsedDate.getDate()).padStart(2, "0");
-    const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
+    const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    const month = monthNames[parsedDate.getMonth()];
     const hours = String(parsedDate.getHours()).padStart(2, "0");
     const minutes = String(parsedDate.getMinutes()).padStart(2, "0");
-    return `${day} TH${month} • ${hours}:${minutes}`;
+    return `${day} ${month} • ${hours}:${minutes}`;
   };
 
   // Tính toán số chỗ dựa trên dữ liệu thật từ Backend
@@ -43,7 +44,7 @@ const EventCard = ({ event }) => {
           
           {/* KHỐI PILL HIỂN THỊ SỐ CHỖ BO GÓC MÀU XANH MINT */}
           <div className="event-card__seats-badge">
-            Còn {simulatedAvailableSeats} / {event.capacity} chỗ
+            {simulatedAvailableSeats} / {event.capacity} seats left
           </div>
         </div>
       </div>

@@ -5,10 +5,10 @@ const HeroSection = () => (
   <section className="hero">
     <div className="hero__content">
       <div className="hero__text">
-        <h3>Tìm kiếm trải nghiệm tiếp theo của bạn.</h3>
-        <p>Khám phá các buổi hòa nhạc, hội thảo và gặp gỡ địa phương</p>
+        <h3>Find your next experience.</h3>
+        <p>Discover local concerts, workshops and meetups</p>
       </div>
-      <SearchBar placeholder="Tìm kiếm, địa điểm, sự kiện..." />
+      <SearchBar placeholder="Search events, locations..." />
       
     </div>
   </section>

@@ -14,7 +14,7 @@ export default function OrganizerDashboard() {
         const data = await getDashboardStats();
         setDashboardData(data);
       } catch (error) {
-        console.error("Không thể tải thông tin tổng quan dashboard");
+        console.error("Unable to load dashboard overview information");
       } finally {
         setLoading(false);
       }

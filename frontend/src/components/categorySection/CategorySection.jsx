@@ -8,9 +8,9 @@ const CategorySection = () => {
   return (
     <section className="category-section">
       <div className="category-section__header">
-        <h2>Khám phá theo danh mục</h2>
+        <h2>Explore by Category</h2>
         <a href="#" className="category-section__view-all">
-          Xem tất cả danh mục →
+          View all categories →
         </a>
       </div>
       <div className="category-section__list">
