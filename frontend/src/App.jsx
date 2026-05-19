@@ -10,6 +10,7 @@ import Layout from "./pages/Organizer/Layout";
 import PrivateRoute from "./components/PrivateRoute";
 import EventList from "./pages/Organizer/EventList";
 import Homepage from "./pages/Home/index";
+import CreateEvent from "./pages/Organizer/CreateEvent";
 
 function App() {
   return (
@@ -44,6 +45,8 @@ function App() {
       >
         <Route path="dashboard" element={<OrganizerDashboard />} />
         <Route path="events" element={<EventList />} />
+
+        <Route path="events/create" element={<CreateEvent />} />
       </Route>
     </Routes>
   );
