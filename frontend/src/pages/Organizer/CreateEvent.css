@@ -1,0 +1,97 @@
+.create-event-container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.create-event-header h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.create-event-header p {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.create-event-form .form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-event-form .form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.create-event-form label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.required {
+  color: #e74c3c;
+}
+
+.create-event-form input,
+.create-event-form select,
+.create-event-form textarea {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.create-event-form input:focus,
+.create-event-form select:focus,
+.create-event-form textarea:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+.input-error {
+  border-color: #e74c3c !important;
+  background-color: #fdf2f2;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.form-actions {
+  margin-top: 30px;
+  text-align: right;
+}
+
+.submit-btn {
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #1a252f;
+}
+
+.submit-btn:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
