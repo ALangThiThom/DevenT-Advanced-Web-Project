@@ -25,6 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::middleware('role:organizer')->prefix('organizer')->group(function () {
+        
+        Route::post('/events', [EventController::class, 'store']);
 
         Route::get('/dashboard-stats', [EventController::class, 'dashboardStats']);
 
