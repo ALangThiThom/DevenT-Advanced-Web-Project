@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreEventRequest;
 
 class EventController extends Controller
 {
@@ -40,42 +41,24 @@ class EventController extends Controller
         ], 200);
     }
 
-    // public function index(Request $request)
-    // {
-    //     $user = $request->user();
 
-    //     $events = $user->organizedEvents()
-    //         ->withCount('registrations')
-    //         ->latest()
-    //         ->paginate(10);
-
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'data' => $events
-    //     ], 200);
-    // }
-
-    public function store(Request $request)
+    public function store(StoreEventRequest $request)
     {
+        // 1. Lấy toàn bộ dữ liệu ĐÃ ĐƯỢC XÁC THỰC (Loại bỏ hoàn toàn dữ liệu rác/độc hại)
+        $validatedData = $request->validated();
 
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:draft,published,cancelled',
-            'capacity' => 'nullable|integer|min:1',
-            'category' => 'nullable|string'
-        ]);
+        // 2. Ép cứng trạng thái mặc định là 'draft' theo đúng quy tắc nghiệp vụ (chữ thường để khớp DB/Validator)
+        $validatedData['status'] = 'draft';
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+        // 3. Lưu vào Database thông qua Relationship
+        // Hàm organizedEvents() sẽ tự động gán organizer_id = ID của user đang đăng nhập
+        $event = $request->user()->organizedEvents()->create($validatedData);
 
-        $event = $request->user()->organizedEvents()->create($request->all());
-
+        // 4. Trả về phản hồi thành công
         return response()->json([
-            'status' => 'success',
-            'message' => 'Event created successfully',
-            'data' => $event
+            'success' => true,
+            'message' => 'Tạo sự kiện bản nháp thành công!',
+            'data'    => $event
         ], 201);
     }
 
@@ -140,11 +123,13 @@ class EventController extends Controller
             ], 404);
         }
 
-        $event->delete();
+        // Thay vì xóa vật lý, chuyển trạng thái sang cancelled theo quy tắc: Tuyệt đối không xóa sự kiện
+        $event->update(['status' => 'cancelled']);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Event deleted successfully'
+            'message' => 'Sự kiện đã được hủy bỏ thành công',
+            'data' => $event
         ], 200);
     }
 
@@ -171,9 +156,9 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::with('organizer:id,name')
-                       ->where('status', 'published')
-                       ->orderBy('start_time', 'asc')
-                       ->get();
+            ->where('status', 'published')
+            ->orderBy('start_time', 'asc')
+            ->get();
 
         return response()->json([
             'success' => true, // Thêm trạng thái đồng bộ với các hàm trên
@@ -184,8 +169,8 @@ class EventController extends Controller
     public function categories()
     {
         $categories = Event::where('status', 'published')
-                           ->distinct()
-                           ->pluck('category');
+            ->distinct()
+            ->pluck('category');
 
         return response()->json([
             'success' => true,
