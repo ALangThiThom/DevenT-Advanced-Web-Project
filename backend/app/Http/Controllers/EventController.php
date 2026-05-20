@@ -42,12 +42,16 @@ class EventController extends Controller
     }
     public function getOrganizerEvents(Request $request)
     {
-        $events = $request->user()
+        $query = $request->user()
             ->organizedEvents()
-            ->with('category:id,name') // Lấy cả thông tin category
-            ->withCount('registrations') // Đếm số lượt đăng ký
-            ->latest() // Sắp xếp theo ngày tạo mới nhất
-            ->paginate(10); // Phân trang, 10 sự kiện mỗi trang
+            ->withCount('registrations')
+            ->latest();
+
+        if ($request->has('status') && $request->status !== '') {
+            $query->where('status', $request->status);
+        }
+
+        $events = $query->paginate(8);
 
         return response()->json([
             'status' => 'success',
@@ -57,13 +61,9 @@ class EventController extends Controller
 
     public function store(StoreEventRequest $request)
     {
-        // 1. Lấy toàn bộ dữ liệu ĐÃ ĐƯỢC XÁC THỰC (Loại bỏ hoàn toàn dữ liệu rác/độc hại)
         $validatedData = $request->validated();
 
-        // 2. Trạng thái 'draft' hoặc 'published' đã được lấy tự động qua $validatedData từ request.
 
-        // 3. Lưu vào Database thông qua Relationship
-        // Hàm organizedEvents() sẽ tự động gán organizer_id = ID của user đang đăng nhập
         $event = $request->user()->organizedEvents()->create($validatedData);
 
         // 4. Trả về phản hồi thành công
@@ -135,7 +135,6 @@ class EventController extends Controller
             ], 404);
         }
 
-        // Thay vì xóa vật lý, chuyển trạng thái sang cancelled theo quy tắc: Tuyệt đối không xóa sự kiện
         $event->update(['status' => 'cancelled']);
 
         return response()->json([
@@ -173,8 +172,8 @@ class EventController extends Controller
             ->get();
 
         return response()->json([
-            'success' => true, // Thêm trạng thái đồng bộ với các hàm trên
-            'data'    => $events   // Đảm bảo bọc trong trường data chuẩn để React hốt trọn bộ
+            'success' => true,
+            'data'    => $events
         ], 200);
     }
 
