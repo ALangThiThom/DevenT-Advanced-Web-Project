@@ -1,27 +1,44 @@
+
 import { Routes, Route } from "react-router-dom";
-import AttendeeRegister from "./pages/Attendee/Register";
+
+
+import PublicLayout from "./layouts/PublicLayout";
+import OrganizerLayout from "./layouts/OrganizerLayout";
+
+
+import Home from "./pages/Public/Home";
+
+
 import AttendeeLogin from "./pages/Attendee/Login";
+import AttendeeRegister from "./pages/Attendee/Register";
 import AttendeeDashboard from "./pages/Attendee/Dashboard";
-import EventDetail from "./pages/Attendee/EventDetail";
-import OrganizerRegister from "./pages/Organizer/Register";
+
+
 import OrganizerLogin from "./pages/Organizer/Login";
+import OrganizerRegister from "./pages/Organizer/Register";
 import OrganizerDashboard from "./pages/Organizer/Dashboard";
-import Layout from "./pages/Organizer/Layout";
-import PrivateRoute from "./components/PrivateRoute";
 import EventList from "./pages/Organizer/EventList";
-import Homepage from "./pages/Home/index";
+
+
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <Routes>
-      {/* Trang chi tiết sự kiện */}
-      <Route path="/events/:id" element={<EventDetail />} />
 
-      {/* Đường dẫn trang chủ */}
-      <Route path="/" element={<Homepage />} />
 
-      <Route path="/attendee/register" element={<AttendeeRegister />} />
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+      </Route>
+
+
+
       <Route path="/attendee/login" element={<AttendeeLogin />} />
+      <Route path="/attendee/register" element={<AttendeeRegister />} />
+      <Route path="/organizer/login" element={<OrganizerLogin />} />
+      <Route path="/organizer/register" element={<OrganizerRegister />} />
+
+
       <Route
         path="/attendee/dashboard"
         element={
@@ -31,18 +48,19 @@ function App() {
         }
       />
 
-      <Route path="/organizer/register" element={<OrganizerRegister />} />
-      <Route path="/organizer/login" element={<OrganizerLogin />} />
 
       <Route
         path="/organizer"
         element={
           <PrivateRoute allowedRole="organizer">
-            <Layout />
+            <OrganizerLayout />
           </PrivateRoute>
         }
       >
+
         <Route path="dashboard" element={<OrganizerDashboard />} />
+
+
         <Route path="events" element={<EventList />} />
       </Route>
     </Routes>

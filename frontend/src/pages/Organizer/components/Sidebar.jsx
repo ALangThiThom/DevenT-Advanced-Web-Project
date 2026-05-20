@@ -1,14 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
-import styles from "../Organizer.module.css";
-
+import styles from "../styles/Organizer.module.css";
 const Sidebar = () => {
   const location = useLocation();
   const logout = useAuthStore((state) => state.logout);
 
   return (
     <aside className={styles.sidebar}>
-      {/* Brand Header */}
+
       <div className={styles.brandHeader}>
         <div className={styles.logoIcon}>
           <i className="fa-solid" style={{ fontSize: "20px" }}>
@@ -23,15 +22,15 @@ const Sidebar = () => {
         </span>
       </div>
 
-      {/* Primary CTA */}
+
       <button className={styles.primaryBtn}>
         <i className="fa-solid fa-plus"></i>
         Create New Event
       </button>
 
-      {/* Navigation Groups */}
+
       <nav style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-        {/* Group 1: Management */}
+
         <div className={styles.navGroup}>
           <span className={styles.navGroupTitle}>Management</span>
           <Link
@@ -50,7 +49,7 @@ const Sidebar = () => {
           </Link>
         </div>
 
-        {/* Group 2: Data */}
+
         <div className={styles.navGroup}>
           <span className={styles.navGroupTitle}>Data</span>
           <Link
@@ -70,7 +69,7 @@ const Sidebar = () => {
         </div>
       </nav>
 
-      {/* Footer Nav */}
+
       <div className={styles.footerNav}>
         <Link to="/organizer/help" className={styles.navLink}>
           <i className="fa-regular fa-circle-question fa-fw"></i>

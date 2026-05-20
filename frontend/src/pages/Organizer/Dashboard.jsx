@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getDashboardStats } from "../../services/eventService";
-import styles from "./Organizer.module.css";
+import styles from "./styles/Organizer.module.css";
 
 export default function OrganizerDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -43,9 +43,9 @@ export default function OrganizerDashboard() {
         </div>
       ) : (
         <>
-          {/* 1. KHU VỰC METRIC CARDS (TOTAL & REGISTRATIONS) */}
+
           <div className={styles.statsGrid}>
-            {/* Card 1: Total Events */}
+
             <div className={styles.statCard}>
               <div className={styles.statInfo}>
                 <h3>Total Events</h3>
@@ -56,7 +56,7 @@ export default function OrganizerDashboard() {
               </div>
             </div>
 
-            {/* Card 2: Active Events */}
+
             <div className={styles.statCard}>
               <div className={styles.statInfo}>
                 <h3>Active Events</h3>
@@ -67,7 +67,7 @@ export default function OrganizerDashboard() {
               </div>
             </div>
 
-            {/* Card 3: Total Registrations (Waitlist tracking point) */}
+
             <div className={styles.statCard}>
               <div className={styles.statInfo}>
                 <h3>Total Registrations</h3>
@@ -79,7 +79,7 @@ export default function OrganizerDashboard() {
             </div>
           </div>
 
-          {/* 2. KHU VỰC BẢNG HIỂN THỊ 4 SỰ KIỆN GẦN NHẤT */}
+
           <div className={styles.tableContainer}>
             <div className={styles.tableHeader}>
               <h2 style={{ fontSize: "1rem", fontWeight: "bold", margin: 0, color: "var(--on-surface)" }}>
@@ -138,12 +138,12 @@ export default function OrganizerDashboard() {
                                   <span>{registered}/{capacity}</span>
                                 </div>
                                 <div style={{ height: "6px", width: "100%", backgroundColor: "#F3F4F6", borderRadius: "9999px" }}>
-                                  <div 
-                                    style={{ 
-                                      height: "100%", 
-                                      backgroundColor: event.status === 'published' ? '#4338CA' : '#9ca3af', 
-                                      borderRadius: "9999px", 
-                                      width: `${progressPercent}%` 
+                                  <div
+                                    style={{
+                                      height: "100%",
+                                      backgroundColor: event.status === 'published' ? '#4338CA' : '#9ca3af',
+                                      borderRadius: "9999px",
+                                      width: `${progressPercent}%`
                                     }}
                                   ></div>
                                 </div>

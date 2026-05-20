@@ -11,7 +11,7 @@ export const register = async (data) => {
 };
 
 export const logout = async () => {
-    // Use POST as per Laravel Sanctum instead of DELETE
+
     const response = await api.post('/logout');
     return response.data;
 };

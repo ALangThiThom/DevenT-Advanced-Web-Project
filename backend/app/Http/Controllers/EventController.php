@@ -63,9 +63,9 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::with('organizer:id,name')
-                       ->where('status', 'published')
-                       ->orderBy('start_time', 'asc')
-                       ->get();
+            ->where('status', 'published')
+            ->orderBy('start_time', 'asc')
+            ->get();
 
         return response()->json([
             'success' => true, // Thêm trạng thái đồng bộ với các hàm trên
@@ -76,8 +76,8 @@ class EventController extends Controller
     public function categories()
     {
         $categories = Event::where('status', 'published')
-                           ->distinct()
-                           ->pluck('category');
+            ->distinct()
+            ->pluck('category');
 
         return response()->json([
             'success' => true,

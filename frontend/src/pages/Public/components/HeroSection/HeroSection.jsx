@@ -1,4 +1,4 @@
-import SearchBar from "../search/Search";
+import SearchBar from "../Search/Search";
 import "./heroSection.css";
 
 const HeroSection = () => (
@@ -9,7 +9,7 @@ const HeroSection = () => (
         <p>Discover local concerts, workshops and meetups</p>
       </div>
       <SearchBar placeholder="Search events, locations..." />
-      
+
     </div>
   </section>
 );

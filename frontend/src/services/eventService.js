@@ -1,8 +1,6 @@
 import api from "../utils/api";
 
-/**
- * Fetch dashboard stats (total stats and 4 latest events)
- */
+
 export const getDashboardStats = async () => {
   try {
     const response = await api.get("/organizer/dashboard-stats");
@@ -13,9 +11,7 @@ export const getDashboardStats = async () => {
   }
 };
 
-/**
- * Fetch paginated organizer events
- */
+
 export const getOrganizerEvents = async (page = 1) => {
   try {
     const response = await api.get(`/organizer/events?page=${page}`);

@@ -11,7 +11,7 @@ export const useRegister = (initialRole) => {
     name: "",
     email: "",
     password: "",
-    password_confirmation: "", 
+    password_confirmation: "",
     role: initialRole.toLowerCase(),
   });
   const [loading, setLoading] = useState(false);
@@ -27,10 +27,10 @@ export const useRegister = (initialRole) => {
     setErrors({});
     try {
       const data = await register(formData);
-      
+
       loginAction(data.user, data.access_token);
       alert("Registration successful!");
-      
+
       const path =
         formData.role === "attendee"
           ? "/attendee/dashboard"

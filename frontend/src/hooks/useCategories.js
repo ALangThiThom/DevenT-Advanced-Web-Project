@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"; // Added useEffect here
-import axios from "axios";                   // Added axios import here
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const useCategories = () => {
   const [categories, setCategories] = useState([]);

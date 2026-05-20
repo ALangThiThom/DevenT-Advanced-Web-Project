@@ -1,6 +1,6 @@
 import CategoryCard from "../categoryCard/CategoryCard";
-import useCategories from "../../hooks/useCategories";
-import "./categorySection.css"; 
+import useCategories from "../../../../hooks/useCategories";
+import "./categorySection.css";
 
 const CategorySection = () => {
   const { categories } = useCategories();

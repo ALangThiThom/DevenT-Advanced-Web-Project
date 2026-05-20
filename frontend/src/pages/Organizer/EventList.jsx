@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getOrganizerEvents } from "../../services/eventService";
-import styles from "./Organizer.module.css";
+import styles from "./styles/Organizer.module.css";
 
 export default function EventList() {
   const [eventsData, setEventsData] = useState(null);
@@ -27,23 +27,23 @@ export default function EventList() {
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
-  // Hàm tính toán phần trăm cho Progress Bar
+
   const calculateProgress = (registrations, capacity) => {
     if (!capacity) return 0;
     const percent = Math.round((registrations / capacity) * 100);
     return percent > 100 ? 100 : percent;
   };
 
-  // Hàm chọn màu sắc cho Progress Bar dựa trên Status
+
   const getProgressColor = (status) => {
-    if (status === "published") return "#22c55e"; // green-500
-    if (status === "cancelled") return "#ef4444"; // red-500
-    return "#9ca3af"; // gray-400 (draft)
+    if (status === "published") return "#22c55e";
+    if (status === "cancelled") return "#ef4444";
+    return "#9ca3af";
   };
 
   return (
     <div className={styles.tableContainer}>
-      {/* Table Header với nút Filter */}
+
       <div className={styles.tableHeader}>
         <h2
           style={{
@@ -61,7 +61,7 @@ export default function EventList() {
         </button>
       </div>
 
-      {/* Loading State */}
+
       {loading ? (
         <div
           style={{
@@ -89,7 +89,7 @@ export default function EventList() {
             <tbody>
               {eventsData?.data?.length > 0 ? (
                 eventsData.data.map((event) => {
-                  // Mặc định capacity là 500 nếu DB chưa có trường này (theo bản thiết kế)
+
                   const capacity = event.capacity || 500;
                   const registered = event.registrations_count || 0;
                   const progressPercent = calculateProgress(
@@ -99,7 +99,7 @@ export default function EventList() {
 
                   return (
                     <tr key={event.id} className={styles.tableRow}>
-                      {/* Cột Event Name có kèm hình đại diện */}
+
                       <td>
                         <div
                           style={{
@@ -120,7 +120,7 @@ export default function EventList() {
                               justifyContent: "center",
                             }}
                           >
-                            {/* Dùng icon ảnh làm placeholder nếu không có ảnh thật */}
+
                             <i
                               className="fa-regular fa-image"
                               style={{ color: "#9CA3AF" }}
@@ -163,7 +163,7 @@ export default function EventList() {
                         </span>
                       </td>
 
-                      {/* Cột Registration với Progress Bar chuẩn Tailwind */}
+
                       <td>
                         {event.status === "draft" ? (
                           <span
@@ -221,7 +221,7 @@ export default function EventList() {
                         )}
                       </td>
 
-                      {/* Cột Actions với hiệu ứng Group-Hover */}
+
                       <td style={{ textAlign: "right" }}>
                         <div className={styles.actionGroup}>
                           <button
@@ -248,7 +248,7 @@ export default function EventList() {
                   );
                 })
               ) : (
-                /* Trạng thái trống (Empty State) */
+
                 <tr>
                   <td
                     colSpan="6"
@@ -288,7 +288,7 @@ export default function EventList() {
         </div>
       )}
 
-      {/* Footer Phân trang */}
+
       {!loading && eventsData?.data?.length > 0 && (
         <div
           style={{

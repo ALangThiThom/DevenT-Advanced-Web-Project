@@ -24,7 +24,7 @@ const Footer = () => (
         </div>
       </div>
 
-      {/* Column 2: Quick Links */}
+
       <div className="footer__column">
         <h4 className="footer__title">QUICK LINKS</h4>
         <ul className="footer__list">
