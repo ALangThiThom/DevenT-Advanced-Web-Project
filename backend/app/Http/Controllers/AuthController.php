@@ -32,7 +32,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Đăng ký thành công',
+            'message' => 'Registration successful',
             'access_token' => $token,
             'token_type' => 'Bearer',
             'user' => $user
@@ -54,7 +54,7 @@ class AuthController extends Controller
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'Email hoặc mật khẩu không chính xác.'
+                'message' => 'Incorrect email or password.'
             ], 401);
         }
         $user->tokens()->delete();
@@ -62,7 +62,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Đăng nhập thành công',
+            'message' => 'Login successful',
             'access_token' => $token,
             'token_type' => 'Bearer',
             'user' => $user
@@ -74,7 +74,7 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Đăng xuất thành công'
+            'message' => 'Logout successful'
         ], 200);
     }
 }
