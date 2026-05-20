@@ -47,6 +47,6 @@ export const getPublicEventById = async (id) => {
 };
 
 export const createEvent = async (eventData) => {
-  const response = await api.post("/events", eventData);
+  const response = await api.post("/organizer/events", eventData);
   return response.data;
 };

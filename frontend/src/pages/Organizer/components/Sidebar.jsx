@@ -24,10 +24,14 @@ const Sidebar = () => {
       </div>
 
       {/* Primary CTA */}
-      <button className={styles.primaryBtn}>
+      <Link
+        to="/organizer/events/create"
+        className={styles.primaryBtn}
+        style={{ textDecoration: "none" }}
+      >
         <i className="fa-solid fa-plus"></i>
         Create New Event
-      </button>
+      </Link>
 
       {/* Navigation Groups */}
       <nav style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>

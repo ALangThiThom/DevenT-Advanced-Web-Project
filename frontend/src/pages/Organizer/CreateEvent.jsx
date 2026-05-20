@@ -20,7 +20,7 @@ const CreateEvent = () => {
         </p>
       </div>
 
-      <form className="create-event-form" onSubmit={handleSubmit}>
+      <form className="create-event-form" onSubmit={(e) => e.preventDefault()}>
         <div className="form-group">
           <label>
             Event Title <span className="required">*</span>
@@ -148,9 +148,23 @@ const CreateEvent = () => {
           )}
         </div>
 
-        <div className="form-actions">
-          <button type="submit" className="submit-btn" disabled={isLoading}>
-            {isLoading ? "Processing..." : "Save as Draft"}
+        <div className="form-actions" style={{ display: "flex", gap: "1rem" }}>
+          <button
+            type="button"
+            className="submit-btn"
+            style={{ backgroundColor: "#6B7280" }}
+            onClick={(e) => handleSubmit(e, "draft")}
+            disabled={isLoading}
+          >
+            {isLoading ? "Processing..." : "Save Draft"}
+          </button>
+          <button
+            type="button"
+            className="submit-btn"
+            onClick={(e) => handleSubmit(e, "published")}
+            disabled={isLoading}
+          >
+            {isLoading ? "Processing..." : "Publish Event"}
           </button>
         </div>
       </form>

@@ -28,18 +28,22 @@ const useCreateEvent = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, status) => {
     e.preventDefault();
     setIsLoading(true);
     setErrors({}); // Reset errors before sending a new request
 
     try {
-      const response = await createEvent(formData);
+      const payload = { ...formData, status };
+      const response = await createEvent(payload);
       if (response.success || response.status === "success") {
-        alert("Draft event created successfully!");
-        navigate("/organizer/dashboard"); // Redirect to the organizer dashboard
+        alert(
+          `Event ${status === "published" ? "published" : "saved as draft"} successfully!`,
+        );
+        navigate("/organizer/events"); // Đã sửa: Điều hướng về Danh sách sự kiện thay vì Dashboard
       }
     } catch (err) {
+      console.error("Create Event Error:", err); // In chi tiết lỗi ra console
       // Catch 422 Validation errors returned from Laravel FormRequest
       if (err.response && err.response.status === 422) {
         setErrors(err.response.data.errors);
