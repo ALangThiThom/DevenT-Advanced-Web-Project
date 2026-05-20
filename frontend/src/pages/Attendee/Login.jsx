@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLogin } from "../../hooks/useLogin";
-import "./Register.css"; // ĐÃ ĐỒNG BỘ
+import "./styles/Register.css";
 
 export default function AttendeeLogin() {
   const { credentials, handleChange, handleLogin, loading, error } =
@@ -25,12 +25,12 @@ export default function AttendeeLogin() {
             DevenT
           </Link>
           <div className="ms-auto d-none d-md-block">
-            <span className="text-muted me-2">Chưa có tài khoản?</span>
+            <span className="text-muted me-2">Don't have an account?</span>
             <Link
               to="/attendee/register"
               className="text-attendee fw-bold text-decoration-none"
             >
-              Đăng ký ngay
+              Register now
             </Link>
           </div>
         </div>
@@ -42,19 +42,17 @@ export default function AttendeeLogin() {
             <div className="col-lg-6 text-attendee pe-lg-5 mb-5 mb-lg-0">
               <h1 className="display-4 fw-bold mb-4">DevenT</h1>
               <p className="lead mb-5 opacity-75 text-dark">
-                Đăng nhập để khám phá và tham gia các sự kiện cộng đồng hấp dẫn
-                dành riêng cho bạn.
+                Log in to discover and join exciting community events tailored for you.
               </p>
 
               <div className="d-flex mb-4 text-dark">
                 <div className="feature-icon me-3">🌍</div>
                 <div>
                   <h5 className="fw-bold mb-1 text-attendee">
-                    Đa dạng sự kiện
+                    Diverse Events
                   </h5>
                   <p className="small opacity-75 mb-0">
-                    Từ công nghệ, nghệ thuật đến thể thao, luôn có sự kiện phù
-                    hợp với bạn.
+                    From technology, arts to sports, there's always an event for you.
                   </p>
                 </div>
               </div>
@@ -63,11 +61,10 @@ export default function AttendeeLogin() {
                 <div className="feature-icon me-3">🤝</div>
                 <div>
                   <h5 className="fw-bold mb-1 text-attendee">
-                    Kết nối cộng đồng
+                    Community Connection
                   </h5>
                   <p className="small opacity-75 mb-0">
-                    Gặp gỡ và giao lưu với những người có cùng sở thích và đam
-                    mê.
+                    Meet and interact with people who share your interests and passions.
                   </p>
                 </div>
               </div>
@@ -76,11 +73,10 @@ export default function AttendeeLogin() {
                 <div className="feature-icon me-3">🎟️</div>
                 <div>
                   <h5 className="fw-bold mb-1 text-attendee">
-                    Tham gia dễ dàng
+                    Easy Participation
                   </h5>
                   <p className="small opacity-75 mb-0">
-                    Chỉ với vài thao tác cơ bản, bạn đã sẵn sàng tham gia sự
-                    kiện.
+                    With just a few clicks, you are ready to join an event.
                   </p>
                 </div>
               </div>
@@ -89,7 +85,7 @@ export default function AttendeeLogin() {
             <div className="col-lg-5 offset-lg-1">
               <div className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-light">
                 <h3 className="fw-bold text-center mb-4 text-attendee">
-                  Đăng nhập Người tham gia
+                  Attendee Login
                 </h3>
                 {error && (
                   <div className="alert alert-danger py-2">{error}</div>
@@ -110,7 +106,7 @@ export default function AttendeeLogin() {
                     <input
                       type="password"
                       className="form-control bg-white py-2"
-                      placeholder="Mật khẩu"
+                      placeholder="Password"
                       name="password"
                       value={credentials.password}
                       onChange={handleChange}
@@ -122,7 +118,7 @@ export default function AttendeeLogin() {
                     className="btn btn-attendee text-white w-100 py-2 fw-bold shadow-sm"
                     disabled={loading}
                   >
-                    {loading ? "Đang xử lý..." : "Đăng nhập"}
+                    {loading ? "Processing..." : "Log in"}
                   </button>
                 </form>
                 <div className="text-center mt-3">
@@ -130,7 +126,7 @@ export default function AttendeeLogin() {
                     to="#"
                     className="text-muted small text-decoration-none"
                   >
-                    Quên mật khẩu?
+                    Forgot password?
                   </Link>
                 </div>
               </div>

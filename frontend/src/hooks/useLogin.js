@@ -26,19 +26,19 @@ export const useLogin = (expectedRole) => {
       const data = await login(credentials);
 
       if (data.user.role !== expectedRole.toLowerCase()) {
-        setError("Sai cổng đăng nhập. Vui lòng kiểm tra lại vai trò của bạn.");
+        setError("Wrong login portal. Please check your role.");
         return;
       }
 
       loginAction(data.user, data.access_token);
-      
+
       const path =
         expectedRole.toLowerCase() === "attendee"
           ? "/attendee/dashboard"
           : "/organizer/dashboard";
       navigate(path);
     } catch (err) {
-      setError(err.response?.data?.message || "Đăng nhập thất bại!");
+      setError(err.response?.data?.message || "Login failed!");
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useRegister } from "../../hooks/useRegister";
-import "./Register.css"; // ĐÃ ĐỒNG BỘ
+import "./styles/Register.css";
 
 export default function AttendeeRegister() {
   const { formData, handleChange, handleRegister, loading, errors } =
@@ -26,12 +26,12 @@ export default function AttendeeRegister() {
             DevenT
           </Link>
           <div className="ms-auto d-none d-md-block">
-            <span className="text-muted me-2">Đã có tài khoản?</span>
+            <span className="text-muted me-2">Already have an account?</span>
             <Link
               to="/attendee/login"
               className="text-attendee fw-bold text-decoration-none"
             >
-              Đăng nhập ngay
+              Log in now
             </Link>
           </div>
         </div>
@@ -45,19 +45,18 @@ export default function AttendeeRegister() {
             <div className="col-lg-6 text-attendee pe-lg-5 mb-5 mb-lg-0">
               <h1 className="display-4 fw-bold mb-4">DevenT</h1>
               <p className="lead mb-5 opacity-75 text-dark">
-                Khám phá và tham gia hàng ngàn sự kiện cộng đồng hấp dẫn dành
-                riêng cho bạn.
+                Discover and join thousands of exciting community events tailored
+                for you.
               </p>
 
               <div className="d-flex mb-4 text-dark">
                 <div className="feature-icon me-3">🌍</div>
                 <div>
                   <h5 className="fw-bold mb-1 text-attendee">
-                    Đa dạng sự kiện
+                    Diverse Events
                   </h5>
                   <p className="small opacity-75 mb-0">
-                    Từ công nghệ, nghệ thuật đến thể thao, luôn có sự kiện phù
-                    hợp với bạn.
+                    From technology, arts to sports, there's always an event for you.
                   </p>
                 </div>
               </div>
@@ -66,11 +65,10 @@ export default function AttendeeRegister() {
                 <div className="feature-icon me-3">🤝</div>
                 <div>
                   <h5 className="fw-bold mb-1 text-attendee">
-                    Kết nối cộng đồng
+                    Community Connection
                   </h5>
                   <p className="small opacity-75 mb-0">
-                    Gặp gỡ và giao lưu với những người có cùng sở thích và đam
-                    mê.
+                    Meet and interact with people who share your interests and passions.
                   </p>
                 </div>
               </div>
@@ -79,11 +77,10 @@ export default function AttendeeRegister() {
                 <div className="feature-icon me-3">🎟️</div>
                 <div>
                   <h5 className="fw-bold mb-1 text-attendee">
-                    Đăng ký dễ dàng
+                    Easy Registration
                   </h5>
                   <p className="small opacity-75 mb-0">
-                    Chỉ với vài thao tác cơ bản, bạn đã sẵn sàng tham gia sự
-                    kiện.
+                    With just a few clicks, you are ready to join an event.
                   </p>
                 </div>
               </div>
@@ -93,14 +90,14 @@ export default function AttendeeRegister() {
             <div className="col-lg-5 offset-lg-1">
               <div className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-light">
                 <h3 className="fw-bold text-center mb-4 text-attendee">
-                  Tạo tài khoản tham gia của bạn
+                  Create your attendee account
                 </h3>
                 <form onSubmit={onSubmit}>
                   <div className="mb-3">
                     <input
                       type="text"
                       className={`form-control bg-white py-2 ${errors.name ? "is-invalid" : ""}`}
-                      placeholder="Họ và tên"
+                      placeholder="Full Name"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
@@ -120,7 +117,7 @@ export default function AttendeeRegister() {
                     <input
                       type="password"
                       className={`form-control bg-white py-2 ${errors.password ? "is-invalid" : ""}`}
-                      placeholder="Mật khẩu (tối thiểu 8 ký tự)"
+                      placeholder="Password (min 8 characters)"
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
@@ -130,7 +127,7 @@ export default function AttendeeRegister() {
                     <input
                       type="password"
                       className="form-control bg-white py-2"
-                      placeholder="Xác nhận mật khẩu"
+                      placeholder="Confirm Password"
                       name="password_confirmation"
                       value={formData.password_confirmation}
                       onChange={handleChange}
@@ -141,7 +138,7 @@ export default function AttendeeRegister() {
                     className="btn btn-attendee text-white w-100 py-2 fw-bold shadow-sm"
                     disabled={loading}
                   >
-                    {loading ? "Đang xử lý..." : "Tạo tài khoản"}
+                    {loading ? "Processing..." : "Create Account"}
                   </button>
                 </form>
               </div>

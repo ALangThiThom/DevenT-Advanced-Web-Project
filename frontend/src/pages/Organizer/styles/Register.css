@@ -1,46 +1,48 @@
-
+/* Loại bỏ lề mặc định của body để tràn màn hình */
 body, html {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
 }
-.bg-attendee {
-  background-color: #ffffff !important;
+
+/* Màu xanh chủ đạo của EventHub */
+.bg-eventhub {
+  background-color: #004d3d !important; /* Màu xanh lục đậm */
   width: 100%;
   margin: 0;
 }
-.text-attendee {
-  color: #004d3d !important;
-}
 
-.bg-attendee-icon {
-  background-color: #004d3d !important;
-  color: white;
-}
-.btn-attendee {
-  background-color: #004d3d; 
+/* Tùy chỉnh nút bấm */
+.btn-eventhub {
+  background-color: #004d3d;
   color: white;
   border: none;
   transition: all 0.3s;
 }
 
-.btn-attendee:hover {
+.btn-eventhub:hover {
   background-color: #00362b;
   color: #fff;
   transform: translateY(-1px);
 }
 
-.attendee-page .form-control {
+/* Bo góc card và input */
+.rounded-4 {
+  border-radius: 1.25rem !important;
+}
+
+.form-control {
   border: 1px solid #e9ecef;
 }
 
-.attendee-page .form-control:focus {
+.form-control:focus {
   box-shadow: none;
   border-color: #004d3d;
 }
-.attendee-page .feature-icon {
-  background: rgba(0, 77, 61, 0.1);
-  color: #004d3d;
+
+/* Icon bên trái */
+.feature-icon {
+  background: rgba(255, 255, 255, 0.1);
   width: 45px;
   height: 45px;
   display: flex;
@@ -49,15 +51,17 @@ body, html {
   border-radius: 8px;
   font-size: 1.2rem;
 }
+
+/* Responsive cho điện thoại */
 @media (max-width: 768px) {
-  .attendee-page .display-4 {
+  .display-4 {
     font-size: 2.5rem;
     text-align: center;
   }
-  .attendee-page .lead {
+  .lead {
     text-align: center;
   }
-  .bg-attendee {
+  .bg-eventhub {
     padding-top: 30px !important;
   }
 }

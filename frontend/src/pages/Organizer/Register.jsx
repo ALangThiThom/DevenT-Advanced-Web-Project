@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useRegister } from "../../hooks/useRegister";
-import "./Register.css"; // ĐÃ ĐỒNG BỘ
+import "./styles/Register.css";
 
 export default function OrganizerRegister() {
   const { formData, handleChange, handleRegister, loading, errors } =
@@ -26,12 +26,12 @@ export default function OrganizerRegister() {
             DevenT
           </Link>
           <div className="ms-auto d-none d-md-block">
-            <span className="text-muted me-2">Đã có tài khoản?</span>
+            <span className="text-muted me-2">Already have an account?</span>
             <Link
               to="/organizer/login"
               className="text-success fw-bold text-decoration-none"
             >
-              Đăng nhập ngay
+              Log in now
             </Link>
           </div>
         </div>
@@ -45,16 +45,15 @@ export default function OrganizerRegister() {
             <div className="col-lg-6 text-white pe-lg-5 mb-5 mb-lg-0">
               <h1 className="display-4 fw-bold mb-4">DevenT</h1>
               <p className="lead mb-5 opacity-75">
-                Tổ chức các sự kiện hiệu quả hơn, nhiều người biết đến hơn với
-                DevenT
+                Organize events more efficiently and reach more people with DevenT
               </p>
 
               <div className="d-flex mb-4">
                 <div className="feature-icon me-3">📅</div>
                 <div>
-                  <h5 className="fw-bold mb-1">500+ Sự kiện</h5>
+                  <h5 className="fw-bold mb-1">500+ Events</h5>
                   <p className="small opacity-75 mb-0">
-                    Tổ chức các sự kiện hiệu quả hơn, nhiều người...
+                    Organize events more efficiently, reach more people...
                   </p>
                 </div>
               </div>
@@ -62,9 +61,9 @@ export default function OrganizerRegister() {
               <div className="d-flex mb-4">
                 <div className="feature-icon me-3">👤</div>
                 <div>
-                  <h5 className="fw-bold mb-1">12K+ Thành viên</h5>
+                  <h5 className="fw-bold mb-1">12K+ Members</h5>
                   <p className="small opacity-75 mb-0">
-                    Cộng đồng người dùng đông đảo và năng động...
+                    A large and active user community...
                   </p>
                 </div>
               </div>
@@ -72,9 +71,9 @@ export default function OrganizerRegister() {
               <div className="d-flex">
                 <div className="feature-icon me-3">✨</div>
                 <div>
-                  <h5 className="fw-bold mb-1">Trải nghiệm tuyệt vời</h5>
+                  <h5 className="fw-bold mb-1">Great Experience</h5>
                   <p className="small opacity-75 mb-0">
-                    Dễ dàng quản lý và tương tác với người tham gia...
+                    Easily manage and interact with participants...
                   </p>
                 </div>
               </div>
@@ -87,14 +86,14 @@ export default function OrganizerRegister() {
                   className="fw-bold text-center mb-4"
                   style={{ color: "#004d3d" }}
                 >
-                  Tổ chức sự kiện cộng đồng của bạn
+                  Organize your community events
                 </h3>
                 <form onSubmit={onSubmit}>
                   <div className="mb-3">
                     <input
                       type="text"
                       className={`form-control bg-light py-2 ${errors.name ? "is-invalid" : ""}`}
-                      placeholder="Tên tổ chức"
+                      placeholder="Organization Name"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
@@ -113,7 +112,7 @@ export default function OrganizerRegister() {
                     <input
                       type="password"
                       className="form-control bg-light py-2"
-                      placeholder="Mật khẩu"
+                      placeholder="Password"
                       name="password"
                       onChange={handleChange}
                     />
@@ -122,7 +121,7 @@ export default function OrganizerRegister() {
                     <input
                       type="password"
                       className="form-control bg-light py-2"
-                      placeholder="Xác nhận mật khẩu"
+                      placeholder="Confirm Password"
                       name="password_confirmation"
                       onChange={handleChange}
                     />
@@ -132,23 +131,23 @@ export default function OrganizerRegister() {
                     className="btn btn-eventhub bg-eventhub text-white w-100 py-2 fw-bold shadow-sm"
                     disabled={loading}
                   >
-                    {loading ? "Đang xử lý..." : "Tạo tài khoản"}
+                    {loading ? "Processing..." : "Create Account"}
                   </button>
                 </form>
                 <p className="small text-center mt-4 text-muted">
-                  Bằng việc đăng ký, bạn đã đồng ý với DevenT về{" "}
+                  By registering, you agree to DevenT's{" "}
                   <Link
                     to="#"
                     className="text-dark fw-bold text-decoration-none"
                   >
-                    Điều khoản
+                    Terms
                   </Link>{" "}
-                  và{" "}
+                  and{" "}
                   <Link
                     to="#"
                     className="text-dark fw-bold text-decoration-none"
                   >
-                    Chính sách bảo mật
+                    Privacy Policy
                   </Link>
                 </p>
               </div>

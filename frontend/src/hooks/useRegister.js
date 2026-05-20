@@ -29,7 +29,7 @@ export const useRegister = (initialRole) => {
       const data = await register(formData);
       
       loginAction(data.user, data.access_token);
-      alert("Đăng ký thành công!");
+      alert("Registration successful!");
       
       const path =
         formData.role === "attendee"
@@ -41,8 +41,8 @@ export const useRegister = (initialRole) => {
         setErrors(error.response.data.errors);
       } else {
         const errorMessage = error.response?.data?.message || error.message;
-        console.error("Chi tiết lỗi API:", error.response || error);
-        alert(`Đăng ký thất bại! Lỗi: ${errorMessage}`);
+        console.error("API error details:", error.response || error);
+        alert(`Registration failed! Error: ${errorMessage}`);
       }
     } finally {
       setLoading(false);

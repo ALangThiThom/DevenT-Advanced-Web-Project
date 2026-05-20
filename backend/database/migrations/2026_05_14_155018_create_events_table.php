@@ -17,7 +17,7 @@ return new class extends Migration
 
             $table->string('title', 255);
             $table->text('description');
-
+            $table->enum('category', ['music', 'education', 'sports', 'food', 'art', 'community'])->nullable();
             $table->string('location')->nullable();
 
             $table->dateTime('start_time');
