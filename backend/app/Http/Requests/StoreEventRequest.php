@@ -30,6 +30,7 @@ class StoreEventRequest extends FormRequest
             'end_time' => 'required|date|after:start_time',
             'capacity' => 'required|integer|min:1',
             'category_id' => 'required|integer|exists:categories,id', // Kiểm tra danh mục hợp lệ
+            'status' => 'required|in:draft,published', // Yêu cầu có status từ 2 nút
         ];
     }
 

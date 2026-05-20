@@ -4,7 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Event;
-use Illuminate\Support\Facades\Schema; 
+use App\Models\Category;
+use Illuminate\Support\Facades\Schema;
 
 class EventSeeder extends Seeder
 {
@@ -15,25 +16,28 @@ class EventSeeder extends Seeder
         Event::truncate();
         Schema::enableForeignKeyConstraints();
 
+        // Lấy danh sách ID của các category từ Database đã được tạo bởi CategorySeeder
+        $categoryIds = Category::pluck('id', 'name');
+
         // 1. Đêm nhạc Neon Nights
         Event::create([
             'organizer_id' => 1,
             'title' => 'Đêm nhạc Neon Nights',
             'description' => 'Hành trình âm thanh hình ảnh đắm chìm với các nghệ sĩ điện tử quốc tế.',
-            'category' => 'music', // Sửa: Đổi 'Âm nhạc' thành 'music' để khớp enum
+            'category_id' => $categoryIds['Music'],
             'location' => 'Sân vận động Skyline',
             'start_time' => '2026-10-24 19:00:00', // Sửa: Đổi 'date_time' thành 'start_time'
             'end_time' => '2026-10-24 22:00:00',   // Thêm: Bổ sung 'end_time' bắt buộc
             'capacity' => 150,
             'status' => 'published', // Sửa: Đổi 'Published' thành viết thường 'published'
-            
+
         ]);
 
         // 2. Giải Chạy Marathon Thành Phố
         Event::create([
             'title' => 'Giải Chạy Marathon Thành Phố',
             'description' => 'Thử thách giới hạn bản thân với cung đường chạy ven biển tuyệt đẹp.',
-            'category' => 'sports', // Sửa: Đổi 'Thể thao' thành 'sports'
+            'category_id' => $categoryIds['Sports'],
             'location' => 'Công viên Trung tâm',
             'start_time' => '2026-10-28 05:30:00',
             'end_time' => '2026-10-28 11:30:00',
@@ -46,7 +50,7 @@ class EventSeeder extends Seeder
         Event::create([
             'title' => 'Xưởng làm Pasta Thủ công',
             'description' => 'Học bí quyết làm pasta truyền thống từ các đầu bếp nổi tiếng địa phương.',
-            'category' => 'food', // Sửa: Đổi 'Ẩm thực' thành 'food'
+            'category_id' => $categoryIds['Food'],
             'location' => 'Phòng bếp The Kitchen Lab',
             'start_time' => '2026-11-15 18:30:00',
             'end_time' => '2026-11-15 21:30:00',
@@ -59,7 +63,7 @@ class EventSeeder extends Seeder
         Event::create([
             'title' => 'Triển lãm Tranh Sơn mài Hiện đại',
             'description' => 'Không gian nghệ thuật trưng bày các tác phẩm sơn mài đương đại độc đáo.',
-            'category' => 'art', // Sửa: Đổi 'Nghệ thuật' thành 'art'
+            'category_id' => $categoryIds['Art'],
             'location' => 'Bảo tàng Mỹ thuật',
             'start_time' => '2026-11-20 09:00:00',
             'end_time' => '2026-11-20 17:00:00',
@@ -72,7 +76,7 @@ class EventSeeder extends Seeder
         Event::create([
             'title' => 'Hội nghị Công nghệ Tương lai',
             'description' => 'Khám phá thập kỷ đổi mới tiếp theo cùng các nhà lãnh đạo ngành.',
-            'category' => 'education', // Sửa: Đổi 'Giáo dục' thành 'education'
+            'category_id' => $categoryIds['Education'],
             'location' => 'Trung tâm Hội nghị Quốc gia',
             'start_time' => '2026-11-02 09:00:00',
             'end_time' => '2026-11-02 16:00:00',
@@ -85,7 +89,7 @@ class EventSeeder extends Seeder
         Event::create([
             'title' => 'Ngày hội Thu gom Rác thải Xanh',
             'description' => 'Chung tay bảo vệ môi trường, đổi rác lấy cây xanh và quà tặng ý nghĩa.',
-            'category' => 'community', // Sửa: Đổi 'Cộng đồng' thành 'community'
+            'category_id' => $categoryIds['Community'],
             'location' => 'Quảng trường Thành phố',
             'start_time' => '2026-12-05 08:00:00',
             'end_time' => '2026-12-05 12:00:00',

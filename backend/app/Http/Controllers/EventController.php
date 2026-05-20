@@ -47,8 +47,7 @@ class EventController extends Controller
         // 1. Lấy toàn bộ dữ liệu ĐÃ ĐƯỢC XÁC THỰC (Loại bỏ hoàn toàn dữ liệu rác/độc hại)
         $validatedData = $request->validated();
 
-        // 2. Ép cứng trạng thái mặc định là 'draft' theo đúng quy tắc nghiệp vụ (chữ thường để khớp DB/Validator)
-        $validatedData['status'] = 'draft';
+        // 2. Trạng thái 'draft' hoặc 'published' đã được lấy tự động qua $validatedData từ request.
 
         // 3. Lưu vào Database thông qua Relationship
         // Hàm organizedEvents() sẽ tự động gán organizer_id = ID của user đang đăng nhập
@@ -57,7 +56,7 @@ class EventController extends Controller
         // 4. Trả về phản hồi thành công
         return response()->json([
             'success' => true,
-            'message' => 'Tạo sự kiện bản nháp thành công!',
+            'message' => 'Create event successfully!',
             'data'    => $event
         ], 201);
     }
@@ -128,7 +127,7 @@ class EventController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Sự kiện đã được hủy bỏ thành công',
+            'message' => 'Cancel event successfully',
             'data' => $event
         ], 200);
     }
@@ -168,9 +167,7 @@ class EventController extends Controller
 
     public function categories()
     {
-        $categories = Event::where('status', 'published')
-            ->distinct()
-            ->pluck('category');
+        $categories = \App\Models\Category::select('id', 'name')->get();
 
         return response()->json([
             'success' => true,

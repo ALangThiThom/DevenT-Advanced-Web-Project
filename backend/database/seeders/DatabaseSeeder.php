@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Event;
+use App\Models\Category;
 use App\Models\Registration;
 use App\Models\Review;
 use App\Models\User;

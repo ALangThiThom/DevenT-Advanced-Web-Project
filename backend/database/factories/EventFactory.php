@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use App\Models\Event;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -36,7 +37,7 @@ class EventFactory extends Factory
         return [
             'organizer_id' => User::factory(),
             'title' => fake()->sentence(6),
-            'category' => fake()->randomElement(['music', 'education', 'sports', 'food', 'art', 'community']),
+            'category_id' => Category::inRandomOrder()->first()?->id ?? Category::create(['name' => fake()->unique()->word()])->id,
             'description' => fake()->paragraphs(3, true),
             'location' => fake()->address(),
             'start_time' => $startTime,
@@ -44,7 +45,7 @@ class EventFactory extends Factory
             'schedule' => $schedule,
             'capacity' => fake()->numberBetween(20, 100),
             'registered_count' => 0,
-            'status' => fake()->randomElement(['draft', 'published', 'completed']),
+            'status' => fake()->randomElement(['draft', 'published', 'cancelled', 'completed']), // Đã sửa: 'ended' thành 'completed' để khớp với enum
         ];
     }
 }
