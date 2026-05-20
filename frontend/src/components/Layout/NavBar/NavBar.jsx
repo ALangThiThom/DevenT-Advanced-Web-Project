@@ -1,4 +1,4 @@
-import "./navbar.css";
+import "./NavBar.css";
 import { useAuthStore } from "../../../store/authStore";
 
 const NavBar = () => {

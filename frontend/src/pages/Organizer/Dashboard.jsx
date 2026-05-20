@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getDashboardStats } from "../../services/eventService";
-import styles from "./Organizer.module.css";
+import styles from "./styles/Organizer.module.css";
 
 export default function OrganizerDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -159,7 +159,7 @@ export default function OrganizerDashboard() {
                                   backgroundColor: "#F3F4F6",
                                   display: "flex",
                                   alignItems: "center",
-                                  justifycontent: "center",
+                                  justifyContent: "center",
                                   flexShrink: 0,
                                 }}
                               >

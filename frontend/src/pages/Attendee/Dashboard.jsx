@@ -1,13 +1,14 @@
-import Navbar from "../../components/layout/navbar/NavBar";
-import Footer from "../../components/layout/footer/Footer";
-import HeroSection from "../../components/heroSection/HeroSection";
-import FeaturedEvents from "../../components/featuredEvents/FeaturedEvents";
-import CategorySection from "../../components/categorySection/CategorySection";
+import NavBar from "../../components/Layout/NavBar/NavBar";
+import Footer from "../../components/Layout/Footer/Footer";
+
+import HeroSection from "../Public/components/HeroSection/HeroSection";
+import FeaturedEvents from "../Public/components/FeaturedEvents/FeaturedEvents";
+import CategorySection from "../Public/components/CategorySection/CategorySection";
 
 export default function AttendeeDashboard() {
   return (
     <div>
-      <Navbar />
+      <NavBar />
 
       <main>
         <HeroSection />

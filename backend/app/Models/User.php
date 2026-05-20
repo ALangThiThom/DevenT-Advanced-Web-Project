@@ -9,6 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
@@ -33,6 +34,7 @@ class User extends Authenticatable
 
     public function organizedEvents()
     {
+
         return $this->hasMany(Event::class, 'organizer_id');
     }
 

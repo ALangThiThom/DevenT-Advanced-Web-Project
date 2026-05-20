@@ -1,30 +1,29 @@
-/* Khung bọc toàn bộ Footer */
 .footer {
-  background-color: #222522; /* Màu nền xám đen giống ảnh mẫu */
-  color: #a0aec0; /* Màu chữ xám nhạt */
+  background-color: #222522;
+  color: #a0aec0;
   padding: 60px 50px 30px 50px;
   font-family: sans-serif;
 }
 
-/* Container chứa 4 cột, dùng Flexbox để dàn ngang */
+
 .footer__container {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap; /* Tự xuống dòng nếu màn hình nhỏ */
+  flex-wrap: wrap;
   gap: 40px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Định dạng từng cột */
+
 .footer__column {
   flex: 1;
-  min-width: 200px; /* Đảm bảo không bị quá bóp nhỏ */
+  min-width: 200px;
 }
 
-/* Tiêu đề Logo ở cột 1 */
+
 .footer__logo {
-  color: #52c41a; /* Màu xanh lá đặc trưng của EventHub */
+  color: #52c41a;
   font-size: 24px;
   margin-bottom: 15px;
 }
@@ -35,7 +34,7 @@
   margin-bottom: 20px;
 }
 
-/* Icon mạng xã hội */
+
 .footer__socials {
   display: flex;
   gap: 15px;
@@ -51,7 +50,7 @@
   color: #ffffff;
 }
 
-/* Tiêu đề các cột 2, 3, 4 */
+
 .footer__title {
   color: #ffffff;
   font-size: 14px;
@@ -60,7 +59,7 @@
   margin-bottom: 20px;
 }
 
-/* Danh sách link */
+
 .footer__list {
   list-style: none;
   padding: 0;
@@ -82,11 +81,11 @@
   color: #ffffff;
 }
 
-/* Ô nhập email (Newsletter) */
+
 .footer__newsletter {
   display: flex;
   align-items: center;
-  background-color: #2d312d; /* Nền ô input tối hơn nền footer */
+  background-color: #2d312d;
   border-radius: 6px;
   padding: 5px 10px;
 }
@@ -104,9 +103,9 @@
   color: #718096;
 }
 
-/* Nút mũi tên gửi đi */
+
 .footer__submit-btn {
-  background-color: #a8eed1; /* Màu xanh ngọc nhạt của cái nút trong ảnh */
+  background-color: #a8eed1;
   border: none;
   border-radius: 6px;
   color: #222522;
@@ -117,14 +116,14 @@
   justify-content: center;
 }
 
-/* Đường gạch phân cách */
+
 .footer__divider {
   border: 0;
   border-top: 1px solid #2d312d;
   margin: 40px 0 20px 0;
 }
 
-/* Phần Copyright dưới cùng */
+
 .footer__bottom {
   text-align: center;
   font-size: 13px;

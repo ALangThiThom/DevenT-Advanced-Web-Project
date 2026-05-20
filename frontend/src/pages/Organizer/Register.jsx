@@ -13,7 +13,7 @@ export default function OrganizerRegister() {
 
   return (
     <div className="register-page">
-      {/* --- HEADER --- */}
+
       <nav className="navbar navbar-expand-lg navbar-light bg-white py-3 border-bottom">
         <div className="container">
           <Link
@@ -37,11 +37,11 @@ export default function OrganizerRegister() {
         </div>
       </nav>
 
-      {/* --- MAIN HERO SECTION --- */}
+
       <div className="container-fluid bg-eventhub py-5">
         <div className="container py-lg-5">
           <div className="row align-items-center">
-            {/* Left Column: Info */}
+
             <div className="col-lg-6 text-white pe-lg-5 mb-5 mb-lg-0">
               <h1 className="display-4 fw-bold mb-4">DevenT</h1>
               <p className="lead mb-5 opacity-75">
@@ -79,7 +79,7 @@ export default function OrganizerRegister() {
               </div>
             </div>
 
-            {/* Right Column: Register Form */}
+
             <div className="col-lg-5 offset-lg-1">
               <div className="card border-0 shadow-lg rounded-4 p-4 p-md-5">
                 <h3

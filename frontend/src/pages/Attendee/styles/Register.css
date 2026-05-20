@@ -1,18 +1,18 @@
-/* Loại bỏ lề mặc định của body để tràn màn hình */
+
 body, html {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
 }
 
-/* Màu nền chủ đạo của Attendee */
+
 .bg-attendee {
-  background-color: #ffffff !important; /* Nền trắng */
+  background-color: #ffffff !important;
   width: 100%;
   margin: 0;
 }
 
-/* Màu chữ và nền icon dùng chung */
+
 .text-attendee {
   color: #004d3d !important;
 }
@@ -22,9 +22,9 @@ body, html {
   color: white;
 }
 
-/* Tùy chỉnh nút bấm Attendee */
+
 .btn-attendee {
-  background-color: #004d3d; /* Màu xanh lục đậm */
+  background-color: #004d3d;
   color: white;
   border: none;
   transition: all 0.3s;
@@ -36,7 +36,7 @@ body, html {
   transform: translateY(-1px);
 }
 
-/* Form control focus cho Attendee */
+
 .attendee-page .form-control {
   border: 1px solid #e9ecef;
 }
@@ -46,7 +46,7 @@ body, html {
   border-color: #004d3d;
 }
 
-/* Icon bên trái - Nền nhạt màu xanh, chữ xanh */
+
 .attendee-page .feature-icon {
   background: rgba(0, 77, 61, 0.1);
   color: #004d3d;
@@ -59,7 +59,7 @@ body, html {
   font-size: 1.2rem;
 }
 
-/* Responsive cho điện thoại */
+
 @media (max-width: 768px) {
   .attendee-page .display-4 {
     font-size: 2.5rem;

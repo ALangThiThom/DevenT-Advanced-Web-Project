@@ -1,18 +1,18 @@
 
 .organizer-cta {
   width: 100%;
-  max-width: 1400px;    
-  margin: 60px auto;    
-  padding: 0 16px;     
+  max-width: 1400px;
+  margin: 60px auto;
+  padding: 0 16px;
   box-sizing: border-box;
 }
 
 .organizer-cta__container {
-  background-color: #0b4a3a; 
-  border-radius: 20px;       
-  padding: 50px 60px;        
+  background-color: #0b4a3a;
+  border-radius: 20px;
+  padding: 50px 60px;
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
   gap: 40px;
   position: relative;
@@ -25,10 +25,10 @@
   max-width: 600px;
 }
 .organizer-cta__subtitle {
-  color: #a8eed1; 
+  color: #a8eed1;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 1.5px; 
+  letter-spacing: 1.5px;
   margin-bottom: 12px;
 }
 
@@ -51,7 +51,7 @@
 }
 .btn-cta {
   padding: 12px 28px;
-  border-radius: 12px; 
+  border-radius: 12px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -103,7 +103,7 @@
     justify-content: center;
   }
   .organizer-cta__icon {
-    order: -1; 
+    order: -1;
     width: 100px;
     height: 100px;
   }

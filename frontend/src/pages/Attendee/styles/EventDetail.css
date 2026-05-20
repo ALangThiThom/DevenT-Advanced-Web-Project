@@ -1,4 +1,4 @@
-/* Màu sắc chủ đạo và cấu trúc nền */
+
 .event-detail-wrapper {
   overflow-x: hidden;
 }
@@ -14,7 +14,7 @@
   margin-top: -80px;
 }
 
-/* Các tùy biến chữ và khối text */
+
 .event-title {
   color: #004d3d;
   font-size: 2.5rem;
@@ -42,7 +42,7 @@
   text-align: justify;
 }
 
-/* Custom Dòng thời gian lịch trình (Timeline) */
+
 .timeline-container {
   border-color: #e6f0ed !important;
 }
@@ -63,7 +63,7 @@
   color: #004d3d;
 }
 
-/* Widget đăng ký bên cột phải */
+
 .sticky-widget {
   top: 20px;
 }
@@ -88,7 +88,7 @@
   font-size: 0.9rem;
 }
 
-/* Progress bar và Button */
+
 .seats-badge {
   background-color: #e02424;
   color: #ffffff;

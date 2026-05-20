@@ -1,15 +1,15 @@
 
 .featured-events {
   width: 100%;
-  max-width: 1400px;  
-  margin: 0 auto;       
-  padding: 40px 16px; 
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 16px;
   box-sizing: border-box;
 }
 
 .featured-events__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
   padding: 24px 0;
   width: 100%;
@@ -118,8 +118,8 @@
   white-space: nowrap;
 }
 .event-card__seats-badge {
-  background-color: #def7ec; 
-  color: #03543f;           
+  background-color: #def7ec;
+  color: #03543f;
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 12px;
@@ -133,17 +133,17 @@
 }
 .featured-events__header {
   display: flex;
-  justify-content: space-between; 
-  align-items: center;           
-  margin-bottom: 20px;           
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
   width: 100%;
 }
 .featured-events__view-all {
   display: flex;
   align-items: center;
-  gap: 6px;                     
-  color: #054a3a;                 
-  text-decoration: none;          
+  gap: 6px;
+  color: #054a3a;
+  text-decoration: none;
   font-weight: 600;
   font-size: 14px;
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getOrganizerEvents } from "../../services/eventService";
-import styles from "./Organizer.module.css";
+import styles from "./styles/Organizer.module.css";
 
 export default function EventList() {
   const [eventsData, setEventsData] = useState(null);

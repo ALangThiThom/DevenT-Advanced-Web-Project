@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('events', function (Blueprint $table) {
+
             $table->id();
+
             $table->foreignId('organizer_id')->constrained('users')->onDelete('cascade');
 
             $table->string('title', 255);
@@ -24,18 +24,17 @@ return new class extends Migration
             $table->dateTime('end_time');
 
             $table->integer('capacity')->unsigned();
+
             $table->integer('registered_count')->unsigned()->default(0);
 
             $table->enum('status', ['draft', 'published', 'cancelled', 'completed'])->default('draft');
 
             $table->timestamps();
+
             $table->softDeletes();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('events');

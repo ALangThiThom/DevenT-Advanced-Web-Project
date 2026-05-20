@@ -23,6 +23,7 @@ class EventController extends Controller
             ->count();
 
         $recentEvents = $user->organizedEvents()
+            ->with(['category'])
             ->withCount('registrations')
             ->latest()
             ->take(4)
@@ -44,6 +45,7 @@ class EventController extends Controller
     {
         $query = $request->user()
             ->organizedEvents()
+            ->with(['category'])
             ->withCount('registrations')
             ->latest();
 
@@ -149,7 +151,7 @@ class EventController extends Controller
      */
     public function showPublic($id)
     {
-        $event = Event::withCount('registrations')->find($id);
+        $event = Event::with(['category'])->withCount('registrations')->find($id);
 
         if (!$event || $event->status === 'draft') {
             return response()->json([
@@ -166,7 +168,8 @@ class EventController extends Controller
 
     public function index()
     {
-        $events = Event::with('organizer:id,name')
+        $events = Event::with(['organizer:id,name', 'category'])
+            ->withCount('registrations')
             ->where('status', 'published')
             ->orderBy('start_time', 'asc')
             ->get();

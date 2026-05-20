@@ -1,28 +1,44 @@
 import { Routes, Route } from "react-router-dom";
-import AttendeeRegister from "./pages/Attendee/Register";
+
+// Layouts
+import PublicLayout from "./layouts/PublicLayout";
+import OrganizerLayout from "./layouts/OrganizerLayout";
+
+// Pages - Public
+import Home from "./pages/Public/Home";
+import EventDetail from "./pages/Attendee/EventDetail"; // Giữ lại từ file 1
+
+// Pages - Attendee
 import AttendeeLogin from "./pages/Attendee/Login";
+import AttendeeRegister from "./pages/Attendee/Register";
 import AttendeeDashboard from "./pages/Attendee/Dashboard";
-import EventDetail from "./pages/Attendee/EventDetail";
-import OrganizerRegister from "./pages/Organizer/Register";
+
+// Pages - Organizer
 import OrganizerLogin from "./pages/Organizer/Login";
+import OrganizerRegister from "./pages/Organizer/Register";
 import OrganizerDashboard from "./pages/Organizer/Dashboard";
-import Layout from "./pages/Organizer/Layout";
-import PrivateRoute from "./components/PrivateRoute";
 import EventList from "./pages/Organizer/EventList";
-import Homepage from "./pages/Home/index";
 import CreateEvent from "./pages/Organizer/CreateEvent";
+
+// Components
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <Routes>
-      {/* Trang chi tiết sự kiện */}
-      <Route path="/events/:id" element={<EventDetail />} />
+      {/* Cấu trúc Public Layout */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/events/:id" element={<EventDetail />} />
+      </Route>
 
-      {/* Đường dẫn trang chủ */}
-      <Route path="/" element={<Homepage />} />
-
-      <Route path="/attendee/register" element={<AttendeeRegister />} />
+      {/* Auth Routes */}
       <Route path="/attendee/login" element={<AttendeeLogin />} />
+      <Route path="/attendee/register" element={<AttendeeRegister />} />
+      <Route path="/organizer/login" element={<OrganizerLogin />} />
+      <Route path="/organizer/register" element={<OrganizerRegister />} />
+
+      {/* Attendee Protected Routes */}
       <Route
         path="/attendee/dashboard"
         element={
@@ -32,20 +48,17 @@ function App() {
         }
       />
 
-      <Route path="/organizer/register" element={<OrganizerRegister />} />
-      <Route path="/organizer/login" element={<OrganizerLogin />} />
-
+      {/* Organizer Protected Routes với Nested Layout */}
       <Route
         path="/organizer"
         element={
           <PrivateRoute allowedRole="organizer">
-            <Layout />
+            <OrganizerLayout />
           </PrivateRoute>
         }
       >
         <Route path="dashboard" element={<OrganizerDashboard />} />
         <Route path="events" element={<EventList />} />
-
         <Route path="events/create" element={<CreateEvent />} />
       </Route>
     </Routes>

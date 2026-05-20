@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
-import styles from "../Organizer.module.css";
+import styles from "../styles/Organizer.module.css";
 
 const Sidebar = () => {
   const location = useLocation();
