@@ -29,8 +29,12 @@ class StoreEventRequest extends FormRequest
             'start_time' => 'required|date|after:now',
             'end_time' => 'required|date|after:start_time',
             'capacity' => 'required|integer|min:1',
-            'category_id' => 'required|integer|exists:categories,id', // Kiểm tra danh mục hợp lệ
-            'status' => 'required|in:draft,published', // Yêu cầu có status từ 2 nút
+            'category_id' => 'required|integer|exists:categories,id',
+            'status' => 'required|in:draft,published',
+            'schedule' => 'nullable|array',
+            'schedule.*.time' => 'required_with:schedule|date',
+            'schedule.*.title' => 'required_with:schedule|string|max:255',
+            'schedule.*.description' => 'nullable|string',
         ];
     }
 
