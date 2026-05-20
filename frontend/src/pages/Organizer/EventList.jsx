@@ -4,6 +4,7 @@ import styles from "./Organizer.module.css";
 
 export default function EventList() {
   const [eventsData, setEventsData] = useState(null);
+  const [meta, setMeta] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -13,11 +14,11 @@ export default function EventList() {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const data = await getOrganizerEvents(1);
-      console.log("Dữ liệu từ API:", data); // THÊM DÒNG NÀY ĐỂ KIỂM TRA
-      setEventsData(data);
+      const data = await getOrganizerEvents({ page: 1 });
+      setEventsData(data.events);
+      setMeta(data.meta);
     } catch (error) {
-      console.error("Unable to load event list", error); // In luôn lỗi ra để dễ debug
+      console.error("Unable to load event list");
     } finally {
       setLoading(false);
     }
@@ -308,7 +309,8 @@ export default function EventList() {
               color: "var(--on-surface-variant)",
             }}
           >
-            Showing {eventsData.length} events
+            Showing {meta?.from || 0} to {meta?.to || 0} of {meta?.total || 0}{" "}
+            events
           </span>
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button

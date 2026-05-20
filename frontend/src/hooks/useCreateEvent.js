@@ -79,7 +79,6 @@ const useCreateEvent = () => {
     } catch (err) {
       if (err.response && err.response.status === 422) {
         setErrors(err.response.data.errors);
-        // Đã xóa logic điều hướng currentStep. Giờ chỉ cần cuộn trang hoặc báo lỗi chung.
         alert("Please check the form for errors highlighted in red.");
       } else {
         alert("A system error occurred. Please try again later.");

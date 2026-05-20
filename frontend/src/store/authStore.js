@@ -16,13 +16,13 @@ export const useAuthStore = create(
         try {
           await logout();
         } catch (error) {
-          console.error("Lỗi khi đăng xuất:", error);
+          console.error("Error when logging out:", error);
         }
         set({ user: null, token: null });
       },
     }),
     {
       name: "auth-storage",
-    }
-  )
+    },
+  ),
 );
