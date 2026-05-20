@@ -6,6 +6,8 @@ const useCreateEvent = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  // Form data giữ nguyên cấu trúc, bao gồm cả mảng schedule
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -14,39 +16,71 @@ const useCreateEvent = () => {
     end_time: "",
     capacity: "",
     category_id: "",
+    schedule: [],
   });
 
-  // Handle data updates as the user types
+  // --- XỬ LÝ NHẬP LIỆU CƠ BẢN ---
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Automatically clear the red validation error message when the user starts re-typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
   };
 
-  // Handle form submission
-  const handleSubmit = async (e, status) => {
+  // --- QUẢN LÝ LỊCH TRÌNH (SCHEDULE) ---
+  const addScheduleItem = () => {
+    setFormData((prev) => ({
+      ...prev,
+      schedule: [...prev.schedule, { time: "", title: "", description: "" }],
+    }));
+  };
+
+  const updateScheduleItem = (index, field, value) => {
+    setFormData((prev) => {
+      const newSchedule = [...prev.schedule];
+      newSchedule[index] = { ...newSchedule[index], [field]: value };
+      return { ...prev, schedule: newSchedule };
+    });
+
+    const errorKey = `schedule.${index}.${field}`;
+    if (errors[errorKey]) {
+      setErrors((prev) => ({ ...prev, [errorKey]: null }));
+    }
+  };
+
+  const removeScheduleItem = (index) => {
+    setFormData((prev) => {
+      const newSchedule = [...prev.schedule];
+      newSchedule.splice(index, 1);
+      return { ...prev, schedule: newSchedule };
+    });
+  };
+
+  // --- XỬ LÝ SUBMIT (LƯU NHÁP / ĐĂNG TẢI) ---
+  const handleSubmit = async (e, finalStatus = "published") => {
     e.preventDefault();
     setIsLoading(true);
-    setErrors({}); // Reset errors before sending a new request
+    setErrors({});
+
+    const payload = { ...formData, status: finalStatus };
 
     try {
-      const payload = { ...formData, status };
       const response = await createEvent(payload);
       if (response.success || response.status === "success") {
         alert(
-          `Event ${status === "published" ? "published" : "saved as draft"} successfully!`,
+          finalStatus === "published"
+            ? "Event published successfully!"
+            : "Draft event saved successfully!",
         );
-        navigate("/organizer/events"); // Đã sửa: Điều hướng về Danh sách sự kiện thay vì Dashboard
+        navigate("/organizer/events");
       }
     } catch (err) {
-      console.error("Create Event Error:", err); // In chi tiết lỗi ra console
-      // Catch 422 Validation errors returned from Laravel FormRequest
       if (err.response && err.response.status === 422) {
         setErrors(err.response.data.errors);
+        // Đã xóa logic điều hướng currentStep. Giờ chỉ cần cuộn trang hoặc báo lỗi chung.
+        alert("Please check the form for errors highlighted in red.");
       } else {
         alert("A system error occurred. Please try again later.");
       }
@@ -60,6 +94,9 @@ const useCreateEvent = () => {
     errors,
     isLoading,
     handleChange,
+    addScheduleItem,
+    updateScheduleItem,
+    removeScheduleItem,
     handleSubmit,
   };
 };
