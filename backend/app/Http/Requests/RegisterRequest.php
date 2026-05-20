@@ -6,13 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
 {
-    // 1. Cho phép mọi người dùng sử dụng request này
+
     public function authorize(): bool
     {
         return true;
     }
 
-    // 2. Định nghĩa các quy tắc kiểm tra (Rules)
     public function rules(): array
     {
         return [
