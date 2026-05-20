@@ -14,9 +14,10 @@ export default function EventList() {
     try {
       setLoading(true);
       const data = await getOrganizerEvents(1);
+      console.log("Dữ liệu từ API:", data); // THÊM DÒNG NÀY ĐỂ KIỂM TRA
       setEventsData(data);
     } catch (error) {
-      console.error("Unable to load event list");
+      console.error("Unable to load event list", error); // In luôn lỗi ra để dễ debug
     } finally {
       setLoading(false);
     }
@@ -87,10 +88,10 @@ export default function EventList() {
               </tr>
             </thead>
             <tbody>
-              {eventsData?.data?.length > 0 ? (
-                eventsData.data.map((event) => {
-                  // Mặc định capacity là 500 nếu DB chưa có trường này (theo bản thiết kế)
-                  const capacity = event.capacity || 500;
+              {eventsData?.length > 0 ? (
+                eventsData.map((event) => {
+                  // Sử dụng capacity thực tế từ DB, nếu không có thì mặc định là 0
+                  const capacity = event.capacity || 0;
                   const registered = event.registrations_count || 0;
                   const progressPercent = calculateProgress(
                     registered,
@@ -139,11 +140,11 @@ export default function EventList() {
                       </td>
 
                       <td style={{ color: "var(--on-surface-variant)" }}>
-                        {formatDate(event.created_at)}
+                        {formatDate(event.start_time)}
                       </td>
 
                       <td style={{ color: "var(--on-surface-variant)" }}>
-                        {event.category || "Uncategorized"}
+                        {event.category?.name || "Uncategorized"}
                       </td>
 
                       <td>
@@ -289,7 +290,7 @@ export default function EventList() {
       )}
 
       {/* Footer Phân trang */}
-      {!loading && eventsData?.data?.length > 0 && (
+      {!loading && eventsData?.length > 0 && (
         <div
           style={{
             padding: "1rem 1.5rem",
@@ -307,8 +308,7 @@ export default function EventList() {
               color: "var(--on-surface-variant)",
             }}
           >
-            Showing {eventsData.data.length} of{" "}
-            {eventsData.total || eventsData.data.length} events
+            Showing {eventsData.length} events
           </span>
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button

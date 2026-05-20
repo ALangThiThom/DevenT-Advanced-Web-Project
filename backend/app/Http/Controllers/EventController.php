@@ -40,7 +40,20 @@ class EventController extends Controller
             ]
         ], 200);
     }
+    public function getOrganizerEvents(Request $request)
+    {
+        $events = $request->user()
+            ->organizedEvents()
+            ->with('category:id,name') // Lấy cả thông tin category
+            ->withCount('registrations') // Đếm số lượt đăng ký
+            ->latest() // Sắp xếp theo ngày tạo mới nhất
+            ->paginate(10); // Phân trang, 10 sự kiện mỗi trang
 
+        return response()->json([
+            'status' => 'success',
+            'data' => $events
+        ], 200);
+    }
 
     public function store(StoreEventRequest $request)
     {
@@ -101,7 +114,7 @@ class EventController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $event->update($request->all());
+        $event->update($validator->validated());
 
         return response()->json([
             'status' => 'success',
