@@ -94,7 +94,7 @@ export default function EventDetail() {
 
   const seatsTotal = event.capacity || 0;
   const seatsAvailable = seatsTotal - (event.registrations_count || 0);
-  const eventCategory = event.category || "Event";
+  const eventCategory = event.category?.name || "Event";
   const eventLocation = event.location || "Unknown location";
   const eventAddress =
     event.address || event.location || "No detailed address";

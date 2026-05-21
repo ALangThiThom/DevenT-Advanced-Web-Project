@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
 {
-
     public function authorize(): bool
     {
         return true;
@@ -25,10 +24,9 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Họ và tên không được để trống.',
-            'email.unique' => 'Email này đã được đăng ký rồi.',
-            'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
-
+            'name.required' => 'The name field is required.',
+            'email.unique' => 'This email is already registered.',
+            'password.confirmed' => 'The password confirmation does not match.',
         ];
     }
 }

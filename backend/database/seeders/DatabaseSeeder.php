@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Event;
+use App\Models\Category;
 use App\Models\Registration;
 use App\Models\Review;
 use App\Models\User;
@@ -11,10 +12,12 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-
+    /**
+     * Seed the application's database.
+     */
     public function run(): void
     {
-
+        // Bypass authentiaction (for no login feature)
         $organizer = User::updateOrCreate(
             ['email' => 'organizer@dev.com'],
             [
@@ -28,6 +31,9 @@ class DatabaseSeeder extends Seeder
         $token = $organizer->createToken('dev-bypass-token')->plainTextToken;
 
         $this->command->info($token);
+
+
+
 
         $attendees = User::factory(10)->create(['role' => 'attendee']);
 

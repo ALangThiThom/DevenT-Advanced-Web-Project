@@ -1,4 +1,4 @@
-import EventCard from "../eventCard/EventCard";
+import EventCard from "../EventCard/EventCard";
 import useEvents from "../../../../hooks/useEvents";
 
 const FeaturedEvents = () => {
@@ -15,12 +15,14 @@ const FeaturedEvents = () => {
 
       {loading ? (
         <p>Loading...</p>
-      ) : (
+      ) : events.length > 0 ? (
         <div className="featured-events__grid">
           {events.map((event) => (
             <EventCard key={event.id} event={event} />
           ))}
         </div>
+      ) : (
+        <p className="text-muted">No featured events found at the moment.</p>
       )}
     </section>
   );

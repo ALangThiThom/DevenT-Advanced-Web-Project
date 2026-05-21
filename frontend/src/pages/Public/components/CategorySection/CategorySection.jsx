@@ -1,6 +1,6 @@
-import CategoryCard from "../categoryCard/CategoryCard";
+import CategoryCard from "../CategoryCard/CategoryCard";
 import useCategories from "../../../../hooks/useCategories";
-import "./categorySection.css";
+import "./CategorySection.css";
 
 const CategorySection = () => {
   const { categories } = useCategories();
@@ -14,9 +14,13 @@ const CategorySection = () => {
         </a>
       </div>
       <div className="category-section__list">
-        {categories.map((cat) => (
-          <CategoryCard key={cat.id} category={cat} />
-        ))}
+        {categories.length > 0 ? (
+          categories.map((cat) => (
+            <CategoryCard key={cat.id} category={cat} />
+          ))
+        ) : (
+          <p className="text-muted w-100 text-center">No categories available.</p>
+        )}
       </div>
     </section>
   );

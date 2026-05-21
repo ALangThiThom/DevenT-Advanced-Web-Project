@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "./eventCard.css";
+import "./EventCard.css";
 
 const EventCard = ({ event }) => {
 
@@ -15,15 +15,17 @@ const EventCard = ({ event }) => {
   };
 
 
-  const simulatedAvailableSeats = event.capacity - 10;
+  const seatsTotal = event.capacity || 0;
+  const registeredCount = event.registrations_count || 0;
+  const simulatedAvailableSeats = Math.max(0, seatsTotal - registeredCount);
 
   return (
-    <Link to={`/events/${event.id}`} className="event-card" style={{ textDecoration: 'none' }}>
+    <Link to={`/events/${event.id}`} className="event-card-link" style={{ textDecoration: 'none' }}>
       <div className="event-card">
 
         <div className="event-card__banner">
           <div className="event-card__image-placeholder"></div>
-          <span className="event-card__tag">{event.category}</span>
+          <span className="event-card__tag">{event.category?.name || "Uncategorized"}</span>
       </div>
 
 
@@ -44,7 +46,7 @@ const EventCard = ({ event }) => {
 
 
           <div className="event-card__seats-badge">
-            {simulatedAvailableSeats} / {event.capacity} seats left
+            {simulatedAvailableSeats} / {seatsTotal} seats left
           </div>
         </div>
       </div>

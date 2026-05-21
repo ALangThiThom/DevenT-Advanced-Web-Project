@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../utils/api";
 
 const useEvents = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/events")
-      .then(res => setEvents(res.data.data))
-      .catch(err => console.error(err))
+    api
+      .get("/events")
+      .then((res) => {
+        const data = res.data.data || res.data;
+        if (Array.isArray(data)) {
+          setEvents(data);
+        }
+      })
+      .catch((err) => console.error("Error fetching events:", err))
       .finally(() => setLoading(false));
   }, []);
 

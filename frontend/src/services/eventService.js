@@ -1,6 +1,8 @@
 import api from "../utils/api";
 
-
+/**
+ * Fetch dashboard stats (total stats and 4 latest events)
+ */
 export const getDashboardStats = async () => {
   try {
     const response = await api.get("/organizer/dashboard-stats");
@@ -11,11 +13,17 @@ export const getDashboardStats = async () => {
   }
 };
 
-
-export const getOrganizerEvents = async (page = 1) => {
+export const getOrganizerEvents = async ({ page = 1, status = "" } = {}) => {
   try {
-    const response = await api.get(`/organizer/events?page=${page}`);
-    return response.data.data;
+    const params = new URLSearchParams({ page });
+    if (status) {
+      params.append("status", status);
+    }
+
+    const response = await api.get(`/organizer/events?${params.toString()}`);
+    const paginator = response.data.data;
+
+    return { events: paginator.data, meta: paginator };
   } catch (error) {
     console.error("Error fetching event list:", error);
     throw error;
@@ -40,4 +48,9 @@ export const getPublicEventById = async (id) => {
     console.error(`Error fetching public event ${id}:`, error);
     throw error;
   }
+};
+
+export const createEvent = async (eventData) => {
+  const response = await api.post("/organizer/events", eventData);
+  return response.data;
 };

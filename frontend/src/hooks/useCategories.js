@@ -1,23 +1,21 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../utils/api";
 
 const useCategories = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/categories")
-      .then(res => {
-        if (res.data.success) {
-          setCategories(res.data.data);
+    api
+      .get("/categories")
+      .then((res) => {
+        const data = res.data.data || res.data;
+        if (Array.isArray(data)) {
+          setCategories(data);
         }
       })
-      .catch(err => {
-        console.error("Error fetching categories from Backend:", err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch((err) => console.error("Error fetching categories:", err))
+      .finally(() => setLoading(false));
   }, []);
 
   return { categories, loading };

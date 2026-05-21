@@ -1,18 +1,18 @@
-
+/* Loại bỏ lề mặc định của body để tràn màn hình */
 body, html {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
 }
 
-
+/* Màu xanh chủ đạo của EventHub */
 .bg-eventhub {
-  background-color: #004d3d !important;
+  background-color: #004d3d !important; /* Màu xanh lục đậm */
   width: 100%;
   margin: 0;
 }
 
-
+/* Tùy chỉnh nút bấm */
 .btn-eventhub {
   background-color: #004d3d;
   color: white;
@@ -26,7 +26,7 @@ body, html {
   transform: translateY(-1px);
 }
 
-
+/* Bo góc card và input */
 .rounded-4 {
   border-radius: 1.25rem !important;
 }
@@ -40,7 +40,7 @@ body, html {
   border-color: #004d3d;
 }
 
-
+/* Icon bên trái */
 .feature-icon {
   background: rgba(255, 255, 255, 0.1);
   width: 45px;
@@ -52,7 +52,7 @@ body, html {
   font-size: 1.2rem;
 }
 
-
+/* Responsive cho điện thoại */
 @media (max-width: 768px) {
   .display-4 {
     font-size: 2.5rem;

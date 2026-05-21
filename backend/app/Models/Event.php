@@ -13,6 +13,7 @@ class Event extends Model
     protected $fillable = [
         'organizer_id',
         'title',
+        'category_id',
         'description',
         'location',
         'schedule',
@@ -42,5 +43,10 @@ class Event extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }
