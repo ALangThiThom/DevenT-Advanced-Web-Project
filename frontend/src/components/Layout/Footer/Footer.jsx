@@ -4,7 +4,7 @@ const Footer = () => (
   <footer className="footer">
     <div className="footer__container">
       <div className="footer__column">
-        <h3 className="footer__logo">Devent</h3>
+        <h3 className="footer__logo">DevenT</h3>
         <p className="footer__description">
           A platform connecting the community through meaningful events
         </p>
