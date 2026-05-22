@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getOrganizerEvents } from "../../services/eventService";
 import styles from "./styles/Organizer.module.css";
 
 export default function EventList() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [eventsData, setEventsData] = useState(null);
   const [meta, setMeta] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -250,6 +251,9 @@ export default function EventList() {
                             <button
                               className={styles.actionBtn}
                               title="Edit Event"
+                              onClick={() =>
+                                navigate(`/organizer/events/${event.id}/edit`)
+                              }
                             >
                               <i
                                 className="fa-solid fa-pen-to-square"

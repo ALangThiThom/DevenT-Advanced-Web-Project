@@ -19,6 +19,7 @@ import OrganizerRegister from "./pages/Organizer/Register";
 import OrganizerDashboard from "./pages/Organizer/Dashboard";
 import EventList from "./pages/Organizer/EventList";
 import CreateEvent from "./pages/Organizer/CreateEvent";
+import EditEvent from "./pages/Organizer/EditEvent";
 
 // Components
 import PrivateRoute from "./components/PrivateRoute";
@@ -60,6 +61,7 @@ function App() {
         <Route path="dashboard" element={<OrganizerDashboard />} />
         <Route path="events" element={<EventList />} />
         <Route path="events/create" element={<CreateEvent />} />
+        <Route path="events/:id/edit" element={<EditEvent />} />
       </Route>
     </Routes>
   );
