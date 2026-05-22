@@ -189,4 +189,27 @@ class EventController extends Controller
             'data'    => $categories
         ]);
     }
+
+    public function cancel($id)
+    {
+        $event = Event::where('id', $id)
+                      ->where('organizer_id', auth()->id())
+                      ->first();
+
+        if (!$event) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Event not found or you do not have permission.'
+            ], 404);
+        }
+
+        $event->status = 'cancelled';
+        $event->save();
+
+        return response()->json([
+            'sucess' => true,
+            'message' => 'Event cancelled successfully',
+            'data' => $event
+        ]);
+    }
 }
