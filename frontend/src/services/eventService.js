@@ -59,3 +59,17 @@ export const updateEvent = async (id, eventData) => {
   const response = await api.put(`/organizer/events/${id}`, eventData);
   return response.data;
 };
+
+/**
+ * Hủy một sự kiện (Chuyển trạng thái sang cancelled)
+ * @param {number} id - ID của sự kiện cần hủy
+ */
+export const cancelEvent = async (id) => {
+  try {
+    const response = await api.patch(`/organizer/events/${id}/cancel`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error cancelling event with id ${id}:`, error);
+    throw error;
+  }
+};

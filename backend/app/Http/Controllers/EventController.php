@@ -207,7 +207,7 @@ class EventController extends Controller
         $event->save();
 
         return response()->json([
-            'sucess' => true,
+            'success' => true,
             'message' => 'Event cancelled successfully',
             'data' => $event
         ]);
