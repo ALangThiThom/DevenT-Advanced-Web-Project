@@ -126,33 +126,40 @@ class EventController extends Controller
     }
 
     public function destroy(Request $request, $id)
-    {
-        $event = $request->user()->organizedEvents()->find($id);
+        {
+            $event = $request->user()->organizedEvents()->find($id);
 
-        if (!$event) {
+
+            if (!$event) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Event not found or unauthorized'
+                ], 404);
+            }
+
+
+            // Only allow deletion of draft events
+            if ($event->status !== 'draft') {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Only draft events can be deleted'
+                ], 403);
+            }
+
+
+            $eventTitle = $event->title;
+            
+            // SỬ DỤNG forceDelete() ĐỂ XÓA VĨNH VIỄN KHỎI DATABASE
+            $event->forceDelete();
+
+
             return response()->json([
-                'status' => 'error',
-                'message' => 'Event not found or unauthorized'
-            ], 404);
+                'status' => 'success',
+                'message' => 'Draft event permanently deleted',
+                'data' => ['title' => $eventTitle]
+            ], 200);
         }
 
-        // Only allow deletion of draft events
-        if ($event->status !== 'draft') {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Only draft events can be deleted'
-            ], 403);
-        }
-
-        $eventTitle = $event->title;
-        $event->delete();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Draft event deleted successfully',
-            'data' => ['title' => $eventTitle]
-        ], 200);
-    }
 
     public function showPublic($id)
     {
