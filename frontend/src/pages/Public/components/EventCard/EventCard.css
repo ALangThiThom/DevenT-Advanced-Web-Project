@@ -1,10 +1,14 @@
-
 .featured-events {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 40px 16px;
   box-sizing: border-box;
+}
+
+/* Thêm responsive cho vùng chứa */
+@media (max-width: 768px) {
+  .featured-events { padding: 20px 10px; }
 }
 
 .featured-events__grid {
@@ -14,6 +18,12 @@
   padding: 24px 0;
   width: 100%;
 }
+
+/* Giữ nguyên giao diện nhưng ép co lại trên điện thoại nhỏ */
+@media (max-width: 400px) {
+  .featured-events__grid { grid-template-columns: 1fr; }
+}
+
 .event-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -30,6 +40,7 @@
   transform: translateY(-4px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
+
 .event-card__banner {
   position: relative;
   width: 100%;
@@ -62,6 +73,7 @@
   flex-direction: column;
   flex-grow: 1;
 }
+
 .event-card__date-row {
   display: flex;
   align-items: center;
@@ -82,6 +94,7 @@
   margin: 0 0 10px 0;
   line-height: 1.4;
 }
+
 .event-card__desc {
   font-size: 14px;
   color: #718096;
@@ -117,6 +130,12 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Responsive cho location text để không bị bể trên mobile */
+@media (max-width: 450px) {
+  .event-card__location-text { max-width: 80px; }
+}
+
 .event-card__seats-badge {
   background-color: #def7ec;
   color: #03543f;
@@ -131,19 +150,11 @@
   font-size: 14px;
   opacity: 0.8;
 }
+
 .featured-events__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
   width: 100%;
-}
-.featured-events__view-all {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #054a3a;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
 }
