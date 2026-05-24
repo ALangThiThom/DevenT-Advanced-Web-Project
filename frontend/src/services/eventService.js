@@ -73,3 +73,17 @@ export const cancelEvent = async (id) => {
     throw error;
   }
 };
+
+/**
+ * Xóa một bản nháp sự kiện (chỉ cho phép xóa draft events)
+ * @param {number} id - ID của sự kiện cần xóa
+ */
+export const deleteEvent = async (id) => {
+  try {
+    const response = await api.delete(`/organizer/events/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting event with id ${id}:`, error);
+    throw error;
+  }
+};

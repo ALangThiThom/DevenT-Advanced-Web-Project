@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getOrganizerEvents, cancelEvent } from "../../services/eventService";
+import { getOrganizerEvents, cancelEvent, deleteEvent } from "../../services/eventService";
 import styles from "./styles/Organizer.module.css";
 
 /**
@@ -25,6 +25,10 @@ export default function EventList() {
   // State quản lý Modal Hủy Sự Kiện
   const [cancelModal, setCancelModal] = useState({ isOpen: false, eventId: null, eventTitle: '' });
   const [isCancelling, setIsCancelling] = useState(false);
+
+  // State quản lý Modal Xóa Sự Kiện Nháp
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, eventId: null, eventTitle: '' });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // ========================================================================
   // 3. DERIVED STATE & CONSTANTS (Biến phái sinh)
@@ -104,6 +108,43 @@ export default function EventList() {
       alert("Error: Cannot cancel the event. Please try again!");
     } finally {
       setIsCancelling(false);
+    }
+  };
+
+  /**
+   * Mở Modal xác nhận xóa bản nháp sự kiện
+   * @param {Object} event - Đối tượng sự kiện được chọn
+   */
+  const handleOpenDeleteModal = (event) => {
+    if (event.status !== 'draft') return;
+    setDeleteModal({ isOpen: true, eventId: event.id, eventTitle: event.title });
+  };
+
+  /**
+   * Đóng Modal xóa sự kiện
+   */
+  const handleCloseDeleteModal = () => {
+    setDeleteModal({ isOpen: false, eventId: null, eventTitle: '' });
+  };
+
+  /**
+   * Gọi API thực thi việc Xóa sự kiện nháp khi user bấm Confirm
+   */
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteEvent(deleteModal.eventId);
+      
+      alert("Draft event deleted successfully");
+      
+      // Xóa sự kiện khỏi mảng eventsData
+      setEventsData(prevEvents => prevEvents.filter(ev => ev.id !== deleteModal.eventId));
+      
+      handleCloseDeleteModal();
+    } catch (error) {
+      alert("Error: Cannot delete the event. Please try again!");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -225,7 +266,7 @@ export default function EventList() {
                                 <button className={styles.actionBtn} title="Edit Event" onClick={() => navigate(`/organizer/events/${event.id}/edit`)}>
                                   <i className="fa-solid fa-pen-to-square" style={{ fontSize: "16px" }}></i>
                                 </button>
-                                <button className={`${styles.actionBtn} ${styles.actionBtnDelete}`} title="Delete Event">
+                                <button className={`${styles.actionBtn} ${styles.actionBtnDelete}`} title="Delete Event" onClick={() => handleOpenDeleteModal(event)}>
                                   <i className="fa-solid fa-trash-can" style={{ fontSize: "16px" }}></i>
                                 </button>
                               </>
@@ -295,6 +336,24 @@ export default function EventList() {
               <button onClick={handleCloseCancelModal} className="btn btn-secondary" disabled={isCancelling}>Cancel</button>
               <button onClick={handleConfirmCancel} className="btn btn-danger" disabled={isCancelling} style={{ minWidth: '100px' }}>
                 {isCancelling ? 'Processing...' : 'Confirm'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Draft Event Modal */}
+      {deleteModal.isOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1050, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '8px', width: '400px', maxWidth: '90%', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
+            <h4 style={{ margin: '0 0 16px 0', color: '#dc3545', fontWeight: 'bold' }}>Delete Draft Event</h4>
+            <p style={{ margin: '0 0 24px 0', color: '#4b5563', lineHeight: '1.5' }}>
+              Are you sure you want to delete the draft event <strong>"{deleteModal.eventTitle}"</strong>? This action cannot be undone and the event data will be permanently removed.
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+              <button onClick={handleCloseDeleteModal} className="btn btn-secondary" disabled={isDeleting}>Cancel</button>
+              <button onClick={handleConfirmDelete} className="btn btn-danger" disabled={isDeleting} style={{ minWidth: '100px' }}>
+                {isDeleting ? 'Processing...' : 'Delete'}
               </button>
             </div>
           </div>
