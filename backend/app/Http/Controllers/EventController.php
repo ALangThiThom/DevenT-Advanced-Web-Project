@@ -127,7 +127,6 @@ class EventController extends Controller
 
     public function destroy(Request $request, $id)
     {
-
         $event = $request->user()->organizedEvents()->find($id);
 
         if (!$event) {
@@ -137,12 +136,21 @@ class EventController extends Controller
             ], 404);
         }
 
-        $event->update(['status' => 'cancelled']);
+        // Only allow deletion of draft events
+        if ($event->status !== 'draft') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Only draft events can be deleted'
+            ], 403);
+        }
+
+        $eventTitle = $event->title;
+        $event->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Cancel event successfully',
-            'data' => $event
+            'message' => 'Draft event deleted successfully',
+            'data' => ['title' => $eventTitle]
         ], 200);
     }
 
@@ -201,6 +209,29 @@ class EventController extends Controller
         return response()->json([
             'success' => true,
             'data'    => $categories
+        ]);
+    }
+
+    public function cancel($id)
+    {
+        $event = Event::where('id', $id)
+                      ->where('organizer_id', auth()->id())
+                      ->first();
+
+        if (!$event) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Event not found or you do not have permission.'
+            ], 404);
+        }
+
+        $event->status = 'cancelled';
+        $event->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Event cancelled successfully',
+            'data' => $event
         ]);
     }
 }

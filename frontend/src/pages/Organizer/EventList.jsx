@@ -1,51 +1,209 @@
 import { useEffect, useState } from "react";
-import { getOrganizerEvents } from "../../services/eventService";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  getOrganizerEvents,
+  cancelEvent,
+  deleteEvent,
+} from "../../services/eventService";
 import styles from "./styles/Organizer.module.css";
 
+/**
+ * Component EventList
+ * Hiển thị bảng danh sách sự kiện của Ban tổ chức theo các tab (Draft, Published, Cancelled, Ended)
+ */
 export default function EventList() {
+  // ========================================================================
+  // 1. ROUTER & CUSTOM HOOKS
+  // ========================================================================
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // ========================================================================
+  // 2. STATE MANAGEMENT (Quản lý trạng thái)
+  // ========================================================================
+  // State quản lý danh sách và trạng thái tải dữ liệu
   const [eventsData, setEventsData] = useState(null);
   const [meta, setMeta] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // State quản lý Modal Hủy Sự Kiện
+  const [cancelModal, setCancelModal] = useState({
+    isOpen: false,
+    eventId: null,
+    eventTitle: "",
+  });
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  // State quản lý Modal Xóa Sự Kiện Nháp
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    eventId: null,
+    eventTitle: "",
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // ========================================================================
+  // 3. DERIVED STATE & CONSTANTS (Biến phái sinh)
+  // ========================================================================
+  // Lấy trạng thái từ URL (VD: ?status=published)
+  const statusParam =
+    new URLSearchParams(location.search).get("status") || "draft";
+  const validStatuses = ["draft", "published", "cancelled", "ended"];
+  const currentStatus = validStatuses.includes(statusParam)
+    ? statusParam
+    : "draft";
+
+  // Xác định tiêu đề hiển thị trên bảng
+  const pageTitle =
+    currentStatus === "draft"
+      ? "Draft Events"
+      : currentStatus === "published"
+        ? "Published Events"
+        : currentStatus === "cancelled"
+          ? "Cancelled Events"
+          : "Ended Events";
+
+  // ========================================================================
+  // 4. LIFECYCLE & DATA FETCHING (Vòng đời & Gọi API)
+  // ========================================================================
   useEffect(() => {
     fetchEvents();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
+  /**
+   * Gọi API lấy danh sách sự kiện dựa trên trạng thái hiện tại
+   */
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const data = await getOrganizerEvents({ page: 1 });
+      const data = await getOrganizerEvents({ page: 1, status: currentStatus });
       setEventsData(data.events);
       setMeta(data.meta);
     } catch (error) {
-      console.error("Unable to load event list");
+      console.error("Unable to load event list", error);
     } finally {
       setLoading(false);
     }
   };
 
+  // ========================================================================
+  // 5. EVENT HANDLERS (Hàm xử lý tương tác UI)
+  // ========================================================================
+  /**
+   * Mở Modal xác nhận hủy sự kiện
+   * @param {Object} event - Đối tượng sự kiện được chọn
+   */
+  const handleOpenCancelModal = (event) => {
+    if (event.status !== "published") return;
+    setCancelModal({
+      isOpen: true,
+      eventId: event.id,
+      eventTitle: event.title,
+    });
+  };
+
+  /**
+   * Đóng Modal và xóa dữ liệu tạm
+   */
+  const handleCloseCancelModal = () => {
+    setCancelModal({ isOpen: false, eventId: null, eventTitle: "" });
+  };
+
+  /**
+   * Gọi API thực thi việc Hủy sự kiện khi user bấm Confirm
+   */
+  const handleConfirmCancel = async () => {
+    setIsCancelling(true);
+    try {
+      await cancelEvent(cancelModal.eventId);
+
+      alert("Event cancelled successfully");
+
+      // FIX LỖI TÊN BIẾN: Cập nhật status của sự kiện trong mảng eventsData
+      setEventsData((prevEvents) =>
+        prevEvents.map((ev) =>
+          ev.id === cancelModal.eventId ? { ...ev, status: "cancelled" } : ev,
+        ),
+      );
+
+      handleCloseCancelModal();
+    } catch (error) {
+      alert("Error: Cannot cancel the event. Please try again!");
+    } finally {
+      setIsCancelling(false);
+    }
+  };
+
+  /**
+   * Mở Modal xác nhận xóa bản nháp sự kiện
+   * @param {Object} event - Đối tượng sự kiện được chọn
+   */
+  const handleOpenDeleteModal = (event) => {
+    if (event.status !== "draft") return;
+    setDeleteModal({
+      isOpen: true,
+      eventId: event.id,
+      eventTitle: event.title,
+    });
+  };
+
+  /**
+   * Đóng Modal xóa sự kiện
+   */
+  const handleCloseDeleteModal = () => {
+    setDeleteModal({ isOpen: false, eventId: null, eventTitle: "" });
+  };
+
+  /**
+   * Gọi API thực thi việc Xóa sự kiện nháp khi user bấm Confirm
+   */
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteEvent(deleteModal.eventId);
+
+      alert("Draft event deleted successfully");
+
+      // Xóa sự kiện khỏi mảng eventsData
+      setEventsData((prevEvents) =>
+        prevEvents.filter((ev) => ev.id !== deleteModal.eventId),
+      );
+
+      handleCloseDeleteModal();
+    } catch (error) {
+      alert("Error: Cannot delete the event. Please try again!");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // ========================================================================
+  // 6. UTILITY FUNCTIONS (Hàm tiện ích hỗ trợ định dạng)
+  // ========================================================================
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
-  // Hàm tính toán phần trăm cho Progress Bar
   const calculateProgress = (registrations, capacity) => {
     if (!capacity) return 0;
     const percent = Math.round((registrations / capacity) * 100);
     return percent > 100 ? 100 : percent;
   };
 
-  // Hàm chọn màu sắc cho Progress Bar dựa trên Status
   const getProgressColor = (status) => {
     if (status === "published") return "#22c55e"; // green-500
     if (status === "cancelled") return "#ef4444"; // red-500
     return "#9ca3af"; // gray-400 (draft)
   };
 
+  // ========================================================================
+  // 7. RENDER (Vẽ Giao diện)
+  // ========================================================================
   return (
     <div className={styles.tableContainer}>
-      {/* Table Header với nút Filter */}
+      {/* HEADER BẢNG */}
       <div className={styles.tableHeader}>
         <h2
           style={{
@@ -55,7 +213,7 @@ export default function EventList() {
             color: "var(--on-surface)",
           }}
         >
-          Recent Events
+          {pageTitle}
         </h2>
         <button className={styles.secondaryBtn}>
           <i className="fa-solid fa-filter" style={{ fontSize: "14px" }}></i>{" "}
@@ -63,7 +221,7 @@ export default function EventList() {
         </button>
       </div>
 
-      {/* Loading State */}
+      {/* NỘI DUNG BẢNG */}
       {loading ? (
         <div
           style={{
@@ -91,7 +249,6 @@ export default function EventList() {
             <tbody>
               {eventsData?.length > 0 ? (
                 eventsData.map((event) => {
-                  // Sử dụng capacity thực tế từ DB, nếu không có thì mặc định là 0
                   const capacity = event.capacity || 0;
                   const registered = event.registrations_count || 0;
                   const progressPercent = calculateProgress(
@@ -101,7 +258,7 @@ export default function EventList() {
 
                   return (
                     <tr key={event.id} className={styles.tableRow}>
-                      {/* Cột Event Name có kèm hình đại diện */}
+                      {/* Cột Tên sự kiện */}
                       <td>
                         <div
                           style={{
@@ -116,13 +273,11 @@ export default function EventList() {
                               height: "32px",
                               borderRadius: "4px",
                               backgroundColor: "#E5E7EB",
-                              overflow: "hidden",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
                             }}
                           >
-                            {/* Dùng icon ảnh làm placeholder nếu không có ảnh thật */}
                             <i
                               className="fa-regular fa-image"
                               style={{ color: "#9CA3AF" }}
@@ -140,14 +295,17 @@ export default function EventList() {
                         </div>
                       </td>
 
+                      {/* Cột Ngày tháng */}
                       <td style={{ color: "var(--on-surface-variant)" }}>
                         {formatDate(event.start_time)}
                       </td>
 
+                      {/* Cột Danh mục */}
                       <td style={{ color: "var(--on-surface-variant)" }}>
                         {event.category?.name || "Uncategorized"}
                       </td>
 
+                      {/* Cột Trạng thái */}
                       <td>
                         <span
                           className={
@@ -165,7 +323,7 @@ export default function EventList() {
                         </span>
                       </td>
 
-                      {/* Cột Registration với Progress Bar chuẩn Tailwind */}
+                      {/* Cột Thanh Tiến Độ */}
                       <td>
                         {event.status === "draft" ? (
                           <span
@@ -223,34 +381,68 @@ export default function EventList() {
                         )}
                       </td>
 
-                      {/* Cột Actions với hiệu ứng Group-Hover */}
+                      {/* FIX LOGIC: Cột Actions hiển thị động theo trạng thái */}
                       <td style={{ textAlign: "right" }}>
-                        <div className={styles.actionGroup}>
-                          <button
-                            className={styles.actionBtn}
-                            title="Edit Event"
+                        {event.status === "draft" ||
+                        event.status === "published" ? (
+                          <div className={styles.actionGroup}>
+                            {/* Draft Actions: Edit & Delete */}
+                            {event.status === "draft" && (
+                              <>
+                                <button
+                                  className={styles.actionBtn}
+                                  title="Edit Event"
+                                  onClick={() =>
+                                    navigate(
+                                      `/organizer/events/${event.id}/edit`,
+                                    )
+                                  }
+                                >
+                                  <i
+                                    className="fa-solid fa-pen-to-square"
+                                    style={{ fontSize: "16px" }}
+                                  ></i>
+                                </button>
+                                <button
+                                  className={`${styles.actionBtn} ${styles.actionBtnDelete}`}
+                                  title="Delete Event"
+                                  onClick={() => handleOpenDeleteModal(event)}
+                                >
+                                  <i
+                                    className="fa-solid fa-trash-can"
+                                    style={{ fontSize: "16px" }}
+                                  ></i>
+                                </button>
+                              </>
+                            )}
+
+                            {/* Published Actions: Cancel */}
+                            {event.status === "published" && (
+                              <button
+                                onClick={() => handleOpenCancelModal(event)}
+                                className="btn btn-sm btn-outline-danger"
+                                title="Cancel Event"
+                              >
+                                <i className="fa-solid fa-xmark"></i>
+                              </button>
+                            )}
+                          </div>
+                        ) : (
+                          <span
+                            style={{
+                              color: "var(--on-surface-variant)",
+                              fontSize: "0.85rem",
+                            }}
                           >
-                            <i
-                              className="fa-solid fa-pen-to-square"
-                              style={{ fontSize: "16px" }}
-                            ></i>
-                          </button>
-                          <button
-                            className={`${styles.actionBtn} ${styles.actionBtnDelete}`}
-                            title="Delete Event"
-                          >
-                            <i
-                              className="fa-solid fa-trash-can"
-                              style={{ fontSize: "16px" }}
-                            ></i>
-                          </button>
-                        </div>
+                            No actions
+                          </span>
+                        )}
                       </td>
                     </tr>
                   );
                 })
               ) : (
-                /* Trạng thái trống (Empty State) */
+                /* Empty State */
                 <tr>
                   <td
                     colSpan="6"
@@ -290,7 +482,7 @@ export default function EventList() {
         </div>
       )}
 
-      {/* Footer Phân trang */}
+      {/* FOOTER PHÂN TRANG */}
       {!loading && eventsData?.length > 0 && (
         <div
           style={{
@@ -331,6 +523,156 @@ export default function EventList() {
             >
               Next
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================================== */}
+      {/* 8. MODAL PORTALS (Hộp thoại nổi)                                        */}
+      {/* Đặt ở cuối cùng để không làm rối cấu trúc HTML chính                     */}
+      {/* ======================================================================== */}
+      {cancelModal.isOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 1050,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#fff",
+              padding: "24px",
+              borderRadius: "8px",
+              width: "400px",
+              maxWidth: "90%",
+              boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)",
+            }}
+          >
+            <h4
+              style={{
+                margin: "0 0 16px 0",
+                color: "#dc3545",
+                fontWeight: "bold",
+              }}
+            >
+              Cancel Event
+            </h4>
+            <p
+              style={{
+                margin: "0 0 24px 0",
+                color: "#4b5563",
+                lineHeight: "1.5",
+              }}
+            >
+              Are you sure you want to cancel the event{" "}
+              <strong>"{cancelModal.eventTitle}"</strong>? This action cannot be
+              undone. The event will be marked as Cancelled and attendees will
+              be notified.
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "12px",
+              }}
+            >
+              <button
+                onClick={handleCloseCancelModal}
+                className="btn btn-secondary"
+                disabled={isCancelling}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmCancel}
+                className="btn btn-danger"
+                disabled={isCancelling}
+                style={{ minWidth: "100px" }}
+              >
+                {isCancelling ? "Processing..." : "Confirm"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Draft Event Modal */}
+      {deleteModal.isOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 1050,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#fff",
+              padding: "24px",
+              borderRadius: "8px",
+              width: "400px",
+              maxWidth: "90%",
+              boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)",
+            }}
+          >
+            <h4
+              style={{
+                margin: "0 0 16px 0",
+                color: "#dc3545",
+                fontWeight: "bold",
+              }}
+            >
+              Delete Draft Event
+            </h4>
+            <p
+              style={{
+                margin: "0 0 24px 0",
+                color: "#4b5563",
+                lineHeight: "1.5",
+              }}
+            >
+              Are you sure you want to delete the draft event{" "}
+              <strong>"{deleteModal.eventTitle}"</strong>? This action cannot be
+              undone and the event data will be permanently removed.
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "12px",
+              }}
+            >
+              <button
+                onClick={handleCloseDeleteModal}
+                className="btn btn-secondary"
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                className="btn btn-danger"
+                disabled={isDeleting}
+                style={{ minWidth: "100px" }}
+              >
+                {isDeleting ? "Processing..." : "Delete"}
+              </button>
+            </div>
           </div>
         </div>
       )}

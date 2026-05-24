@@ -28,8 +28,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/dashboard-stats', [EventController::class, 'dashboardStats']);
         Route::get('/events', [EventController::class, 'getOrganizerEvents']);
+        Route::patch('/events/{id}/cancel', [EventController::class, 'cancel']);
 
         Route::apiResource('events', EventController::class)->except(['index']);
+
     });
 
     Route::middleware('role:attendee')->prefix('attendee')->group(function () {});

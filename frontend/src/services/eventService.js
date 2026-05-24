@@ -54,3 +54,36 @@ export const createEvent = async (eventData) => {
   const response = await api.post("/organizer/events", eventData);
   return response.data;
 };
+
+export const updateEvent = async (id, eventData) => {
+  const response = await api.put(`/organizer/events/${id}`, eventData);
+  return response.data;
+};
+
+/**
+ * Hủy một sự kiện (Chuyển trạng thái sang cancelled)
+ * @param {number} id - ID của sự kiện cần hủy
+ */
+export const cancelEvent = async (id) => {
+  try {
+    const response = await api.patch(`/organizer/events/${id}/cancel`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error cancelling event with id ${id}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Xóa một bản nháp sự kiện (chỉ cho phép xóa draft events)
+ * @param {number} id - ID của sự kiện cần xóa
+ */
+export const deleteEvent = async (id) => {
+  try {
+    const response = await api.delete(`/organizer/events/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting event with id ${id}:`, error);
+    throw error;
+  }
+};
