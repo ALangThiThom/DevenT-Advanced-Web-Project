@@ -117,7 +117,6 @@ export default function OrganizerDashboard() {
                     <th>Date</th>
                     <th>Status</th>
                     <th>Registration Progress</th>
-                    <th style={{ textAlign: "right" }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -240,16 +239,7 @@ export default function OrganizerDashboard() {
                               </div>
                             )}
                           </td>
-                          <td style={{ textAlign: "right" }}>
-                            <div className={styles.actionGroup}>
-                              <button
-                                className={styles.actionBtn}
-                                title="Quick Edit"
-                              >
-                                <i className="fa-solid fa-pen-to-square"></i>
-                              </button>
-                            </div>
-                          </td>
+                          
                         </tr>
                       );
                     })

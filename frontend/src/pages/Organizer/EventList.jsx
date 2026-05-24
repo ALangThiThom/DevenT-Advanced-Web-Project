@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   getOrganizerEvents,
@@ -6,6 +6,7 @@ import {
   deleteEvent,
 } from "../../services/eventService";
 import styles from "./styles/Organizer.module.css";
+
 
 /**
  * Component EventList
@@ -18,15 +19,16 @@ export default function EventList() {
   const location = useLocation();
   const navigate = useNavigate();
 
+
   // ========================================================================
   // 2. STATE MANAGEMENT (Quản lý trạng thái)
   // ========================================================================
-  // State quản lý danh sách và trạng thái tải dữ liệu
   const [eventsData, setEventsData] = useState(null);
   const [meta, setMeta] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // State quản lý Modal Hủy Sự Kiện
+
   const [cancelModal, setCancelModal] = useState({
     isOpen: false,
     eventId: null,
@@ -34,7 +36,7 @@ export default function EventList() {
   });
   const [isCancelling, setIsCancelling] = useState(false);
 
-  // State quản lý Modal Xóa Sự Kiện Nháp
+
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     eventId: null,
@@ -42,10 +44,10 @@ export default function EventList() {
   });
   const [isDeleting, setIsDeleting] = useState(false);
 
+
   // ========================================================================
   // 3. DERIVED STATE & CONSTANTS (Biến phái sinh)
   // ========================================================================
-  // Lấy trạng thái từ URL (VD: ?status=published)
   const statusParam =
     new URLSearchParams(location.search).get("status") || "draft";
   const validStatuses = ["draft", "published", "cancelled", "ended"];
@@ -53,7 +55,7 @@ export default function EventList() {
     ? statusParam
     : "draft";
 
-  // Xác định tiêu đề hiển thị trên bảng
+
   const pageTitle =
     currentStatus === "draft"
       ? "Draft Events"
@@ -63,21 +65,40 @@ export default function EventList() {
           ? "Cancelled Events"
           : "Ended Events";
 
+
+  // Sử dụng useRef để theo dõi sự thay đổi của status giữa các lần render
+  const prevStatusRef = useRef(currentStatus);
+
+
   // ========================================================================
   // 4. LIFECYCLE & DATA FETCHING (Vòng đời & Gọi API)
   // ========================================================================
+
+
   useEffect(() => {
+    // Nếu status thay đổi so với lần trước đó
+    if (prevStatusRef.current !== currentStatus) {
+      prevStatusRef.current = currentStatus; // Cập nhật lại ref
+
+
+      // Nếu không phải trang 1 thì reset về 1 và dừng lại (để useEffect chạy lại)
+      if (currentPage !== 1) {
+        setCurrentPage(1);
+        return;
+      }
+    }
     fetchEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search]);
+  }, [currentStatus, currentPage]);
 
-  /**
-   * Gọi API lấy danh sách sự kiện dựa trên trạng thái hiện tại
-   */
+
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const data = await getOrganizerEvents({ page: 1, status: currentStatus });
+      const data = await getOrganizerEvents({
+        page: currentPage,
+        status: currentStatus,
+      });
       setEventsData(data.events);
       setMeta(data.meta);
     } catch (error) {
@@ -87,13 +108,10 @@ export default function EventList() {
     }
   };
 
+
   // ========================================================================
   // 5. EVENT HANDLERS (Hàm xử lý tương tác UI)
   // ========================================================================
-  /**
-   * Mở Modal xác nhận hủy sự kiện
-   * @param {Object} event - Đối tượng sự kiện được chọn
-   */
   const handleOpenCancelModal = (event) => {
     if (event.status !== "published") return;
     setCancelModal({
@@ -103,29 +121,25 @@ export default function EventList() {
     });
   };
 
-  /**
-   * Đóng Modal và xóa dữ liệu tạm
-   */
+
   const handleCloseCancelModal = () => {
     setCancelModal({ isOpen: false, eventId: null, eventTitle: "" });
   };
 
-  /**
-   * Gọi API thực thi việc Hủy sự kiện khi user bấm Confirm
-   */
+
   const handleConfirmCancel = async () => {
     setIsCancelling(true);
     try {
       await cancelEvent(cancelModal.eventId);
-
       alert("Event cancelled successfully");
 
-      // FIX LỖI TÊN BIẾN: Cập nhật status của sự kiện trong mảng eventsData
+
       setEventsData((prevEvents) =>
         prevEvents.map((ev) =>
           ev.id === cancelModal.eventId ? { ...ev, status: "cancelled" } : ev,
         ),
       );
+
 
       handleCloseCancelModal();
     } catch (error) {
@@ -135,10 +149,7 @@ export default function EventList() {
     }
   };
 
-  /**
-   * Mở Modal xác nhận xóa bản nháp sự kiện
-   * @param {Object} event - Đối tượng sự kiện được chọn
-   */
+
   const handleOpenDeleteModal = (event) => {
     if (event.status !== "draft") return;
     setDeleteModal({
@@ -148,27 +159,37 @@ export default function EventList() {
     });
   };
 
-  /**
-   * Đóng Modal xóa sự kiện
-   */
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+
+  const handleNextPage = () => {
+    if (meta && currentPage < meta.last_page) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+
   const handleCloseDeleteModal = () => {
     setDeleteModal({ isOpen: false, eventId: null, eventTitle: "" });
   };
 
-  /**
-   * Gọi API thực thi việc Xóa sự kiện nháp khi user bấm Confirm
-   */
+
   const handleConfirmDelete = async () => {
     setIsDeleting(true);
     try {
       await deleteEvent(deleteModal.eventId);
-
       alert("Draft event deleted successfully");
 
-      // Xóa sự kiện khỏi mảng eventsData
+
       setEventsData((prevEvents) =>
         prevEvents.filter((ev) => ev.id !== deleteModal.eventId),
       );
+
 
       handleCloseDeleteModal();
     } catch (error) {
@@ -178,6 +199,7 @@ export default function EventList() {
     }
   };
 
+
   // ========================================================================
   // 6. UTILITY FUNCTIONS (Hàm tiện ích hỗ trợ định dạng)
   // ========================================================================
@@ -186,24 +208,26 @@ export default function EventList() {
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
+
   const calculateProgress = (registrations, capacity) => {
     if (!capacity) return 0;
     const percent = Math.round((registrations / capacity) * 100);
     return percent > 100 ? 100 : percent;
   };
 
+
   const getProgressColor = (status) => {
-    if (status === "published") return "#22c55e"; // green-500
-    if (status === "cancelled") return "#ef4444"; // red-500
-    return "#9ca3af"; // gray-400 (draft)
+    if (status === "published") return "#22c55e";
+    if (status === "cancelled") return "#ef4444";
+    return "#9ca3af";
   };
+
 
   // ========================================================================
   // 7. RENDER (Vẽ Giao diện)
   // ========================================================================
   return (
     <div className={styles.tableContainer}>
-      {/* HEADER BẢNG */}
       <div className={styles.tableHeader}>
         <h2
           style={{
@@ -221,7 +245,7 @@ export default function EventList() {
         </button>
       </div>
 
-      {/* NỘI DUNG BẢNG */}
+
       {loading ? (
         <div
           style={{
@@ -256,9 +280,9 @@ export default function EventList() {
                     capacity,
                   );
 
+
                   return (
                     <tr key={event.id} className={styles.tableRow}>
-                      {/* Cột Tên sự kiện */}
                       <td>
                         <div
                           style={{
@@ -295,17 +319,17 @@ export default function EventList() {
                         </div>
                       </td>
 
-                      {/* Cột Ngày tháng */}
+
                       <td style={{ color: "var(--on-surface-variant)" }}>
                         {formatDate(event.start_time)}
                       </td>
 
-                      {/* Cột Danh mục */}
+
                       <td style={{ color: "var(--on-surface-variant)" }}>
                         {event.category?.name || "Uncategorized"}
                       </td>
 
-                      {/* Cột Trạng thái */}
+
                       <td>
                         <span
                           className={
@@ -323,7 +347,7 @@ export default function EventList() {
                         </span>
                       </td>
 
-                      {/* Cột Thanh Tiến Độ */}
+
                       <td>
                         {event.status === "draft" ? (
                           <span
@@ -381,12 +405,11 @@ export default function EventList() {
                         )}
                       </td>
 
-                      {/* FIX LOGIC: Cột Actions hiển thị động theo trạng thái */}
+
                       <td style={{ textAlign: "right" }}>
                         {event.status === "draft" ||
                         event.status === "published" ? (
                           <div className={styles.actionGroup}>
-                            {/* Draft Actions: Edit & Delete */}
                             {event.status === "draft" && (
                               <>
                                 <button
@@ -416,7 +439,7 @@ export default function EventList() {
                               </>
                             )}
 
-                            {/* Published Actions: Cancel */}
+
                             {event.status === "published" && (
                               <button
                                 onClick={() => handleOpenCancelModal(event)}
@@ -442,7 +465,6 @@ export default function EventList() {
                   );
                 })
               ) : (
-                /* Empty State */
                 <tr>
                   <td
                     colSpan="6"
@@ -482,7 +504,7 @@ export default function EventList() {
         </div>
       )}
 
-      {/* FOOTER PHÂN TRANG */}
+
       {!loading && eventsData?.length > 0 && (
         <div
           style={{
@@ -510,16 +532,29 @@ export default function EventList() {
               style={{
                 padding: "0.375rem 0.75rem",
                 fontSize: "0.75rem",
-                opacity: 0.5,
-                cursor: "not-allowed",
+                opacity: currentPage === 1 ? 0.5 : 1,
+                cursor: currentPage === 1 ? "not-allowed" : "pointer",
               }}
-              disabled
+              disabled={currentPage === 1}
+              onClick={handlePrevPage}
             >
               Previous
             </button>
+
+
             <button
               className={styles.secondaryBtn}
-              style={{ padding: "0.375rem 0.75rem", fontSize: "0.75rem" }}
+              style={{
+                padding: "0.375rem 0.75rem",
+                fontSize: "0.75rem",
+                opacity: meta?.current_page >= meta?.last_page ? 0.5 : 1,
+                cursor:
+                  meta?.current_page >= meta?.last_page
+                    ? "not-allowed"
+                    : "pointer",
+              }}
+              disabled={meta?.current_page >= meta?.last_page}
+              onClick={handleNextPage}
             >
               Next
             </button>
@@ -527,9 +562,9 @@ export default function EventList() {
         </div>
       )}
 
+
       {/* ======================================================================== */}
       {/* 8. MODAL PORTALS (Hộp thoại nổi)                                        */}
-      {/* Đặt ở cuối cùng để không làm rối cấu trúc HTML chính                     */}
       {/* ======================================================================== */}
       {cancelModal.isOpen && (
         <div
@@ -604,7 +639,7 @@ export default function EventList() {
         </div>
       )}
 
-      {/* Delete Draft Event Modal */}
+
       {deleteModal.isOpen && (
         <div
           style={{
@@ -679,3 +714,6 @@ export default function EventList() {
     </div>
   );
 }
+
+
+

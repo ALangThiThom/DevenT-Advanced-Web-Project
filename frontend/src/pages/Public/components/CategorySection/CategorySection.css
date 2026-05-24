@@ -1,4 +1,18 @@
+.category-item.active {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+.category-item.active .category-item__icon-wrapper {
+  background-color: #0d4433 !important; 
+  box-shadow: 0 4px 15px rgba(13, 68, 51, 0.3); 
+}
 
+
+.category-item.active .category-item__name {
+  color: #0d4433 !important; 
+  font-weight: 600;      
+}
 .category-section {
   width: 100%;
   max-width: 1400px;
@@ -38,10 +52,21 @@
 }
 .category-section__list {
   display: flex;
-  justify-content: space-between;
+  /* Thay đổi để hỗ trợ lướt ngang */
+  justify-content: flex-start; /* Chuyển từ space-between sang flex-start để các icon xếp sát nhau */
   align-items: center;
-  gap: 15px;
+  gap: 20px;
   width: 100%;
+  
+  /* CÁC THUỘC TÍNH QUAN TRỌNG ĐỂ LƯỚT ĐƯỢC */
+  overflow-x: auto;          /* Cho phép cuộn ngang */
+  padding-bottom: 15px;      /* Khoảng cách để không chạm đáy khi cuộn */
+  scrollbar-width: none;     /* Ẩn thanh cuộn trên Firefox */
+}
+
+/* Ẩn thanh cuộn trên Chrome/Safari/Edge */
+.category-section__list::-webkit-scrollbar {
+  display: none;
 }
 
 .category-item {
@@ -53,7 +78,9 @@
   padding: 0;
   cursor: pointer;
   transition: transform 0.2s ease;
-  width: 100px;
+  
+  /* QUAN TRỌNG: Ngăn không cho các icon bị co lại */
+  flex: 0 0 80px; 
 }
 
 .category-item__icon-wrapper {

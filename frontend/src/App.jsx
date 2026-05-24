@@ -6,6 +6,7 @@ import OrganizerLayout from "./layouts/OrganizerLayout";
 
 // Pages - Public
 import Home from "./pages/Public/Home";
+import SearchPage from "./pages/Public/SearchPage/SearchPage";
 import EventDetail from "./pages/Attendee/EventDetail"; // Giữ lại từ file 1
 
 // Pages - Attendee
@@ -31,6 +32,7 @@ function App() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/events/:id" element={<EventDetail />} />
+        <Route path="/search" element={<SearchPage />} />
       </Route>
 
       {/* Auth Routes */}

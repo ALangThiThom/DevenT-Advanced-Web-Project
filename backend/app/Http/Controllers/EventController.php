@@ -126,37 +126,41 @@ class EventController extends Controller
     }
 
     public function destroy(Request $request, $id)
-    {
-        $event = $request->user()->organizedEvents()->find($id);
+        {
+            $event = $request->user()->organizedEvents()->find($id);
 
-        if (!$event) {
+
+            if (!$event) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Event not found or unauthorized'
+                ], 404);
+            }
+
+
+            // Only allow deletion of draft events
+            if ($event->status !== 'draft') {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Only draft events can be deleted'
+                ], 403);
+            }
+
+
+            $eventTitle = $event->title;
+            
+            // SỬ DỤNG forceDelete() ĐỂ XÓA VĨNH VIỄN KHỎI DATABASE
+            $event->forceDelete();
+
+
             return response()->json([
-                'status' => 'error',
-                'message' => 'Event not found or unauthorized'
-            ], 404);
+                'status' => 'success',
+                'message' => 'Draft event permanently deleted',
+                'data' => ['title' => $eventTitle]
+            ], 200);
         }
 
-        // Only allow deletion of draft events
-        if ($event->status !== 'draft') {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Only draft events can be deleted'
-            ], 403);
-        }
 
-        $eventTitle = $event->title;
-        $event->delete();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Draft event deleted successfully',
-            'data' => ['title' => $eventTitle]
-        ], 200);
-    }
-
-    /**
-     * Public show for event details. Only non-draft events are visible publicly.
-     */
     public function showPublic($id)
     {
         $event = Event::with(['category'])->withCount('registrations')->find($id);
@@ -174,13 +178,30 @@ class EventController extends Controller
         ], 200);
     }
 
-    public function index()
+   public function index(\Illuminate\Http\Request $request) 
     {
-        $events = Event::with(['organizer:id,name', 'category'])
+        $categoryId = $request->query('category_id');
+        $search = $request->query('search');
+        if (!empty($search) && mb_strlen(trim($search), 'UTF-8') < 4) {
+        return response()->json([
+            'success' => true,
+            'data'    => []
+        ], 200);
+    }
+        $query = Event::with(['organizer:id,name', 'category'])
             ->withCount('registrations')
             ->where('status', 'published')
-            ->orderBy('start_time', 'asc')
-            ->get();
+            ->orderBy('start_time', 'asc');
+        $query->when($categoryId, function ($q) use ($categoryId) {
+            return $q->where('category_id', $categoryId);
+        });
+        $query->when($search, function ($q) use ($search) {
+            return $q->where(function ($subQuery) use ($search) {
+                $subQuery->where('title', 'LIKE', "%{$search}%")
+                         ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        });
+        $events = $query->get();
 
         return response()->json([
             'success' => true,
