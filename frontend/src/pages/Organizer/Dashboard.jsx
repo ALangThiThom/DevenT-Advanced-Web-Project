@@ -107,17 +107,6 @@ export default function OrganizerDashboard() {
               >
                 Recent Events Overview
               </h2>
-              <Link
-                to="/organizer/events"
-                className={styles.secondaryBtn}
-                style={{ textDecoration: "none", fontSize: "0.875rem" }}
-              >
-                View All Events{" "}
-                <i
-                  className="fa-solid fa-arrow-right ms-1"
-                  style={{ fontSize: "12px" }}
-                ></i>
-              </Link>
             </div>
 
             <div style={{ overflowX: "auto" }}>

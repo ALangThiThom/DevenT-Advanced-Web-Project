@@ -1,7 +1,7 @@
 import React from "react";
 import useEventForm from "../../../hooks/useEventForm";
 import useCategories from "../../../hooks/useCategories";
-import "../CreateEvent.css";
+import "../styles/CreateEvent.css";
 
 const EventForm = ({ eventId = null, isEditMode = false }) => {
   // 1. Invoke custom hook lấy các state và các hàm quản lý lịch trình, submit

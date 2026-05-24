@@ -127,7 +127,6 @@ class EventController extends Controller
 
     public function destroy(Request $request, $id)
     {
-
         $event = $request->user()->organizedEvents()->find($id);
 
         if (!$event) {
@@ -137,12 +136,21 @@ class EventController extends Controller
             ], 404);
         }
 
-        $event->update(['status' => 'cancelled']);
+        // Only allow deletion of draft events
+        if ($event->status !== 'draft') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Only draft events can be deleted'
+            ], 403);
+        }
+
+        $eventTitle = $event->title;
+        $event->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Cancel event successfully',
-            'data' => $event
+            'message' => 'Draft event deleted successfully',
+            'data' => ['title' => $eventTitle]
         ], 200);
     }
 
