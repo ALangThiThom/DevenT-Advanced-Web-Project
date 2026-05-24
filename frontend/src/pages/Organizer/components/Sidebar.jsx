@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
+import SidebarDropdown from "./SidebarDropdown";
 import styles from "../styles/Organizer.module.css";
 
 const Sidebar = () => {
@@ -45,13 +46,7 @@ const Sidebar = () => {
             <i className="fa-solid fa-chart-pie fa-fw"></i>
             Dashboard
           </Link>
-          <Link
-            to="/organizer/events"
-            className={`${styles.navLink} ${location.pathname.includes("events") ? styles.navLinkActive : ""}`}
-          >
-            <i className="fa-regular fa-calendar-days fa-fw"></i>
-            My Events
-          </Link>
+          <SidebarDropdown />
         </div>
 
         {/* Group 2: Data */}

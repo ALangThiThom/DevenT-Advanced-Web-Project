@@ -54,3 +54,8 @@ export const createEvent = async (eventData) => {
   const response = await api.post("/organizer/events", eventData);
   return response.data;
 };
+
+export const updateEvent = async (id, eventData) => {
+  const response = await api.put(`/organizer/events/${id}`, eventData);
+  return response.data;
+};

@@ -1,20 +1,30 @@
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getOrganizerEvents } from "../../services/eventService";
 import styles from "./styles/Organizer.module.css";
 
 export default function EventList() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [eventsData, setEventsData] = useState(null);
   const [meta, setMeta] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const statusParam =
+    new URLSearchParams(location.search).get("status") || "draft";
+  const validStatuses = ["draft", "published", "cancelled", "ended"];
+  const currentStatus = validStatuses.includes(statusParam)
+    ? statusParam
+    : "draft";
+
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [location.search]);
 
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const data = await getOrganizerEvents({ page: 1 });
+      const data = await getOrganizerEvents({ page: 1, status: currentStatus });
       setEventsData(data.events);
       setMeta(data.meta);
     } catch (error) {
@@ -43,6 +53,17 @@ export default function EventList() {
     return "#9ca3af"; // gray-400 (draft)
   };
 
+  const pageTitle =
+    currentStatus === "draft"
+      ? "Draft Events"
+      : currentStatus === "published"
+        ? "Published Events"
+        : currentStatus === "cancelled"
+          ? "Cancelled Events"
+          : "Ended Events";
+
+  const showDraftActions = currentStatus === "draft";
+
   return (
     <div className={styles.tableContainer}>
       {/* Table Header với nút Filter */}
@@ -55,7 +76,7 @@ export default function EventList() {
             color: "var(--on-surface)",
           }}
         >
-          Recent Events
+          {pageTitle}
         </h2>
         <button className={styles.secondaryBtn}>
           <i className="fa-solid fa-filter" style={{ fontSize: "14px" }}></i>{" "}
@@ -225,26 +246,40 @@ export default function EventList() {
 
                       {/* Cột Actions với hiệu ứng Group-Hover */}
                       <td style={{ textAlign: "right" }}>
-                        <div className={styles.actionGroup}>
-                          <button
-                            className={styles.actionBtn}
-                            title="Edit Event"
+                        {showDraftActions ? (
+                          <div className={styles.actionGroup}>
+                            <button
+                              className={styles.actionBtn}
+                              title="Edit Event"
+                              onClick={() =>
+                                navigate(`/organizer/events/${event.id}/edit`)
+                              }
+                            >
+                              <i
+                                className="fa-solid fa-pen-to-square"
+                                style={{ fontSize: "16px" }}
+                              ></i>
+                            </button>
+                            <button
+                              className={`${styles.actionBtn} ${styles.actionBtnDelete}`}
+                              title="Delete Event"
+                            >
+                              <i
+                                className="fa-solid fa-trash-can"
+                                style={{ fontSize: "16px" }}
+                              ></i>
+                            </button>
+                          </div>
+                        ) : (
+                          <span
+                            style={{
+                              color: "var(--on-surface-variant)",
+                              fontSize: "0.85rem",
+                            }}
                           >
-                            <i
-                              className="fa-solid fa-pen-to-square"
-                              style={{ fontSize: "16px" }}
-                            ></i>
-                          </button>
-                          <button
-                            className={`${styles.actionBtn} ${styles.actionBtnDelete}`}
-                            title="Delete Event"
-                          >
-                            <i
-                              className="fa-solid fa-trash-can"
-                              style={{ fontSize: "16px" }}
-                            ></i>
-                          </button>
-                        </div>
+                            No actions
+                          </span>
+                        )}
                       </td>
                     </tr>
                   );

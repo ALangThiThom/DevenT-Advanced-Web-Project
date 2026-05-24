@@ -108,6 +108,58 @@
   font-weight: 600;
 }
 
+.subNavContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.subNavList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-left: 1rem;
+  margin-top: 0.25rem;
+}
+
+.subNavItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  width: 100%;
+  background: transparent;
+  color: var(--on-surface-variant);
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.subNavItem:hover {
+  background-color: #f9fafb;
+}
+
+.subNavItemActive {
+  background-color: #EEF2FF;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.subNavDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background-color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.subNavDotActive {
+  background-color: var(--primary);
+}
+
 .footerNav {
   display: flex;
   flex-direction: column;
