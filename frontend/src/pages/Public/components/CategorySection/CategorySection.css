@@ -1,4 +1,18 @@
+.category-item.active {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+.category-item.active .category-item__icon-wrapper {
+  background-color: #0d4433 !important; 
+  box-shadow: 0 4px 15px rgba(13, 68, 51, 0.3); 
+}
 
+
+.category-item.active .category-item__name {
+  color: #0d4433 !important; 
+  font-weight: 600;      
+}
 .category-section {
   width: 100%;
   max-width: 1400px;

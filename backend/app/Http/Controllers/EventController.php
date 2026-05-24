@@ -146,9 +146,6 @@ class EventController extends Controller
         ], 200);
     }
 
-    /**
-     * Public show for event details. Only non-draft events are visible publicly.
-     */
     public function showPublic($id)
     {
         $event = Event::with(['category'])->withCount('registrations')->find($id);
@@ -166,13 +163,18 @@ class EventController extends Controller
         ], 200);
     }
 
-    public function index()
+   public function index(\Illuminate\Http\Request $request) 
     {
-        $events = Event::with(['organizer:id,name', 'category'])
+
+        $categoryId = $request->query('category_id');
+        $query = Event::with(['organizer:id,name', 'category'])
             ->withCount('registrations')
             ->where('status', 'published')
-            ->orderBy('start_time', 'asc')
-            ->get();
+            ->orderBy('start_time', 'asc');
+        $query->when($categoryId, function ($q) use ($categoryId) {
+            return $q->where('category_id', $categoryId);
+        });
+        $events = $query->get();
 
         return response()->json([
             'success' => true,

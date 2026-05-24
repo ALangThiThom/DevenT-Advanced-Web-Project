@@ -11,7 +11,7 @@ const NavBar = () => {
           <h2>DevenT</h2>
         </div>
         <ul className="navbar__menu" role="list">
-          <li className="active">Home</li>
+          <li > <a href="/"> Home</a> </li>
           <li>
             <a href="/events">Events</a>
           </li>

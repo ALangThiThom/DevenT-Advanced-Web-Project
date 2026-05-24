@@ -1,8 +1,10 @@
 import EventCard from "../EventCard/EventCard";
 import useEvents from "../../../../hooks/useEvents";
+const FeaturedEvents = ({ selectedCategory }) => {
+  
 
-const FeaturedEvents = () => {
-  const { events, loading } = useEvents();
+  const { events, loading } = useEvents(selectedCategory); 
+  
   return (
     <section className="featured-events">
       <div className="featured-events__header">
