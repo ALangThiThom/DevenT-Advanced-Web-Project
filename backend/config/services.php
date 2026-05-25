@@ -31,7 +31,15 @@ return [
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT_URI')
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
+
+        'guzzle' => [
+            'config' => [
+                'curl' => [
+                    CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+                ],
+            ],
+        ],
     ],
 
     'slack' => [
