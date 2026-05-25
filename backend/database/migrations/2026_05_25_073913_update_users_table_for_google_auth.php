@@ -7,29 +7,28 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Run the migrations to modify the users table for Google OAuth support.
      */
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // 1. Thêm cột google_id
+            // Store the Google ID for users authenticating via OAuth
             $table->string('google_id')->nullable()->after('email');
 
-            // 2. Sửa cột password
+            // Make password nullable since OAuth users won't have a traditional password
             $table->string('password')->nullable()->change();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Reverse the migrations and rollback the OAuth modifications.
      */
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // 1. Xóa cột google_id
             $table->dropColumn('google_id');
 
-            // 2. Khôi phục cột password
+            // Revert password to be required
             $table->string('password')->nullable(false)->change();
         });
     }

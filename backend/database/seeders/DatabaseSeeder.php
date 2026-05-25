@@ -72,7 +72,7 @@ class DatabaseSeeder extends Seeder
 
         foreach ($eventsData as $index => $eventData) {
             $event = Event::create($eventData);
-            
+
             // Logic để đăng ký cho sự kiện
             // Nếu là sự kiện đầu tiên, ép buộc đăng ký full capacity (10 người)
             $count = ($index === 0) ? 10 : rand(3, 7);
