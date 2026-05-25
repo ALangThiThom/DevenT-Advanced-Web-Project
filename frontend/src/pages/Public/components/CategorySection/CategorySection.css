@@ -1,18 +1,3 @@
-.category-item.active {
-  background-color: transparent !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-}
-.category-item.active .category-item__icon-wrapper {
-  background-color: #0d4433 !important; 
-  box-shadow: 0 4px 15px rgba(13, 68, 51, 0.3); 
-}
-
-
-.category-item.active .category-item__name {
-  color: #0d4433 !important; 
-  font-weight: 600;      
-}
 .category-section {
   width: 100%;
   max-width: 1400px;
@@ -20,6 +5,7 @@
   padding: 0 16px;
   box-sizing: border-box;
 }
+
 .category-section__header {
   display: flex;
   justify-content: space-between;
@@ -50,23 +36,14 @@
 .category-section__view-all:hover {
   opacity: 0.8;
 }
+
+/* --- ĐIỀU CHỈNH KHU VỰC DANH SÁCH --- */
 .category-section__list {
   display: flex;
-  /* Thay đổi để hỗ trợ lướt ngang */
-  justify-content: flex-start; /* Chuyển từ space-between sang flex-start để các icon xếp sát nhau */
+  justify-content: space-between; 
   align-items: center;
-  gap: 20px;
   width: 100%;
-  
-  /* CÁC THUỘC TÍNH QUAN TRỌNG ĐỂ LƯỚT ĐƯỢC */
-  overflow-x: auto;          /* Cho phép cuộn ngang */
-  padding-bottom: 15px;      /* Khoảng cách để không chạm đáy khi cuộn */
-  scrollbar-width: none;     /* Ẩn thanh cuộn trên Firefox */
-}
-
-/* Ẩn thanh cuộn trên Chrome/Safari/Edge */
-.category-section__list::-webkit-scrollbar {
-  display: none;
+  padding-bottom: 15px;
 }
 
 .category-item {
@@ -79,8 +56,8 @@
   cursor: pointer;
   transition: transform 0.2s ease;
   
-  /* QUAN TRỌNG: Ngăn không cho các icon bị co lại */
-  flex: 0 0 80px; 
+  /* Điều chỉnh độ rộng vừa vặn cho text và icon */
+  flex: 0 1 100px; 
 }
 
 .category-item__icon-wrapper {
@@ -110,6 +87,7 @@
   transition: color 0.3s ease;
 }
 
+/* --- TRẠNG THÁI HOVER & ACTIVE --- */
 .category-item:hover {
   transform: translateY(-4px);
 }
@@ -122,4 +100,37 @@
 
 .category-item:hover .category-item__name {
   color: #0b4a3a;
+}
+
+.category-item.active {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.category-item.active .category-item__icon-wrapper {
+  background-color: #0d4433 !important; 
+  box-shadow: 0 4px 15px rgba(13, 68, 51, 0.3); 
+}
+
+.category-item.active .category-item__name {
+  color: #0d4433 !important; 
+  font-weight: 600;      
+}
+@media (max-width: 992px) {
+  .category-section__list {
+    justify-content: flex-start; 
+    overflow-x: auto;
+    scrollbar-width: none; 
+    gap: 32px; 
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .category-section__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-item {
+    flex: 0 0 85px; 
+  }
 }
