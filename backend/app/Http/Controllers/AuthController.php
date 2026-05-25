@@ -7,12 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use Laravel\Socialite\Facades\Socialite;
+
 class AuthController extends Controller
 {
-
+    /**
+     * Register a new user and return an access token.
+     */
     public function register(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -41,9 +44,11 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Authenticate user credentials and generate a new access token.
+     */
     public function login(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required'
@@ -61,6 +66,7 @@ class AuthController extends Controller
             ], 401);
         }
 
+        // Invalidate previous tokens to ensure a fresh session and prevent token accumulation
         $user->tokens()->delete();
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -73,13 +79,69 @@ class AuthController extends Controller
         ], 200);
     }
 
+    /**
+     * Revoke the user's current access token.
+     */
     public function logout(Request $request)
     {
-
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Logout successful'
         ], 200);
+    }
+
+    /**
+     * Generate the OAuth URL for Google authentication.
+     * The frontend uses this URL to redirect the user to Google's consent screen.
+     */
+    public function getGoogleAuthUrl()
+    {
+        $url = Socialite::driver('google')->stateless()->redirect()->getTargetUrl();
+
+        return response()->json([
+            'success' => true,
+            'url' => $url
+        ]);
+    }
+
+    /**
+     * Handle the callback from Google OAuth.
+     * Authenticates an existing user or registers a new one via their Google account.
+     */
+    public function handleGoogleCallback(Request $request)
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+
+            $user = User::where('email', $googleUser->getEmail())->first();
+
+            if ($user) {
+                $user->google_id = $googleUser->getId();
+                $user->save();
+            } else {
+                // Default all new users registering via OAuth to the 'attendee' role
+                $user = User::create([
+                    'name' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
+                    'google_id' => $googleUser->getId(),
+                    'role' => 'attendee'
+                ]);
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Google Login Successful',
+                'user' => $user,
+                'token' => $token
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to authenticate with Google: ' . $e->getMessage()
+            ], 400);
+        }
     }
 }
