@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./NavBar.css";
 import { useAuthStore } from "../../../store/authStore";
+import UserMenu from "./UserMenu";
 
 const NavBar = () => {
   const { user, logout } = useAuthStore();
@@ -40,12 +41,7 @@ const NavBar = () => {
         </ul>
         <div className="navbar__actions">
           {user ? (
-            <>
-              <p className="navbar__welcome">Hello, {user.name}!</p>
-              <button className="btn-logout" onClick={logout}>
-                Logout
-              </button>
-            </>
+            <UserMenu user={user} logout={logout} />
           ) : (
             <>
               <a href="/attendee/login" className="btn-login">
