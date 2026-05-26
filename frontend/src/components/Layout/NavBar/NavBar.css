@@ -111,6 +111,75 @@
   cursor: pointer;
 }
 
+.navbar__user-menu {
+  position: relative;
+}
+
+.navbar__user-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: #374151;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+.navbar__user-icon {
+  color: #6b7280;
+  font-size: 1rem;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.navbar__dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  min-width: 180px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  padding: 0.5rem 0;
+  z-index: 20;
+}
+
+.navbar__dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  color: #374151;
+  background: transparent;
+  text-decoration: none;
+  text-align: left;
+  border: none;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.navbar__dropdown-item:hover {
+  background: #f8fafc;
+}
+
+.navbar__dropdown-item--danger {
+  color: #ef4444;
+}
+
+.btn-logout:hover {
+  background-color: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+  transform: translateY(-1px);
+}
+
+.btn-login {
+  background: none;
+}
 /* DESIGN NÚT HAMBURGER */
 .navbar__toggle {
   display: none;
@@ -209,4 +278,27 @@
     border-top: 1px solid #f7fafc;
     text-align: left;
   }
+}
+
+.navbar__menu {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar__menu a {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.navbar__menu a:hover {
+  color: var(--color-text-primary);
+}
+
+.navbar__menu a.active {
+  font-weight: 500;
+  color: var(--color-text-primary);
 }

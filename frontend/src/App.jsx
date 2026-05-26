@@ -44,14 +44,16 @@ function App() {
       <Route path="/auth/google/callback" element={<AuthCallback />} />
 
       {/* Attendee Protected Routes */}
-      <Route
-        path="/attendee/dashboard"
-        element={
-          <PrivateRoute allowedRole="attendee">
-            <AttendeeDashboard />
-          </PrivateRoute>
-        }
-      />
+      <Route element={<PublicLayout />}>
+        <Route
+          path="/attendee/dashboard"
+          element={
+            <PrivateRoute allowedRole="attendee">
+              <AttendeeDashboard />
+            </PrivateRoute>
+          }
+        />
+      </Route>
 
       {/* Organizer Protected Routes với Nested Layout */}
       <Route
