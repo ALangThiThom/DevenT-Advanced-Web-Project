@@ -29,7 +29,7 @@ const UserMenu = ({ user, logout }) => {
       </button>
       {isOpen && (
         <div className="navbar__dropdown-menu">
-          <a href="/profile" className="navbar__dropdown-item">
+          <a href="/attendee/profile" className="navbar__dropdown-item">
             <svg
               className="navbar__dropdown-icon"
               viewBox="0 0 24 24"

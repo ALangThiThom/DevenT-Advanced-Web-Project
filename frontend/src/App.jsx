@@ -13,6 +13,7 @@ import EventDetail from "./pages/Attendee/EventDetail"; // Giữ lại từ file
 import AttendeeLogin from "./pages/Attendee/Login";
 import AttendeeRegister from "./pages/Attendee/Register";
 import AttendeeDashboard from "./pages/Attendee/Dashboard";
+import AttendeeProfile from "./pages/Attendee/Profile";
 
 // Pages - Organizer
 import OrganizerLogin from "./pages/Organizer/Login";
@@ -47,6 +48,15 @@ function App() {
         element={
           <PrivateRoute allowedRole="attendee">
             <AttendeeDashboard />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/attendee/profile"
+        element={
+          <PrivateRoute allowedRole="attendee">
+            <AttendeeProfile />
           </PrivateRoute>
         }
       />
