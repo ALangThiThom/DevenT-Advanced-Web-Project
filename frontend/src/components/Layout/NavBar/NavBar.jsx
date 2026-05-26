@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./NavBar.css";
 import { useAuthStore } from "../../../store/authStore";
 import UserMenu from "./UserMenu";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const { user, logout } = useAuthStore();
@@ -11,12 +12,14 @@ const NavBar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const homePath = user?.role === "attendee" ? "/attendee/dashboard" : "/";
+
   return (
     <nav className="site-navbar">
       <div className="navbar__container">
         {/* Nút Hamburger Menu (Chỉ hiển thị trên Mobile/Tablet) */}
-        <button 
-          className={`navbar__toggle ${isMenuOpen ? "active" : ""}`} 
+        <button
+          className={`navbar__toggle ${isMenuOpen ? "active" : ""}`}
           onClick={toggleMenu}
           aria-label="Toggle navigation"
         >
@@ -25,18 +28,23 @@ const NavBar = () => {
           <span className="bar"></span>
         </button>
         <div className="navbar__logo">
-            <a href="/">DevenT</a>
-            </div>
-        <ul className={`navbar__menu ${isMenuOpen ? "is-open" : ""}`} role="list">
-          <li > <a href="/"> Home</a> </li>
+          <Link to={homePath}>DevenT</Link>
+        </div>
+        <ul
+          className={`navbar__menu ${isMenuOpen ? "is-open" : ""}`}
+          role="list"
+        >
           <li>
-            <a href="/events">Events</a>
+            <Link to={homePath}>Home</Link>
           </li>
           <li>
-            <a href="/about">About</a>
+            <Link to="/events">Events</Link>
           </li>
           <li>
-            <a href="/contact">Contact</a>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/contact">Contact</Link>
           </li>
         </ul>
         <div className="navbar__actions">
