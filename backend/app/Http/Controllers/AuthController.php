@@ -153,11 +153,6 @@ class AuthController extends Controller
                 'token' => $token
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Google OAuth Error', [
-                'message' => $e->getMessage(),
-                'class'   => get_class($e),
-                'request_params' => $request->all(),
-            ]);
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to authenticate with Google: ' . $e->getMessage()

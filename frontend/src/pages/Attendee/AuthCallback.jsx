@@ -43,19 +43,13 @@ export default function AuthCallback() {
           throw new Error(data.message || "Authentication failed.");
         }
       } catch (error) {
-        // Lấy message từ response của backend nếu có (axios error)
-        const serverMessage =
-          error?.response?.data?.message || null;
-
+        const serverMessage = error?.response?.data?.message;
         console.error("Google Auth Error:", error);
-        console.error("Server response:", error?.response?.data);
-
         alert(
           serverMessage ||
           error.message ||
             "An error occurred while logging in with Google. Please try again!",
         );
-
         navigate("/attendee/login", { replace: true });
       }
     };
