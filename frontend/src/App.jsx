@@ -11,6 +11,7 @@ import EventDetail from "./pages/Attendee/EventDetail"; // Giữ lại từ file
 
 // Pages - Attendee
 import AttendeeLogin from "./pages/Attendee/Login";
+import AuthCallback from "./pages/Attendee/AuthCallback";
 import AttendeeRegister from "./pages/Attendee/Register";
 import AttendeeDashboard from "./pages/Attendee/Dashboard";
 
@@ -40,6 +41,7 @@ function App() {
       <Route path="/attendee/register" element={<AttendeeRegister />} />
       <Route path="/organizer/login" element={<OrganizerLogin />} />
       <Route path="/organizer/register" element={<OrganizerRegister />} />
+      <Route path="/auth/google/callback" element={<AuthCallback />} />
 
       {/* Attendee Protected Routes */}
       <Route
