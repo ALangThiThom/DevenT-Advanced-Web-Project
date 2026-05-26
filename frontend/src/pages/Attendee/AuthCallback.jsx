@@ -11,7 +11,7 @@ import { useAuthStore } from "../../store/authStore";
 export default function AuthCallback() {
   const navigate = useNavigate();
   const location = useLocation();
-  const setCredentials = useAuthStore((state) => state.setCredentials);
+  const login = useAuthStore((state) => state.login);
 
   // Use a ref to prevent the effect from running twice in React 18 Strict Mode.
   // This ensures we don't consume the one-time-use OAuth code multiple times.
@@ -36,15 +36,22 @@ export default function AuthCallback() {
         const data = await handleGoogleCallback(location.search);
 
         if (data.success && data.token) {
-          setCredentials(data.user, data.token);
+          login(data.user, data.token);
 
           navigate("/attendee/dashboard", { replace: true });
         } else {
           throw new Error(data.message || "Authentication failed.");
         }
       } catch (error) {
+        // Lấy message từ response của backend nếu có (axios error)
+        const serverMessage =
+          error?.response?.data?.message || null;
+
         console.error("Google Auth Error:", error);
+        console.error("Server response:", error?.response?.data);
+
         alert(
+          serverMessage ||
           error.message ||
             "An error occurred while logging in with Google. Please try again!",
         );
@@ -54,7 +61,7 @@ export default function AuthCallback() {
     };
 
     processGoogleAuth();
-  }, [location.search, navigate, setCredentials]);
+  }, [location.search, navigate, login]);
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light">

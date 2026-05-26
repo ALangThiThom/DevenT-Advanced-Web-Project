@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use GuzzleHttp\Client as GuzzleClient;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -97,7 +98,15 @@ class AuthController extends Controller
      */
     public function getGoogleAuthUrl()
     {
-        $url = Socialite::driver('google')->stateless()->redirect()->getTargetUrl();
+        // NOTE: verify=false chỉ dùng cho dev local trên Windows (thiếu CA bundle)
+        // Khi deploy production hãy xoá dòng ->setHttpClient() này
+        // prompt=select_account: buộc Google luôn hiện màn hình chọn tài khoản
+        $url = Socialite::driver('google')
+            ->stateless()
+            ->setHttpClient(new GuzzleClient(['verify' => false]))
+            ->with(['prompt' => 'select_account'])
+            ->redirect()
+            ->getTargetUrl();
 
         return response()->json([
             'success' => true,
@@ -112,7 +121,13 @@ class AuthController extends Controller
     public function handleGoogleCallback(Request $request)
     {
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            // NOTE: verify=false chỉ dùng cho dev local trên Windows (thiếu CA bundle)
+            // Khi deploy production hãy xoá dòng ->setHttpClient() này
+            $googleUser = Socialite::driver('google')
+                ->stateless()
+                ->redirectUrl(config('services.google.redirect'))
+                ->setHttpClient(new GuzzleClient(['verify' => false]))
+                ->user();
 
             $user = User::where('email', $googleUser->getEmail())->first();
 
@@ -138,6 +153,11 @@ class AuthController extends Controller
                 'token' => $token
             ]);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Google OAuth Error', [
+                'message' => $e->getMessage(),
+                'class'   => get_class($e),
+                'request_params' => $request->all(),
+            ]);
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to authenticate with Google: ' . $e->getMessage()
