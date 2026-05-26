@@ -1,5 +1,6 @@
 import "./NavBar.css";
 import { useAuthStore } from "../../../store/authStore";
+import UserMenu from "./UserMenu";
 
 const NavBar = () => {
   const { user, logout } = useAuthStore();
@@ -11,7 +12,10 @@ const NavBar = () => {
           <h2>DevenT</h2>
         </div>
         <ul className="navbar__menu" role="list">
-          <li > <a href="/"> Home</a> </li>
+          <li>
+            {" "}
+            <a href="/"> Home</a>{" "}
+          </li>
           <li>
             <a href="/events">Events</a>
           </li>
@@ -24,12 +28,7 @@ const NavBar = () => {
         </ul>
         <div className="navbar__actions">
           {user ? (
-            <>
-              <p className="navbar__welcome">Hello, {user.name}!</p>
-              <button className="btn-logout" onClick={logout}>
-                Logout
-              </button>
-            </>
+            <UserMenu user={user} logout={logout} />
           ) : (
             <>
               <a href="/attendee/login" className="btn-login">
