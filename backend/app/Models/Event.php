@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
 class Event extends Model
 {
     use HasFactory;
@@ -29,6 +28,20 @@ class Event extends Model
         'end_time' => 'datetime',
         'schedule' => 'array',
     ];
+
+    //Khai báo mảng appends để tự động đính kèm trường ảo
+    protected $appends = [
+        'remaining_spots'
+    ];
+
+    /**
+     *
+     * Sử dụng hàm max() để đảm bảo số chỗ trống (remaining_spots) không bao giờ bị âm
+     */
+    public function getRemainingSpotsAttribute()
+    {
+        return max(0, $this->capacity - $this->registered_count);
+    }
 
     public function organizer()
     {
