@@ -28,12 +28,6 @@ export default function OrganizerDashboard() {
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
-  const calculateProgress = (registrations, capacity) => {
-    const cap = capacity || 500;
-    const percent = Math.round((registrations / cap) * 100);
-    return percent > 100 ? 100 : percent;
-  };
-
   return (
     <div>
       {loading ? (
@@ -122,12 +116,18 @@ export default function OrganizerDashboard() {
                 <tbody>
                   {dashboardData?.recent_events?.length > 0 ? (
                     dashboardData.recent_events.map((event) => {
-                      const capacity = event.capacity || 500;
-                      const registered = event.registrations_count || 0;
-                      const progressPercent = calculateProgress(
-                        registered,
-                        capacity,
-                      );
+                      const capacity = event.capacity || 0;
+                      const confirmed = event.confirmed_count ?? 0;
+                      const percent = event.registration_percentage ?? 0;
+
+                      let barColor = "#22c55e"; // Default Green
+                      if (event.status === "ended") {
+                        barColor = "#d1d5db"; // Faded grey for ended
+                      } else if (percent >= 90) {
+                        barColor = "#ef4444"; // Red for >= 90%
+                      } else if (percent >= 50) {
+                        barColor = "#f59e0b"; // Orange for >= 50%
+                      }
 
                       return (
                         <tr key={event.id} className={styles.tableRow}>
@@ -211,9 +211,9 @@ export default function OrganizerDashboard() {
                                     color: "var(--on-surface-variant)",
                                   }}
                                 >
-                                  <span>{progressPercent}%</span>
+                                  <span>{percent}%</span>
                                   <span>
-                                    {registered}/{capacity}
+                                    {confirmed}/{capacity}
                                   </span>
                                 </div>
                                 <div
@@ -227,12 +227,10 @@ export default function OrganizerDashboard() {
                                   <div
                                     style={{
                                       height: "100%",
-                                      backgroundColor:
-                                        event.status === "published"
-                                          ? "#4338CA"
-                                          : "#9ca3af",
+                                      backgroundColor: barColor,
                                       borderRadius: "9999px",
-                                      width: `${progressPercent}%`,
+                                      width: `${percent}%`,
+                                      transition: "width 0.5s ease-in-out",
                                     }}
                                   ></div>
                                 </div>
