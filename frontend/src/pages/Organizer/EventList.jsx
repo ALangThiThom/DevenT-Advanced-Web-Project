@@ -7,7 +7,6 @@ import {
 } from "../../services/eventService";
 import styles from "./styles/Organizer.module.css";
 
-
 /**
  * Component EventList
  * Hiển thị bảng danh sách sự kiện của Ban tổ chức theo các tab (Draft, Published, Cancelled, Ended)
@@ -19,7 +18,6 @@ export default function EventList() {
   const location = useLocation();
   const navigate = useNavigate();
 
-
   // ========================================================================
   // 2. STATE MANAGEMENT (Quản lý trạng thái)
   // ========================================================================
@@ -28,7 +26,6 @@ export default function EventList() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
-
   const [cancelModal, setCancelModal] = useState({
     isOpen: false,
     eventId: null,
@@ -36,14 +33,12 @@ export default function EventList() {
   });
   const [isCancelling, setIsCancelling] = useState(false);
 
-
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     eventId: null,
     eventTitle: "",
   });
   const [isDeleting, setIsDeleting] = useState(false);
-
 
   // ========================================================================
   // 3. DERIVED STATE & CONSTANTS (Biến phái sinh)
@@ -55,7 +50,6 @@ export default function EventList() {
     ? statusParam
     : "draft";
 
-
   const pageTitle =
     currentStatus === "draft"
       ? "Draft Events"
@@ -65,21 +59,17 @@ export default function EventList() {
           ? "Cancelled Events"
           : "Ended Events";
 
-
   // Sử dụng useRef để theo dõi sự thay đổi của status giữa các lần render
   const prevStatusRef = useRef(currentStatus);
-
 
   // ========================================================================
   // 4. LIFECYCLE & DATA FETCHING (Vòng đời & Gọi API)
   // ========================================================================
 
-
   useEffect(() => {
     // Nếu status thay đổi so với lần trước đó
     if (prevStatusRef.current !== currentStatus) {
       prevStatusRef.current = currentStatus; // Cập nhật lại ref
-
 
       // Nếu không phải trang 1 thì reset về 1 và dừng lại (để useEffect chạy lại)
       if (currentPage !== 1) {
@@ -90,7 +80,6 @@ export default function EventList() {
     fetchEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStatus, currentPage]);
-
 
   const fetchEvents = async () => {
     try {
@@ -108,7 +97,6 @@ export default function EventList() {
     }
   };
 
-
   // ========================================================================
   // 5. EVENT HANDLERS (Hàm xử lý tương tác UI)
   // ========================================================================
@@ -121,11 +109,9 @@ export default function EventList() {
     });
   };
 
-
   const handleCloseCancelModal = () => {
     setCancelModal({ isOpen: false, eventId: null, eventTitle: "" });
   };
-
 
   const handleConfirmCancel = async () => {
     setIsCancelling(true);
@@ -133,13 +119,11 @@ export default function EventList() {
       await cancelEvent(cancelModal.eventId);
       alert("Event cancelled successfully");
 
-
       setEventsData((prevEvents) =>
         prevEvents.map((ev) =>
           ev.id === cancelModal.eventId ? { ...ev, status: "cancelled" } : ev,
         ),
       );
-
 
       handleCloseCancelModal();
     } catch (error) {
@@ -148,7 +132,6 @@ export default function EventList() {
       setIsCancelling(false);
     }
   };
-
 
   const handleOpenDeleteModal = (event) => {
     if (event.status !== "draft") return;
@@ -159,13 +142,11 @@ export default function EventList() {
     });
   };
 
-
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
     }
   };
-
 
   const handleNextPage = () => {
     if (meta && currentPage < meta.last_page) {
@@ -173,11 +154,9 @@ export default function EventList() {
     }
   };
 
-
   const handleCloseDeleteModal = () => {
     setDeleteModal({ isOpen: false, eventId: null, eventTitle: "" });
   };
-
 
   const handleConfirmDelete = async () => {
     setIsDeleting(true);
@@ -185,11 +164,9 @@ export default function EventList() {
       await deleteEvent(deleteModal.eventId);
       alert("Draft event deleted successfully");
 
-
       setEventsData((prevEvents) =>
         prevEvents.filter((ev) => ev.id !== deleteModal.eventId),
       );
-
 
       handleCloseDeleteModal();
     } catch (error) {
@@ -199,7 +176,6 @@ export default function EventList() {
     }
   };
 
-
   // ========================================================================
   // 6. UTILITY FUNCTIONS (Hàm tiện ích hỗ trợ định dạng)
   // ========================================================================
@@ -207,21 +183,6 @@ export default function EventList() {
     const options = { year: "numeric", month: "short", day: "2-digit" };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
-
-
-  const calculateProgress = (registrations, capacity) => {
-    if (!capacity) return 0;
-    const percent = Math.round((registrations / capacity) * 100);
-    return percent > 100 ? 100 : percent;
-  };
-
-
-  const getProgressColor = (status) => {
-    if (status === "published") return "#22c55e";
-    if (status === "cancelled") return "#ef4444";
-    return "#9ca3af";
-  };
-
 
   // ========================================================================
   // 7. RENDER (Vẽ Giao diện)
@@ -244,7 +205,6 @@ export default function EventList() {
           Filter
         </button>
       </div>
-
 
       {loading ? (
         <div
@@ -274,12 +234,17 @@ export default function EventList() {
               {eventsData?.length > 0 ? (
                 eventsData.map((event) => {
                   const capacity = event.capacity || 0;
-                  const registered = event.registrations_count || 0;
-                  const progressPercent = calculateProgress(
-                    registered,
-                    capacity,
-                  );
+                  const confirmed = event.confirmed_count ?? 0;
+                  const percent = event.registration_percentage ?? 0;
 
+                  let barColor = "#22c55e"; // Default Green (< 50%)
+                  if (event.status === "ended") {
+                    barColor = "#d1d5db"; // Faded grey for ended events
+                  } else if (percent >= 90) {
+                    barColor = "#ef4444"; // Red for nearly full (>= 90%)
+                  } else if (percent >= 50) {
+                    barColor = "#f59e0b"; // Orange for half full (>= 50%)
+                  }
 
                   return (
                     <tr key={event.id} className={styles.tableRow}>
@@ -319,16 +284,13 @@ export default function EventList() {
                         </div>
                       </td>
 
-
                       <td style={{ color: "var(--on-surface-variant)" }}>
                         {formatDate(event.start_time)}
                       </td>
 
-
                       <td style={{ color: "var(--on-surface-variant)" }}>
                         {event.category?.name || "Uncategorized"}
                       </td>
-
 
                       <td>
                         <span
@@ -346,7 +308,6 @@ export default function EventList() {
                             : "Draft"}
                         </span>
                       </td>
-
 
                       <td>
                         {event.status === "draft" ? (
@@ -377,9 +338,9 @@ export default function EventList() {
                                 fontWeight: "500",
                               }}
                             >
-                              <span>{progressPercent}%</span>
+                              <span>{percent}%</span>
                               <span>
-                                {registered}/{capacity}
+                                {confirmed}/{capacity}
                               </span>
                             </div>
                             <div
@@ -393,18 +354,16 @@ export default function EventList() {
                               <div
                                 style={{
                                   height: "100%",
-                                  backgroundColor: getProgressColor(
-                                    event.status,
-                                  ),
+                                  backgroundColor: barColor,
                                   borderRadius: "9999px",
-                                  width: `${progressPercent}%`,
+                                  width: `${percent}%`,
+                                  transition: "width 0.5s ease-in-out",
                                 }}
                               ></div>
                             </div>
                           </div>
                         )}
                       </td>
-
 
                       <td style={{ textAlign: "right" }}>
                         {event.status === "draft" ||
@@ -438,7 +397,6 @@ export default function EventList() {
                                 </button>
                               </>
                             )}
-
 
                             {event.status === "published" && (
                               <button
@@ -504,7 +462,6 @@ export default function EventList() {
         </div>
       )}
 
-
       {!loading && eventsData?.length > 0 && (
         <div
           style={{
@@ -541,7 +498,6 @@ export default function EventList() {
               Previous
             </button>
 
-
             <button
               className={styles.secondaryBtn}
               style={{
@@ -561,7 +517,6 @@ export default function EventList() {
           </div>
         </div>
       )}
-
 
       {/* ======================================================================== */}
       {/* 8. MODAL PORTALS (Hộp thoại nổi)                                        */}
@@ -639,7 +594,6 @@ export default function EventList() {
         </div>
       )}
 
-
       {deleteModal.isOpen && (
         <div
           style={{
@@ -714,6 +668,3 @@ export default function EventList() {
     </div>
   );
 }
-
-
-
