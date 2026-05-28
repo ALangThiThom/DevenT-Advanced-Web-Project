@@ -43,6 +43,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::delete('/logout', [AuthController::class, 'logout']);
 
+    // Event Registration
+    Route::post('/registrations', [\App\Http\Controllers\RegistrationController::class, 'store']);
+
     /*
      * Organizer-only Routes
      * Restricted by 'role:organizer' middleware to ensure regular attendees
