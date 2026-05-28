@@ -1,14 +1,26 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPublicEventById } from "../../services/eventService";
+import { getPublicEventById, registerForEvent } from "../../services/eventService";
 import "./styles/EventDetail.css";
 
+/**
+ * EventDetail Component
+ * Displays the full details of a specific event for attendees.
+ * Includes event schedule, location, remaining capacity, and allows
+ * users to register for the event.
+ */
 export default function EventDetail() {
   const { id } = useParams();
+  // State management for event data, loading status, and errors
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // State for Toast notifications and registration button status
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+  const [isRegistering, setIsRegistering] = useState(false);
 
+  // Fetch event details whenever the component mounts or the ID changes
   useEffect(() => {
     const fetchEvent = async () => {
       if (!id) {
@@ -34,6 +46,9 @@ export default function EventDetail() {
     fetchEvent();
   }, [id]);
 
+  /**
+   * Formats a raw date string into a readable format (e.g., "May 14, 2026").
+   */
   const formatDate = (dateString) => {
     if (!dateString) return "-";
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -43,6 +58,9 @@ export default function EventDetail() {
     });
   };
 
+  /**
+   * Formats start and end times into a readable time range (e.g., "10:00 AM - 12:00 PM").
+   */
   const formatTimeRange = (start, end) => {
     if (!start || !end) return "-";
     const startTime = new Date(start).toLocaleTimeString("en-US", {
@@ -56,6 +74,60 @@ export default function EventDetail() {
     return `${startTime} - ${endTime}`;
   };
 
+  /**
+   * Handles the event registration process.
+   * Performs capacity checks, triggers the API call, handles success/error
+   * states via toast notifications, and updates local state instantly.
+   */
+  const handleRegister = async () => {
+    if (!event) return;
+
+    // Preventive check: Do not allow registration if capacity is reached
+    if (seatsAvailable <= 0) {
+      setToast({
+        show: true,
+        message: "This event has reached its maximum capacity.",
+        type: "danger",
+      });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+      return;
+    }
+
+    try {
+      setIsRegistering(true); // Disable button and show loading text
+      
+      // Call the backend API to register the user
+      await registerForEvent(id);
+      
+      // Show success toast notification
+      setToast({
+        show: true,
+        message: "Successfully registered for the event!",
+        type: "success",
+      });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+      
+      // Instantly update the local event state to reflect the new registration count
+      // This automatically reduces the `seatsAvailable` variable without reloading the page
+      setEvent(prev => ({
+        ...prev,
+        registrations_count: (prev.registrations_count || 0) + 1
+      }));
+    } catch (err) {
+      setToast({
+        show: true,
+        message: err?.response?.data?.message || "Failed to register for the event. Please login first or check your network.",
+        type: "danger",
+      });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+    } finally {
+      setIsRegistering(false);
+    }
+  };
+
+  /**
+   * Renders the event's hero banner if a thumbnail URL is provided.
+   */
   const renderBanner = () => {
     if (!event) return null;
     if (event.thumbnail_url) {
@@ -102,6 +174,30 @@ export default function EventDetail() {
 
   return (
     <div className="w-100 bg-light min-vh-100 pb-5 event-detail-wrapper">
+      
+      {/* Toast Notification Container (Bootstrap 5 styling) */}
+      <div className="toast-container position-fixed top-0 end-0 p-3" style={{ zIndex: 1050 }}>
+        <div 
+          className={`toast align-items-center text-bg-${toast.type} border-0 ${toast.show ? 'show' : 'hide'}`} 
+          role="alert" 
+          aria-live="assertive" 
+          aria-atomic="true"
+        >
+          <div className="d-flex">
+            <div className="toast-body">
+              {toast.message}
+            </div>
+            <button 
+              type="button" 
+              className="btn-close btn-close-white me-2 m-auto" 
+              aria-label="Close" 
+              onClick={() => setToast({ ...toast, show: false })}
+            ></button>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero Banner Section */}
       {renderBanner()}
 
       <div className="container px-4 px-md-0 event-content-container">
@@ -126,6 +222,7 @@ export default function EventDetail() {
               </p>
             </div>
 
+            {/* Event Schedule Timeline */}
             <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white text-start">
               <h3 className="fw-bold mb-4 event-section-heading">
                 Event schedule
@@ -178,6 +275,7 @@ export default function EventDetail() {
             </div>
           </div>
 
+          {/* Registration Widget / Sidebar */}
           <div className="col-lg-5 col-xl-4">
             <div className="card border-0 shadow-sm rounded-4 p-4 p-md-4 bg-white sticky-lg-top text-start sticky-widget">
               <div className="d-flex align-items-center mb-4">
@@ -239,8 +337,13 @@ export default function EventDetail() {
                 </div>
               </div>
 
-              <button className="btn w-100 py-3 fw-bold border-0 shadow-sm rounded-3 text-white btn-register-submit">
-                Register
+              {/* Registration Action Button */}
+              <button 
+                className="btn w-100 py-3 fw-bold border-0 shadow-sm rounded-3 text-white btn-register-submit"
+                onClick={handleRegister}
+                disabled={isRegistering || seatsAvailable <= 0}
+              >
+                {isRegistering ? "Registering..." : (seatsAvailable <= 0 ? "Event Full" : "Register")}
               </button>
             </div>
           </div>
