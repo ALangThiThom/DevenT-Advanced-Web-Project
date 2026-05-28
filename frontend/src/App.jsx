@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 // Layouts
 import PublicLayout from "./layouts/PublicLayout";
 import OrganizerLayout from "./layouts/OrganizerLayout";
+import AttendeeLayout from "./layouts/AttendeeLayout";
 
 // Pages - Public
 import Home from "./pages/Public/Home";
@@ -14,6 +15,7 @@ import AttendeeLogin from "./pages/Attendee/Login";
 import AuthCallback from "./pages/Attendee/AuthCallback";
 import AttendeeRegister from "./pages/Attendee/Register";
 import AttendeeDashboard from "./pages/Attendee/Dashboard";
+import AttendeeProfile from "./pages/Attendee/Profile";
 
 // Pages - Organizer
 import OrganizerLogin from "./pages/Organizer/Login";
@@ -44,14 +46,27 @@ function App() {
       <Route path="/auth/google/callback" element={<AuthCallback />} />
 
       {/* Attendee Protected Routes */}
-      <Route
-        path="/attendee/dashboard"
-        element={
-          <PrivateRoute allowedRole="attendee">
-            <AttendeeDashboard />
-          </PrivateRoute>
-        }
-      />
+      <Route element={<PublicLayout />}>
+        <Route
+          path="/attendee/dashboard"
+          element={
+            <PrivateRoute allowedRole="attendee">
+              <AttendeeDashboard />
+            </PrivateRoute>
+          }
+        />
+      </Route>
+
+      <Route element={<AttendeeLayout />}>
+        <Route
+          path="/attendee/profile"
+          element={
+            <PrivateRoute allowedRole="attendee">
+              <AttendeeProfile />
+            </PrivateRoute>
+          }
+        />
+      </Route>
 
       {/* Organizer Protected Routes với Nested Layout */}
       <Route

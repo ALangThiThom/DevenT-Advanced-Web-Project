@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\AttendeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,11 +55,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('events', EventController::class)->except(['index']);
     });
 
-    /*
-     * Attendee-only Routes
-     * Reserved for actions specific to regular users.
-     */
     Route::middleware('role:attendee')->prefix('attendee')->group(function () {
-        // TODO: Add attendee specific routes here (e.g., event registration, ticket viewing)
+        Route::get('/events/registered', [AttendeeController::class, 'registeredEvents']);
+        Route::get('/events/finished',    [AttendeeController::class, 'finishedEvents']);
+        Route::get('/events/cancelled',   [AttendeeController::class, 'cancelledEvents']);
     });
 });
