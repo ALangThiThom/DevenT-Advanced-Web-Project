@@ -71,7 +71,7 @@ const EventCard = ({ event }) => {
               }
             >
               {remainingSpots === 0
-                ? "Hết chỗ"
+                ? "Out of seats"
                 : `${remainingSpots} / ${capacity} seats left`}
             </div>
           </div>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 import useUserStore from "../../store/userStore";
 import EventCard from "../Public/components/EventCard/EventCard.jsx";
-import NavBar from "/Hoc_Tap_Code/React/DevenT-Advanced-Web-Project/frontend/src/components/Layout/NavBar/NavBar.jsx";
+import NavBar from "../../components/Layout/NavBar/NavBar.jsx";
 
 const TABS = [
   { key: "registered", label: "Registered Events" },
@@ -182,7 +182,7 @@ export default function Profile() {
                         color: "var(--color-text-secondary)",
                         display: "flex",
                         alignItems: "center",
-                        gap: 6,
+                        gap: 0,
                       }}
                     >
                       <i
