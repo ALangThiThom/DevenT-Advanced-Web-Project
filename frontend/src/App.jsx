@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 // Layouts
 import PublicLayout from "./layouts/PublicLayout";
 import OrganizerLayout from "./layouts/OrganizerLayout";
+import AttendeeLayout from "./layouts/AttendeeLayout";
 
 // Pages - Public
 import Home from "./pages/Public/Home";
@@ -56,14 +57,16 @@ function App() {
         />
       </Route>
 
-      <Route
-        path="/attendee/profile"
-        element={
-          <PrivateRoute allowedRole="attendee">
-            <AttendeeProfile />
-          </PrivateRoute>
-        }
-      />
+      <Route element={<AttendeeLayout />}>
+        <Route
+          path="/attendee/profile"
+          element={
+            <PrivateRoute allowedRole="attendee">
+              <AttendeeProfile />
+            </PrivateRoute>
+          }
+        />
+      </Route>
 
       {/* Organizer Protected Routes với Nested Layout */}
       <Route

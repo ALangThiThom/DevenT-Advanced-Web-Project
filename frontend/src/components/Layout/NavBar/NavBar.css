@@ -2,6 +2,7 @@
   width: 100%;
   background-color: #ffffff;
   border-bottom: 1px solid #edf2f7;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   position: fixed;
   top: 0;
   left: 0;

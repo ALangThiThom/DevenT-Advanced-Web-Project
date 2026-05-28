@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 import useUserStore from "../../store/userStore";
 import EventCard from "../Public/components/EventCard/EventCard.jsx";
+import NavBar from "/Hoc_Tap_Code/React/DevenT-Advanced-Web-Project/frontend/src/components/Layout/NavBar/NavBar.jsx";
 
 const TABS = [
   { key: "registered", label: "Registered Events" },
@@ -119,7 +120,7 @@ export default function Profile() {
   return (
     <div style={{ background: "var(--color-background-primary)" }}>
       {/* Header */}
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "2rem 1rem 0" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 1rem 0" }}>
         <div
           style={{
             background: "var(--color-background-primary)",
