@@ -96,8 +96,7 @@ export default function EventDetail() {
   const seatsAvailable = seatsTotal - (event.registrations_count || 0);
   const eventCategory = event.category?.name || "Event";
   const eventLocation = event.location || "Unknown location";
-  const eventAddress =
-    event.address || event.location || "No detailed address";
+  const eventAddress = event.address || event.location || "No detailed address";
   const eventDate = formatDate(event.start_time);
   const eventTime = formatTimeRange(event.start_time, event.end_time);
 
@@ -234,8 +233,8 @@ export default function EventDetail() {
                     Seat status
                   </span>
                   <span className="badge fw-bold px-2 py-1 seats-badge">
-                    {seatsAvailable >= 0 ? seatsAvailable : 0} /{" "}
-                    {seatsTotal} seats left
+                    {seatsAvailable >= 0 ? seatsAvailable : 0} / {seatsTotal}{" "}
+                    seats left
                   </span>
                 </div>
               </div>

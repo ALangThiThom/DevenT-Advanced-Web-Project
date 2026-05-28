@@ -68,11 +68,33 @@ class DatabaseSeeder extends Seeder
             ['title' => 'AI Seminar 2026', 'description' => 'Latest trends in Artificial Intelligence.', 'category_id' => $categoryIds['Education'], 'location' => 'University Hall', 'start_time' => '2026-12-25 10:00:00', 'end_time' => '2026-12-25 15:00:00', 'capacity' => 200, 'status' => 'published', 'organizer_id' => $organizer->id],
             ['title' => 'Charity Gala Dinner', 'description' => 'Formal dinner for a great cause.', 'category_id' => $categoryIds['Food'], 'location' => 'Grand Hotel', 'start_time' => '2026-12-28 19:00:00', 'end_time' => '2026-12-28 23:00:00', 'capacity' => 150, 'status' => 'published', 'organizer_id' => $organizer->id],
             ['title' => 'Painting Workshop', 'description' => 'Create your own masterpiece.', 'category_id' => $categoryIds['Art'], 'location' => 'Art Space', 'start_time' => '2026-12-30 15:00:00', 'end_time' => '2026-12-30 18:00:00', 'capacity' => 20, 'status' => 'published', 'organizer_id' => $organizer->id],
+            [
+                'title' => 'Da Nang DevTalk: Advanced AI & Coding',
+                'description' => 'A hands-on workshop on leveraging AI and cloud environments for modern software development.',
+                'category_id' => $categoryIds['Education'],
+                'location' => 'Software IT Park, Da Nang',
+                'start_time' => '2026-05-26 09:00:00',
+                'end_time' => '2026-05-27 07:00:00',
+                'capacity' => 80,
+                'status' => 'published',
+                'organizer_id' => $organizer->id
+            ],
+            [
+                'title' => 'My Khe Beach Sunrise Yoga',
+                'description' => 'Start your day with mindfulness and community wellness by the ocean. Open to all levels to help balance a busy lifestyle.',
+                'category_id' => $categoryIds['Sports'],
+                'location' => 'My Khe Beach, Da Nang',
+                'start_time' => '2026-05-27 05:30:00',
+                'end_time' => '2026-05-27 12:00:00',
+                'capacity' => 50,
+                'status' => 'published',
+                'organizer_id' => $organizer->id
+            ],
         ];
 
         foreach ($eventsData as $index => $eventData) {
             $event = Event::create($eventData);
-            
+
             // Logic để đăng ký cho sự kiện
             // Nếu là sự kiện đầu tiên, ép buộc đăng ký full capacity (10 người)
             $count = ($index === 0) ? 10 : rand(3, 7);
