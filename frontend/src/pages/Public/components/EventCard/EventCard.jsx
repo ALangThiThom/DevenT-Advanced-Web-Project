@@ -5,7 +5,7 @@ const EventCard = ({ event }) => {
 
   const formatEventDateTime = (rawDateTime) => {
     if (!rawDateTime) return "";
-    const parsedDate = new Date(rawDateTime);
+    const parsedDate = new Date(rawDateTime.endsWith('Z') ? rawDateTime : rawDateTime + 'Z');
     const day = String(parsedDate.getDate()).padStart(2, "0");
     const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     const month = monthNames[parsedDate.getMonth()];

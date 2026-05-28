@@ -1,9 +1,13 @@
 import { create } from "zustand";
-import { getUserProfile } from "../services/userService";
+import { getUserProfile, getRegisteredEvents, getFinishedEvents, getCancelledEvents } from "../services/userService";
 
 const useUserStore = create((set) => ({
   profile: null,
+  registeredEvents: [],
+  finishedEvents: [],
+  cancelledEvents: [],
   loading: false,
+  eventsLoading: false,
   error: null,
 
   fetchProfile: async () => {
@@ -19,7 +23,43 @@ const useUserStore = create((set) => ({
     }
   },
 
-  clearProfile: () => set({ profile: null, error: null }),
+  fetchRegisteredEvents: async () => {
+    set({ eventsLoading: true });
+    try {
+      const data = await getRegisteredEvents();
+      set({ registeredEvents: data, eventsLoading: false });
+    } catch {
+      set({ eventsLoading: false });
+    }
+  },
+
+  fetchFinishedEvents: async () => {
+    set({ eventsLoading: true });
+    try {
+      const data = await getFinishedEvents();
+      set({ finishedEvents: data, eventsLoading: false });
+    } catch {
+      set({ eventsLoading: false });
+    }
+  },
+
+  fetchCancelledEvents: async () => {
+    set({ eventsLoading: true });
+    try {
+      const data = await getCancelledEvents();
+      set({ cancelledEvents: data, eventsLoading: false });
+    } catch {
+      set({ eventsLoading: false });
+    }
+  },
+
+  clearProfile: () => set({
+    profile: null,
+    registeredEvents: [],
+    finishedEvents: [],
+    cancelledEvents: [],
+    error: null,
+  }),
 }));
 
 export default useUserStore;

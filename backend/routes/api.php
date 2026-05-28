@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\AttendeeController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -34,5 +35,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     });
 
-    Route::middleware('role:attendee')->prefix('attendee')->group(function () {});
+    Route::middleware('role:attendee')->prefix('attendee')->group(function () {
+        Route::get('/events/registered', [AttendeeController::class, 'registeredEvents']);
+        Route::get('/events/finished',    [AttendeeController::class, 'finishedEvents']);
+        Route::get('/events/cancelled',   [AttendeeController::class, 'cancelledEvents']);
+    });
 });

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 import useUserStore from "../../store/userStore";
+import EventCard from "../Public/components/EventCard/EventCard.jsx";
 
 const TABS = [
   { key: "registered", label: "Registered Events" },
@@ -30,51 +31,116 @@ const getAvatarColor = (name) => {
   return colors[sum % colors.length];
 };
 
-export default function AttendeeProfile() {
+function EventList({ events, eventsLoading, emptyMessage, emptyIcon }) {
+  if (eventsLoading) {
+    return (
+      <div
+        style={{
+          textAlign: "center",
+          padding: "3rem",
+          color: "var(--color-text-secondary)",
+          fontSize: 14,
+        }}
+      >
+        Đang tải...
+      </div>
+    );
+  }
+
+  if (!events || events.length === 0) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "3rem 1rem",
+          color: "var(--color-text-secondary)",
+          gap: 12,
+        }}
+      >
+        <i
+          className={`ti ${emptyIcon}`}
+          style={{ fontSize: 40 }}
+          aria-hidden="true"
+        />
+        <p style={{ margin: 0, fontSize: 14 }}>{emptyMessage}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+        gap: 24,
+      }}
+    >
+      {events.map((event) => (
+        <EventCard key={event.id} event={event} />
+      ))}
+    </div>
+  );
+}
+
+export default function Profile() {
   const { user } = useAuthStore();
-  const { profile, loading, error, fetchProfile } = useUserStore();
+  const {
+    profile,
+    loading,
+    error,
+    fetchProfile,
+    registeredEvents,
+    finishedEvents,
+    cancelledEvents,
+    eventsLoading,
+    fetchRegisteredEvents,
+    fetchFinishedEvents,
+    fetchCancelledEvents,
+  } = useUserStore();
+
   const [activeTab, setActiveTab] = useState("registered");
 
   useEffect(() => {
     fetchProfile();
+    fetchRegisteredEvents();
   }, []);
+
+  const handleTabChange = (tabKey) => {
+    setActiveTab(tabKey);
+    if (tabKey === "finished" && finishedEvents.length === 0)
+      fetchFinishedEvents();
+    if (tabKey === "cancelled" && cancelledEvents.length === 0)
+      fetchCancelledEvents();
+  };
 
   const displayName = profile?.name || user?.name || "User";
   const displayEmail = profile?.email || user?.email || "";
   const initials = getInitials(displayName);
   const avatarColor = getAvatarColor(displayName);
 
-  return (
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: "2rem 1rem" }}>
-
-      {/* Header */}
+return (
+  <div style={{ background: "var(--color-background-primary)" }}>
+    {/* Header */}
+    <div style={{ maxWidth: 900, margin: "0 auto", padding: "2rem 1rem 0" }}>
       <div style={{
         background: "var(--color-background-primary)",
         border: "0.5px solid var(--color-border-tertiary)",
         borderRadius: "var(--border-radius-lg)",
         padding: "1.5rem",
-        marginBottom: "1rem",
       }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-
-          {/* Avatar + Info */}
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <div style={{
-              width: 80,
-              height: 80,
-              borderRadius: "50%",
-              background: avatarColor.bg,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 28,
-              fontWeight: 500,
-              color: avatarColor.text,
-              flexShrink: 0,
+              width: 80, height: 80, borderRadius: "50%",
+              background: avatarColor.bg, display: "flex",
+              alignItems: "center", justifyContent: "center",
+              fontSize: 28, fontWeight: 500, color: avatarColor.text, flexShrink: 0,
             }}>
               {initials}
             </div>
-
             <div>
               {loading ? (
                 <div style={{ color: "var(--color-text-secondary)", fontSize: 14 }}>Đang tải...</div>
@@ -91,96 +157,67 @@ export default function AttendeeProfile() {
               )}
             </div>
           </div>
-
-          {/* Edit Profile Button */}
           <button
-            onClick={() => {/* navigate to edit page */}}
+            onClick={() => {}}
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "8px 16px",
-              borderRadius: "var(--border-radius-md)",
-              border: "none",
-              background: "#534AB7",
-              color: "#EEEDFE",
-              fontSize: 14,
-              fontWeight: 500,
-              cursor: "pointer",
+              display: "flex", alignItems: "center", gap: 6,
+              padding: "8px 16px", borderRadius: "var(--border-radius-md)",
+              border: "none", background: "#534AB7", color: "#EEEDFE",
+              fontSize: 14, fontWeight: 500, cursor: "pointer",
             }}
           >
             <i className="ti ti-edit" style={{ fontSize: 15 }} aria-hidden="true" />
             Edit profile
           </button>
-
         </div>
       </div>
+    </div>
 
-      {/* Tabs */}
-      <div style={{
-        background: "var(--color-background-primary)",
-        border: "0.5px solid var(--color-border-tertiary)",
-        borderRadius: "var(--border-radius-lg)",
-        overflow: "hidden",
-      }}>
-        {/* Tab bar */}
+    {/* Tabs - full width xám */}
+    <div style={{ background: "#f0f2f5", minHeight: "60vh" }}>
+      {/* Tab bar */}
+      <div style={{ background: "#ffffff", maxWidth: 900, margin: "0 auto", padding: "0 1rem" }}>
         <div style={{
+          background: "var(--color-background-primary)",
           display: "flex",
           borderBottom: "0.5px solid var(--color-border-tertiary)",
+          borderRadius: "var(--border-radius-lg) var(--border-radius-lg) 0 0",
         }}>
           {TABS.map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
+              onClick={() => handleTabChange(tab.key)}
               style={{
-                padding: "14px 20px",
-                border: "none",
-                background: "transparent",
+                padding: "14px 20px", border: "none", background: "transparent",
                 fontSize: 14,
                 fontWeight: activeTab === tab.key ? 500 : 400,
                 color: activeTab === tab.key ? "#534AB7" : "var(--color-text-secondary)",
                 borderBottom: activeTab === tab.key ? "2px solid #534AB7" : "2px solid transparent",
-                cursor: "pointer",
-                transition: "all 0.15s",
-                marginBottom: -1,
+                cursor: "pointer", transition: "all 0.15s", marginBottom: -1,
               }}
             >
               {tab.label}
             </button>
           ))}
         </div>
-
-        {/* Tab content */}
-        <div style={{ padding: "1.5rem" }}>
-          {activeTab === "registered" && (
-            <EmptyState message="Bạn chưa đăng ký sự kiện nào." icon="ti-calendar" />
-          )}
-          {activeTab === "finished" && (
-            <EmptyState message="Chưa có sự kiện nào hoàn thành." icon="ti-circle-check" />
-          )}
-          {activeTab === "cancelled" && (
-            <EmptyState message="Chưa có sự kiện nào bị huỷ." icon="ti-calendar-off" />
-          )}
-        </div>
       </div>
 
+      {/* Content */}
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }}>
+        {activeTab === "registered" && (
+          <EventList events={registeredEvents} eventsLoading={eventsLoading}
+            emptyMessage="Bạn chưa đăng ký sự kiện nào." emptyIcon="ti-calendar" />
+        )}
+        {activeTab === "finished" && (
+          <EventList events={finishedEvents} eventsLoading={eventsLoading}
+            emptyMessage="Chưa có sự kiện nào hoàn thành." emptyIcon="ti-circle-check" />
+        )}
+        {activeTab === "cancelled" && (
+          <EventList events={cancelledEvents} eventsLoading={eventsLoading}
+            emptyMessage="Chưa có sự kiện nào bị huỷ." emptyIcon="ti-calendar-off" />
+        )}
+      </div>
     </div>
-  );
-}
-
-function EmptyState({ message, icon }) {
-  return (
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "3rem 1rem",
-      color: "var(--color-text-secondary)",
-      gap: 12,
-    }}>
-      <i className={`ti ${icon}`} style={{ fontSize: 40 }} aria-hidden="true" />
-      <p style={{ margin: 0, fontSize: 14 }}>{message}</p>
-    </div>
-  );
+  </div>
+);
 }

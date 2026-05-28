@@ -21,3 +21,24 @@ export const getUserProfile = async () => {
   });
   return response.data;
 };
+
+export const getRegisteredEvents = async () => {
+  const response = await axios.get(`${API_BASE_URL}/attendee/events/registered`, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
+
+export const getFinishedEvents = async () => {
+  const response = await axios.get(`${API_BASE_URL}/attendee/events/finished`, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
+
+export const getCancelledEvents = async () => {
+  const response = await axios.get(`${API_BASE_URL}/attendee/events/cancelled`, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
