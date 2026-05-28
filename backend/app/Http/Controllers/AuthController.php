@@ -98,9 +98,6 @@ class AuthController extends Controller
      */
     public function getGoogleAuthUrl()
     {
-        // NOTE: verify=false chỉ dùng cho dev local trên Windows (thiếu CA bundle)
-        // Khi deploy production hãy xoá dòng ->setHttpClient() này
-        // prompt=select_account: buộc Google luôn hiện màn hình chọn tài khoản
         $url = Socialite::driver('google')
             ->stateless()
             ->setHttpClient(new GuzzleClient(['verify' => false]))
@@ -121,8 +118,6 @@ class AuthController extends Controller
     public function handleGoogleCallback(Request $request)
     {
         try {
-            // NOTE: verify=false chỉ dùng cho dev local trên Windows (thiếu CA bundle)
-            // Khi deploy production hãy xoá dòng ->setHttpClient() này
             $googleUser = Socialite::driver('google')
                 ->stateless()
                 ->redirectUrl(config('services.google.redirect'))

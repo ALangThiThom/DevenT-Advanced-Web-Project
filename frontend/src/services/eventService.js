@@ -87,3 +87,12 @@ export const deleteEvent = async (id) => {
     throw error;
   }
 };
+
+/**
+ * Register for an event
+ * @param {number} id - Event ID
+ */
+export const registerForEvent = async (id) => {
+  const response = await api.post("/registrations", { event_id: id });
+  return response.data;
+};
