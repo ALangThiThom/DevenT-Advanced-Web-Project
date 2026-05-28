@@ -4,7 +4,7 @@ import "./EventCard.css";
 const EventCard = ({ event }) => {
   const formatEventDateTime = (rawDateTime) => {
     if (!rawDateTime) return "";
-    const parsedDate = new Date(rawDateTime);
+    const parsedDate = new Date(rawDateTime.endsWith('Z') ? rawDateTime : rawDateTime + 'Z');
     const day = String(parsedDate.getDate()).padStart(2, "0");
     const monthNames = [
       "JAN",
@@ -27,7 +27,7 @@ const EventCard = ({ event }) => {
   };
 
   const capacity = event.capacity || 0;
-  const remainingSpots = event.remaining_spots ?? 0;
+  const remainingSpots = event.remaining_spots ?? (capacity - (event.registered_count ?? event.registrations_count ?? 0));
 
   return (
     <Link
@@ -71,7 +71,7 @@ const EventCard = ({ event }) => {
               }
             >
               {remainingSpots === 0
-                ? "Hết chỗ"
+                ? "Out of seats"
                 : `${remainingSpots} / ${capacity} seats left`}
             </div>
           </div>
