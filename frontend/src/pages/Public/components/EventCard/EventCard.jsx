@@ -27,7 +27,7 @@ const EventCard = ({ event }) => {
   };
 
   const capacity = event.capacity || 0;
-  const remainingSpots = event.remaining_spots ?? 0;
+  const remainingSpots = event.remaining_spots ?? (capacity - (event.registered_count ?? event.registrations_count ?? 0));
 
   return (
     <Link

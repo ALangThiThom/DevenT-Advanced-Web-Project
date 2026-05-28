@@ -17,14 +17,7 @@ const getInitials = (name) => {
 };
 
 const getAvatarColor = (name) => {
-  const colors = [
-    { bg: "#CECBF6", text: "#3C3489" },
-    { bg: "#9FE1CB", text: "#085041" },
-    { bg: "#F5C4B3", text: "#712B13" },
-    { bg: "#B5D4F4", text: "#0C447C" },
-    { bg: "#FAC775", text: "#633806" },
-    { bg: "#F4C0D1", text: "#72243E" },
-  ];
+  const colors = [{ bg: "#dff7ed", text: "#085041" }];
   if (!name) return colors[0];
   let sum = 0;
   for (let i = 0; i < name.length; i++) sum += name.charCodeAt(i);
@@ -110,10 +103,12 @@ export default function Profile() {
 
   const handleTabChange = (tabKey) => {
     setActiveTab(tabKey);
-    if (tabKey === "finished" && finishedEvents.length === 0)
+    if (tabKey === "finished") {
       fetchFinishedEvents();
-    if (tabKey === "cancelled" && cancelledEvents.length === 0)
+    }
+    if (tabKey === "cancelled") {
       fetchCancelledEvents();
+    }
   };
 
   const displayName = profile?.name || user?.name || "User";
@@ -121,103 +116,191 @@ export default function Profile() {
   const initials = getInitials(displayName);
   const avatarColor = getAvatarColor(displayName);
 
-return (
-  <div style={{ background: "var(--color-background-primary)" }}>
-    {/* Header */}
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: "2rem 1rem 0" }}>
-      <div style={{
-        background: "var(--color-background-primary)",
-        border: "0.5px solid var(--color-border-tertiary)",
-        borderRadius: "var(--border-radius-lg)",
-        padding: "1.5rem",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <div style={{
-              width: 80, height: 80, borderRadius: "50%",
-              background: avatarColor.bg, display: "flex",
-              alignItems: "center", justifyContent: "center",
-              fontSize: 28, fontWeight: 500, color: avatarColor.text, flexShrink: 0,
-            }}>
-              {initials}
-            </div>
-            <div>
-              {loading ? (
-                <div style={{ color: "var(--color-text-secondary)", fontSize: 14 }}>Đang tải...</div>
-              ) : error ? (
-                <div style={{ color: "var(--color-text-danger)", fontSize: 14 }}>{error}</div>
-              ) : (
-                <>
-                  <h1 style={{ margin: 0, fontSize: 22, fontWeight: 500 }}>{displayName}</h1>
-                  <p style={{ margin: "4px 0 0", fontSize: 14, color: "var(--color-text-secondary)", display: "flex", alignItems: "center", gap: 6 }}>
-                    <i className="ti ti-mail" style={{ fontSize: 15 }} aria-hidden="true" />
-                    {displayEmail}
-                  </p>
-                </>
-              )}
-            </div>
-          </div>
-          <button
-            onClick={() => {}}
+  return (
+    <div style={{ background: "var(--color-background-primary)" }}>
+      {/* Header */}
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "2rem 1rem 0" }}>
+        <div
+          style={{
+            background: "var(--color-background-primary)",
+            border: "0.5px solid var(--color-border-tertiary)",
+            borderRadius: "var(--border-radius-lg)",
+            padding: "1.5rem",
+          }}
+        >
+          <div
             style={{
-              display: "flex", alignItems: "center", gap: 6,
-              padding: "8px 16px", borderRadius: "var(--border-radius-md)",
-              border: "none", background: "#534AB7", color: "#EEEDFE",
-              fontSize: 14, fontWeight: 500, cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            <i className="ti ti-edit" style={{ fontSize: 15 }} aria-hidden="true" />
-            Edit profile
-          </button>
-        </div>
-      </div>
-    </div>
-
-    {/* Tabs - full width xám */}
-    <div style={{ background: "#f0f2f5", minHeight: "60vh" }}>
-      {/* Tab bar */}
-      <div style={{ background: "#ffffff", maxWidth: 900, margin: "0 auto", padding: "0 1rem" }}>
-        <div style={{
-          background: "var(--color-background-primary)",
-          display: "flex",
-          borderBottom: "0.5px solid var(--color-border-tertiary)",
-          borderRadius: "var(--border-radius-lg) var(--border-radius-lg) 0 0",
-        }}>
-          {TABS.map((tab) => (
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <div
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: "50%",
+                  background: avatarColor.bg,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 28,
+                  fontWeight: 500,
+                  color: avatarColor.text,
+                  flexShrink: 0,
+                }}
+              >
+                {initials}
+              </div>
+              <div>
+                {loading ? (
+                  <div
+                    style={{
+                      color: "var(--color-text-secondary)",
+                      fontSize: 14,
+                    }}
+                  >
+                    Đang tải...
+                  </div>
+                ) : error ? (
+                  <div
+                    style={{ color: "var(--color-text-danger)", fontSize: 14 }}
+                  >
+                    {error}
+                  </div>
+                ) : (
+                  <>
+                    <h1 style={{ margin: 0, fontSize: 22, fontWeight: 500 }}>
+                      {displayName}
+                    </h1>
+                    <p
+                      style={{
+                        margin: "4px 0 0",
+                        fontSize: 14,
+                        color: "var(--color-text-secondary)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                      }}
+                    >
+                      <i
+                        className="ti ti-mail"
+                        style={{ fontSize: 15 }}
+                        aria-hidden="true"
+                      />
+                      {displayEmail}
+                    </p>
+                  </>
+                )}
+              </div>
+            </div>
             <button
-              key={tab.key}
-              onClick={() => handleTabChange(tab.key)}
+              onClick={() => {}}
               style={{
-                padding: "14px 20px", border: "none", background: "transparent",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "8px 16px",
+                borderRadius: "12px",
+                border: "none",
+                background: "#0b4a3a",
+                color: "#e6f0ee",
                 fontSize: 14,
-                fontWeight: activeTab === tab.key ? 500 : 400,
-                color: activeTab === tab.key ? "#534AB7" : "var(--color-text-secondary)",
-                borderBottom: activeTab === tab.key ? "2px solid #534AB7" : "2px solid transparent",
-                cursor: "pointer", transition: "all 0.15s", marginBottom: -1,
+                fontWeight: 500,
+                cursor: "pointer",
               }}
             >
-              {tab.label}
+              <i
+                className="ti ti-pencil"
+                style={{ fontSize: 15 }}
+                aria-hidden="true"
+              />
+              Edit profile
             </button>
-          ))}
+          </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }}>
-        {activeTab === "registered" && (
-          <EventList events={registeredEvents} eventsLoading={eventsLoading}
-            emptyMessage="Bạn chưa đăng ký sự kiện nào." emptyIcon="ti-calendar" />
-        )}
-        {activeTab === "finished" && (
-          <EventList events={finishedEvents} eventsLoading={eventsLoading}
-            emptyMessage="Chưa có sự kiện nào hoàn thành." emptyIcon="ti-circle-check" />
-        )}
-        {activeTab === "cancelled" && (
-          <EventList events={cancelledEvents} eventsLoading={eventsLoading}
-            emptyMessage="Chưa có sự kiện nào bị huỷ." emptyIcon="ti-calendar-off" />
-        )}
+      {/* Tabs - full width xám */}
+      <div style={{ background: "#f0f2f5", minHeight: "60vh" }}>
+        {/* Tab bar */}
+        <div style={{ background: "#ffffff" }}>
+          <div
+            style={{
+              maxWidth: 900,
+              margin: "0 auto",
+              padding: "0 1rem",
+            }}
+          >
+            <div
+              style={{
+                background: "var(--color-background-primary)",
+                display: "flex",
+                borderBottom: "0.5px solid var(--color-border-tertiary)",
+                borderRadius:
+                  "var(--border-radius-lg) var(--border-radius-lg) 0 0",
+              }}
+            >
+              {TABS.map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => handleTabChange(tab.key)}
+                  style={{
+                    padding: "14px 20px",
+                    border: "none",
+                    background: "transparent",
+                    fontSize: 14,
+                    fontWeight: activeTab === tab.key ? 500 : 400,
+                    color:
+                      activeTab === tab.key
+                        ? "#0b4a3a"
+                        : "var(--color-text-secondary)",
+                    borderBottom:
+                      activeTab === tab.key
+                        ? "2px solid #0b4a3a"
+                        : "2px solid transparent",
+                    cursor: "pointer",
+                    transition: "all 0.15s",
+                    marginBottom: -1,
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        {/* Content */}
+        <div
+          style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }}
+        >
+          {activeTab === "registered" && (
+            <EventList
+              events={registeredEvents}
+              eventsLoading={eventsLoading}
+              emptyMessage="You haven't registered for any events yet."
+              emptyIcon="ti-calendar"
+            />
+          )}
+          {activeTab === "finished" && (
+            <EventList
+              events={finishedEvents}
+              eventsLoading={eventsLoading}
+              emptyMessage="No finished events yet."
+              emptyIcon="ti-circle-check"
+            />
+          )}
+          {activeTab === "cancelled" && (
+            <EventList
+              events={cancelledEvents}
+              eventsLoading={eventsLoading}
+              emptyMessage="No cancelled events yet."
+              emptyIcon="ti-calendar-off"
+            />
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 }
