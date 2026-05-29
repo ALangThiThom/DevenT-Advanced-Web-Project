@@ -110,3 +110,13 @@ export const getEventReviews = async (eventId) => {
     throw error;
   }
 };
+
+/**
+ * Submit a review for an event
+ * @param {number} eventId - ID of the event
+ * @param {object} reviewData - { rating, comment }
+ */
+export const submitEventReview = async (eventId, reviewData) => {
+  const response = await api.post(`/events/${eventId}/reviews`, reviewData);
+  return response.data;
+};
