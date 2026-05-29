@@ -33,9 +33,13 @@ class AttendeeController extends Controller
             ->registrations()
             ->where('registrations.status', 'confirmed')
             ->join('events', 'registrations.event_id', '=', 'events.id')
-            ->where('events.status', 'completed')
+            ->where('events.status', 'ended')
             ->select('events.*', 'registrations.status as registration_status')
-            ->get();
+            ->get()
+            ->map(function ($event) {
+                $event->category = \App\Models\Category::find($event->category_id);
+                return $event;
+            });
 
         return response()->json($events);
     }
@@ -47,10 +51,14 @@ class AttendeeController extends Controller
             ->join('events', 'registrations.event_id', '=', 'events.id')
             ->where(function ($query) {
                 $query->where('registrations.status', 'cancelled')
-                      ->orWhere('events.status', 'cancelled');
+                    ->orWhere('events.status', 'cancelled');
             })
             ->select('events.*', 'registrations.status as registration_status')
-            ->get();
+            ->get()
+            ->map(function ($event) {
+                $event->category = \App\Models\Category::find($event->category_id);
+                return $event;
+            });
 
         return response()->json($events);
     }
