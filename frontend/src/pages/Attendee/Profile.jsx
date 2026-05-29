@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/authStore";
+import { useNavigate } from "react-router-dom";
 import useUserStore from "../../store/userStore";
 import EventCard from "../Public/components/EventCard/EventCard.jsx";
 import NavBar from "../../components/Layout/NavBar/NavBar.jsx";
@@ -81,6 +82,7 @@ function EventList({ events, eventsLoading, emptyMessage, emptyIcon }) {
 
 export default function Profile() {
   const { user } = useAuthStore();
+  const navigate = useNavigate();
   const {
     profile,
     loading,
@@ -197,7 +199,7 @@ export default function Profile() {
               </div>
             </div>
             <button
-              onClick={() => {}}
+              onClick={() => navigate("/profile/edit")}
               style={{
                 display: "flex",
                 alignItems: "center",

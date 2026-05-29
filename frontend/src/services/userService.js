@@ -22,6 +22,20 @@ export const getUserProfile = async () => {
   return response.data;
 };
 
+export const updateUserProfile = async (updateData) => {
+  const response = await axios.put(`${API_BASE_URL}/user/profile`, updateData, {
+    headers: getAuthHeaders(),
+  });
+  return response.data; // Trả về thông tin user mới
+};
+
+export const updatePassword = async (passwordData) => {
+  const response = await axios.put(`${API_BASE_URL}/user/password`, passwordData, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
+
 export const getRegisteredEvents = async () => {
   const response = await axios.get(`${API_BASE_URL}/attendee/events/registered`, {
     headers: getAuthHeaders(),

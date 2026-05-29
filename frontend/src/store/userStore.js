@@ -1,5 +1,11 @@
 import { create } from "zustand";
-import { getUserProfile, getRegisteredEvents, getFinishedEvents, getCancelledEvents } from "../services/userService";
+import { 
+  getUserProfile, getRegisteredEvents, 
+  getFinishedEvents, 
+  getCancelledEvents,
+  updateUserProfile,
+  updatePassword
+} from "../services/userService";
 
 const useUserStore = create((set) => ({
   profile: null,
@@ -20,6 +26,32 @@ const useUserStore = create((set) => ({
         error: err.response?.data?.message || "Không thể tải thông tin profile",
         loading: false,
       });
+    }
+  },
+
+  updateProfile: async (updateData) => {
+    set({ loading: true, error: null });
+    try {
+      const data = await updateUserProfile(updateData); 
+      
+      set({ profile: data, loading: false });
+      return data;
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || "Không thể cập nhật thông tin hồ sơ";
+      set({ error: errorMsg, loading: false });
+      throw err;
+    }
+  },
+
+  updatePassword: async (passwordData) => {
+    set({ loading: true, error: null });
+    try {
+      const data = await updatePassword(passwordData);
+      set({ loading: false });
+      return data;
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || "Không thể thay đổi mật khẩu";
+      set({ error: errorMsg, loading: false });
     }
   },
 
