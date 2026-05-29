@@ -96,3 +96,17 @@ export const registerForEvent = async (id) => {
   const response = await api.post("/registrations", { event_id: id });
   return response.data;
 };
+
+/**
+ * Fetch reviews for an event
+ * @param {number} eventId - ID of the event
+ */
+export const getEventReviews = async (eventId) => {
+  try {
+    const response = await api.get(`/events/${eventId}/reviews`);
+    return response.data.data;
+  } catch (error) {
+    console.error(`Error fetching reviews for event ${eventId}:`, error);
+    throw error;
+  }
+};
