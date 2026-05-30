@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\AttendeeController;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallbac
 Route::get('/events', [EventController::class, 'index']);
 Route::get('/categories', [EventController::class, 'categories']);
 Route::get('/events/{id}', [EventController::class, 'showPublic']);
+Route::get('/events/{id}/reviews', [ReviewController::class, 'index']);
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +41,9 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    Route::put('/user/profile', [AuthController::class, 'updateProfile']);
+    Route::put('/user/password', [AuthController::class, 'updatePassword']);
+
     // Support both POST and DELETE for logout depending on frontend implementation
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::delete('/logout', [AuthController::class, 'logout']);
@@ -46,6 +51,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Event Registration
     Route::post('/registrations', [\App\Http\Controllers\RegistrationController::class, 'store']);
     Route::delete('/events/{eventId}/cancel', [\App\Http\Controllers\RegistrationController::class, 'cancel']);
+
+    // Event Reviews
+    Route::post('/events/{id}/reviews', [\App\Http\Controllers\ReviewController::class, 'store']);
+
     /*
      * Organizer-only Routes
      * Restricted by 'role:organizer' middleware to ensure regular attendees

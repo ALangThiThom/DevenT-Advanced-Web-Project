@@ -16,6 +16,7 @@ import AuthCallback from "./pages/Attendee/AuthCallback";
 import AttendeeRegister from "./pages/Attendee/Register";
 import AttendeeDashboard from "./pages/Attendee/Dashboard";
 import AttendeeProfile from "./pages/Attendee/Profile";
+import EditProfile from "./pages/Attendee/EditProfile";
 
 // Pages - Organizer
 import OrganizerLogin from "./pages/Organizer/Login";
@@ -63,6 +64,14 @@ function App() {
           element={
             <PrivateRoute allowedRole="attendee">
               <AttendeeProfile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile/edit"
+          element={
+            <PrivateRoute allowedRole="attendee">
+              <EditProfile />
             </PrivateRoute>
           }
         />

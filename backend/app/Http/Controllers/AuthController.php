@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 use GuzzleHttp\Client as GuzzleClient;
 use Laravel\Socialite\Facades\Socialite;
@@ -153,5 +154,41 @@ class AuthController extends Controller
                 'message' => 'Failed to authenticate with Google: ' . $e->getMessage()
             ], 400);
         }
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        // Validate dữ liệu truyền lên
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            // Đảm bảo email không bị trùng với người khác, ngoại trừ chính user hiện tại
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+        ]);
+
+        // Cập nhật vào DB
+        $user->update($validated);
+
+        // Trả về dữ liệu mới để frontend cập nhật lại Zustand store
+        return response()->json($user, 200);
+    }
+
+    /**
+     * Cập nhật/Đổi mật khẩu mới
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'newPassword' => 'required|string|min:6',
+        ]);
+
+        $user = $request->user();
+        
+        // Tiến hành mã hóa mật khẩu mới và lưu
+        $user->password = Hash::make($request->newPassword);
+        $user->save();
+
+        return response()->json(['message' => 'Thay đổi mật khẩu thành công!'], 200);
     }
 }
