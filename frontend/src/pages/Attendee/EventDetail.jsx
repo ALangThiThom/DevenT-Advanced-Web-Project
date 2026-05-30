@@ -82,29 +82,18 @@ export default function EventDetail() {
   const handleRegister = async () => {
     if (!event) return;
 
-    // Preventive check: Do not allow registration if capacity is reached
-    if (seatsAvailable <= 0) {
-      setToast({
-        show: true,
-        message: "This event has reached its maximum capacity.",
-        type: "danger",
-      });
-      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
-      return;
-    }
-
     try {
       setIsRegistering(true); // Disable button and show loading text
       
       // Call the backend API to register the user
-      await registerForEvent(id);
-      
-      // Show success toast notification
-      setToast({
-        show: true,
-        message: "Successfully registered for the event!",
-        type: "success",
-      });
+          const response = await registerForEvent(id);
+
+          // Show success toast notification
+          setToast({
+            show: true,
+            message: response.message,
+            type: "success",
+          });
       setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
       
       // Instantly update the local event state to reflect the new registration count
@@ -338,13 +327,17 @@ export default function EventDetail() {
               </div>
 
               {/* Registration Action Button */}
-              <button 
-                className="btn w-100 py-3 fw-bold border-0 shadow-sm rounded-3 text-white btn-register-submit"
-                onClick={handleRegister}
-                disabled={isRegistering || seatsAvailable <= 0}
-              >
-                {isRegistering ? "Registering..." : (seatsAvailable <= 0 ? "Event Full" : "Register")}
-              </button>
+                <button 
+                  className="btn w-100 py-3 fw-bold border-0 shadow-sm rounded-3 text-white btn-register-submit"
+                  onClick={handleRegister}
+                  disabled={isRegistering}
+                >
+                  {isRegistering
+                    ? "Processing..."
+                    : seatsAvailable <= 0
+                      ? "Join Waitlist"
+                      : "Register"}
+                </button>
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ import NavBar from "../../components/Layout/NavBar/NavBar.jsx";
 
 const TABS = [
   { key: "registered", label: "Registered Events" },
+  { key: "waitlisted", label: "Waitlisted Events" },
   { key: "finished", label: "Finished Events" },
   { key: "cancelled", label: "Cancelled Events" },
 ];
@@ -111,6 +112,16 @@ export default function Profile() {
       fetchCancelledEvents();
     }
   };
+
+  // Chỉ hiển thị event đã đăng ký chính thức (confirmed) cho tab Registered
+  const confirmedEvents = registeredEvents.filter(
+    (event) => event.registration_status === "confirmed"
+  );
+
+  // Lấy riêng event waitlisted để hiển thị cho tab Waitlisted
+  const waitlistedEvents = registeredEvents.filter(
+    (event) => event.registration_status === "waitlisted"
+  );
 
   const displayName = profile?.name || user?.name || "User";
   const displayEmail = profile?.email || user?.email || "";
@@ -278,10 +289,18 @@ export default function Profile() {
         >
           {activeTab === "registered" && (
             <EventList
-              events={registeredEvents}
+              events={confirmedEvents}
               eventsLoading={eventsLoading}
-              emptyMessage="You haven't registered for any events yet."
-              emptyIcon="ti-calendar"
+              emptyMessage="No registered events yet."
+              emptyIcon="ti-calendar-check"
+            />
+          )}
+          {activeTab === "waitlisted" && (
+            <EventList
+              events={waitlistedEvents}
+              eventsLoading={eventsLoading}
+              emptyMessage="You are not in any waitlist events."
+              emptyIcon="ti-hourglass"
             />
           )}
           {activeTab === "finished" && (

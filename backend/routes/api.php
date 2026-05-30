@@ -45,7 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Event Registration
     Route::post('/registrations', [\App\Http\Controllers\RegistrationController::class, 'store']);
-
+    Route::delete('/events/{eventId}/cancel', [\App\Http\Controllers\RegistrationController::class, 'cancel']);
     /*
      * Organizer-only Routes
      * Restricted by 'role:organizer' middleware to ensure regular attendees
