@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPublicEventById, registerForEvent } from "../../services/eventService";
+import { getPublicEventById, registerForEvent, getEventReviews, submitEventReview } from "../../services/eventService";
+import { useAuthStore } from "../../store/authStore";
 import "./styles/EventDetail.css";
 
 /**
@@ -11,8 +12,11 @@ import "./styles/EventDetail.css";
  */
 export default function EventDetail() {
   const { id } = useParams();
+  const { user } = useAuthStore();
+  
   // State management for event data, loading status, and errors
   const [event, setEvent] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
@@ -20,9 +24,18 @@ export default function EventDetail() {
   const [toast, setToast] = useState({ show: false, message: "", type: "success" });
   const [isRegistering, setIsRegistering] = useState(false);
 
+  // Review submission states
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isReviewedSuccess, setIsReviewedSuccess] = useState(false);
+
+  // Check if current user has already reviewed this event
+  const hasAlreadyReviewed = user && Array.isArray(reviews) && reviews.some(r => r.user_id === user.id);
+
   // Fetch event details whenever the component mounts or the ID changes
   useEffect(() => {
-    const fetchEvent = async () => {
+    const fetchEventData = async () => {
       if (!id) {
         setError("Event ID is not provided.");
         setLoading(false);
@@ -31,8 +44,14 @@ export default function EventDetail() {
 
       try {
         setLoading(true);
-        const data = await getPublicEventById(id);
-        setEvent(data);
+        // Fetch event details and reviews in parallel
+        const [eventData, reviewsData] = await Promise.all([
+          getPublicEventById(id),
+          getEventReviews(id)
+        ]);
+        
+        setEvent(eventData);
+        setReviews(reviewsData);
       } catch (fetchError) {
         setError(
           fetchError?.response?.data?.message ||
@@ -43,7 +62,7 @@ export default function EventDetail() {
       }
     };
 
-    fetchEvent();
+    fetchEventData();
   }, [id]);
 
   /**
@@ -56,6 +75,74 @@ export default function EventDetail() {
       month: "long",
       day: "2-digit",
     });
+  };
+
+  /**
+   * Renders star ratings based on a number (1-5).
+   */
+  const renderStars = (rating, interactive = false, onRate = null) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span 
+          key={i} 
+          className={`${i <= rating ? "text-warning" : "text-muted"} ${interactive ? "cursor-pointer" : ""}`}
+          onClick={() => interactive && onRate && onRate(i)}
+          style={{ cursor: interactive ? "pointer" : "default" }}
+        >
+          {i <= rating ? "★" : "☆"}
+        </span>
+      );
+    }
+    return <div className="fs-5">{stars}</div>;
+  };
+
+  /**
+   * Handles the review submission process.
+   */
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+
+    // Client-side validation
+    if (rating === 0) {
+      setToast({ show: true, message: "Please select a star rating.", type: "danger" });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+      return;
+    }
+
+    if (!comment.trim()) {
+      setToast({ show: true, message: "Please write a comment.", type: "danger" });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const response = await submitEventReview(id, { rating, comment });
+      
+      setToast({
+        show: true,
+        message: "Thank you! Your review has been submitted.",
+        type: "success",
+      });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+
+      setIsReviewedSuccess(true);
+      
+      // Dynamically add the new review to the top of the list
+      if (response.data) {
+        setReviews(prev => [response.data, ...prev]);
+      }
+    } catch (err) {
+      setToast({
+        show: true,
+        message: err?.response?.data?.message || "Failed to submit review. Ensure you are logged in as an attendee and registered for this event.",
+        type: "danger",
+      });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   /**
@@ -272,6 +359,77 @@ export default function EventDetail() {
                   </>
                 )}
               </div>
+            </div>
+
+            {/* Rate & Review Form */}
+            {event.status === 'ended' && !isReviewedSuccess && !hasAlreadyReviewed && (
+              <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 mt-4 bg-white text-start">
+                <h3 className="fw-bold mb-4 event-section-heading">
+                  Rate & Review Event
+                </h3>
+                <form onSubmit={handleReviewSubmit}>
+                  <div className="mb-4">
+                    <label className="form-label fw-bold text-muted small text-uppercase mb-2">Your Rating</label>
+                    {renderStars(rating, true, (val) => setRating(val))}
+                  </div>
+
+                  <div className="mb-4">
+                    <label htmlFor="comment" className="form-label fw-bold text-muted small text-uppercase mb-2">Your Comment</label>
+                    <textarea
+                      id="comment"
+                      className="form-control rounded-3 border-light-subtle bg-light p-3"
+                      rows="4"
+                      placeholder="Share your experience with this event..."
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      maxLength="300"
+                    ></textarea>
+                    <div className="text-end mt-2">
+                      <small className={`${comment.length >= 300 ? 'text-danger' : 'text-muted'}`}>
+                        {comment.length} / 300 characters
+                      </small>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary px-5 py-2 fw-bold rounded-3 border-0 shadow-sm"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Submitting..." : "Submit Review"}
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {/* Event Reviews Section */}
+            <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 mt-4 bg-white text-start">
+              <h3 className="fw-bold mb-4 event-section-heading">
+                Reviews ({reviews.length})
+              </h3>
+              
+              {reviews.length > 0 ? (
+                <div className="reviews-list">
+                  {reviews.map((review, idx) => (
+                    <div key={review.id || idx} className={`review-item ${idx !== reviews.length - 1 ? 'mb-4 pb-4 border-bottom' : ''}`}>
+                      <div className="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                          <h6 className="fw-bold mb-0">{review.user?.name || "Anonymous"}</h6>
+                          <small className="text-muted">{formatDate(review.created_at)}</small>
+                        </div>
+                        {renderStars(review.rating)}
+                      </div>
+                      <p className="text-secondary mb-0">
+                        {review.comment}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-4">
+                  <p className="text-muted mb-0">No reviews yet. Be the first to share your experience!</p>
+                </div>
+              )}
             </div>
           </div>
 

@@ -1,26 +1,34 @@
 <?php
 
+
 namespace App\Http\Controllers;
+
 
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreEventRequest;
 
+
 class EventController extends Controller
 {
+
 
     public function dashboardStats(Request $request)
     {
         $user = $request->user();
 
+
         $totalEvents = $user->organizedEvents()->count();
 
+
         $activeEvents = $user->organizedEvents()->where('status', 'published')->count();
+
 
         $totalRegistrations = $user->organizedEvents()
             ->join('registrations', 'events.id', '=', 'registrations.event_id')
             ->count();
+
 
         $recentEvents = $user->organizedEvents()
             ->with(['category'])
@@ -28,6 +36,7 @@ class EventController extends Controller
             ->latest()
             ->take(4)
             ->get();
+
 
         return response()->json([
             'status' => 'success',
@@ -49,11 +58,14 @@ class EventController extends Controller
             ->withCount('registrations')
             ->latest();
 
+
         if ($request->has('status') && $request->status !== '') {
             $query->where('status', $request->status);
         }
 
+
         $events = $query->paginate(8);
+
 
         return response()->json([
             'status' => 'success',
@@ -61,12 +73,16 @@ class EventController extends Controller
         ], 200);
     }
 
+
     public function store(StoreEventRequest $request)
     {
         $validatedData = $request->validated();
 
 
+
+
         $event = $request->user()->organizedEvents()->create($validatedData);
+
 
         // 4. Trả về phản hồi thành công
         return response()->json([
@@ -76,10 +92,13 @@ class EventController extends Controller
         ], 201);
     }
 
+
     public function show(Request $request, $id)
     {
 
+
         $event = $request->user()->organizedEvents()->withCount('registrations')->find($id);
+
 
         if (!$event) {
             return response()->json([
@@ -87,6 +106,7 @@ class EventController extends Controller
                 'message' => 'Event not found or unauthorized'
             ], 404);
         }
+
 
         return response()->json([
             'status' => 'success',
@@ -94,10 +114,13 @@ class EventController extends Controller
         ], 200);
     }
 
+
     public function update(Request $request, $id)
     {
 
+
         $event = $request->user()->organizedEvents()->find($id);
+
 
         if (!$event) {
             return response()->json([
@@ -106,17 +129,21 @@ class EventController extends Controller
             ], 404);
         }
 
+
         $validator = Validator::make($request->all(), [
             'title' => 'sometimes|required|string|max:255',
             'status' => 'sometimes|required|in:draft,published,cancelled',
             'capacity' => 'sometimes|nullable|integer|min:1'
         ]);
 
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+
         $event->update($validator->validated());
+
 
         return response()->json([
             'status' => 'success',
@@ -125,45 +152,57 @@ class EventController extends Controller
         ], 200);
     }
 
+
     public function destroy(Request $request, $id)
-        {
-            $event = $request->user()->organizedEvents()->find($id);
+    {
+        $event = $request->user()->organizedEvents()->find($id);
 
 
-            if (!$event) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Event not found or unauthorized'
-                ], 404);
-            }
 
 
-            // Only allow deletion of draft events
-            if ($event->status !== 'draft') {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Only draft events can be deleted'
-                ], 403);
-            }
-
-
-            $eventTitle = $event->title;
-            
-            // SỬ DỤNG forceDelete() ĐỂ XÓA VĨNH VIỄN KHỎI DATABASE
-            $event->forceDelete();
-
-
+        if (!$event) {
             return response()->json([
-                'status' => 'success',
-                'message' => 'Draft event permanently deleted',
-                'data' => ['title' => $eventTitle]
-            ], 200);
+                'status' => 'error',
+                'message' => 'Event not found or unauthorized'
+            ], 404);
         }
+
+
+
+
+        // Only allow deletion of draft events
+        if ($event->status !== 'draft') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Only draft events can be deleted'
+            ], 403);
+        }
+
+
+
+
+        $eventTitle = $event->title;
+
+        // SỬ DỤNG forceDelete() ĐỂ XÓA VĨNH VIỄN KHỎI DATABASE
+        $event->forceDelete();
+
+
+
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Draft event permanently deleted',
+            'data' => ['title' => $eventTitle]
+        ], 200);
+    }
+
+
 
 
     public function showPublic($id)
     {
         $event = Event::with(['category'])->withCount('registrations')->find($id);
+
 
         if (!$event || $event->status === 'draft') {
             return response()->json([
@@ -172,22 +211,56 @@ class EventController extends Controller
             ], 404);
         }
 
+
+        if ($event->status === 'published') {
+            return response()->json([
+                'status' => 'success',
+                'data' => $event
+            ], 200);
+        }
+
+
+        // Nếu event không phải 'published' (ví dụ: 'ended', 'cancelled'), yêu cầu phải đăng nhập
+        $user = auth('sanctum')->user();
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Event not found or unauthorized'
+            ], 404);
+        }
+
+
+        // Kiểm tra xem người dùng hiện tại có phải là người tạo sự kiện (organizer)
+        // hoặc đã đăng ký tham gia sự kiện (attendee) hay không
+        $isOrganizer = $event->organizer_id === $user->id;
+        $isRegistered = $event->registrations()->where('user_id', $user->id)->exists();
+
+
+        if (!$isOrganizer && !$isRegistered) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Event not found or unauthorized'
+            ], 404);
+        }
+
+
         return response()->json([
             'status' => 'success',
             'data' => $event
         ], 200);
     }
 
-   public function index(\Illuminate\Http\Request $request) 
+
+    public function index(\Illuminate\Http\Request $request)
     {
         $categoryId = $request->query('category_id');
         $search = $request->query('search');
         if (!empty($search) && mb_strlen(trim($search), 'UTF-8') < 4) {
-        return response()->json([
-            'success' => true,
-            'data'    => []
-        ], 200);
-    }
+            return response()->json([
+                'success' => true,
+                'data'    => []
+            ], 200);
+        }
         $query = Event::with(['organizer:id,name', 'category'])
             ->withCount('registrations')
             ->where('status', 'published')
@@ -198,10 +271,11 @@ class EventController extends Controller
         $query->when($search, function ($q) use ($search) {
             return $q->where(function ($subQuery) use ($search) {
                 $subQuery->where('title', 'LIKE', "%{$search}%")
-                         ->orWhere('description', 'LIKE', "%{$search}%");
+                    ->orWhere('description', 'LIKE', "%{$search}%");
             });
         });
         $events = $query->get();
+
 
         return response()->json([
             'success' => true,
@@ -209,9 +283,11 @@ class EventController extends Controller
         ], 200);
     }
 
+
     public function categories()
     {
         $categories = \App\Models\Category::select('id', 'name')->get();
+
 
         return response()->json([
             'success' => true,
@@ -219,11 +295,13 @@ class EventController extends Controller
         ]);
     }
 
+
     public function cancel($id)
     {
         $event = Event::where('id', $id)
-                      ->where('organizer_id', auth()->id())
-                      ->first();
+            ->where('organizer_id', auth()->id())
+            ->first();
+
 
         if (!$event) {
             return response()->json([
@@ -232,8 +310,10 @@ class EventController extends Controller
             ], 404);
         }
 
+
         $event->status = 'cancelled';
         $event->save();
+
 
         return response()->json([
             'success' => true,
@@ -241,4 +321,4 @@ class EventController extends Controller
             'data' => $event
         ]);
     }
-}
+};
