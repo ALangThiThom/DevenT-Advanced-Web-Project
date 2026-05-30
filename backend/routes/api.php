@@ -41,6 +41,9 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    Route::put('/user/profile', [AuthController::class, 'updateProfile']);
+    Route::put('/user/password', [AuthController::class, 'updatePassword']);
+
     // Support both POST and DELETE for logout depending on frontend implementation
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::delete('/logout', [AuthController::class, 'logout']);
