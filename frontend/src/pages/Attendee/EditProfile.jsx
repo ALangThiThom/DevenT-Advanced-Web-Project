@@ -138,19 +138,17 @@ export default function EditProfile() {
           </p>
         </div>
 
-        {/* Form Card */}
         <div
           style={{
             background: "#ffffff",
             boxShadow:
               "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
             border: "1px solid var(--color-border-tertiary)",
-            borderRadius: "12px", // Bo góc chuẩn theo ảnh 2 mẫu search
+            borderRadius: "12px",
             padding: "2.5rem",
           }}
         >
           <form onSubmit={handleSubmit}>
-            {/* PHẦN 1: PERSONAL INFORMATION */}
             <div style={{ marginBottom: "2.5rem" }}>
               <h2
                 style={{
@@ -215,7 +213,7 @@ export default function EditProfile() {
               </div>
             </div>
 
-            {/* PHẦN 2: SECURITY */}
+            {/* SECURITY */}
             <div style={{ marginBottom: "2.5rem" }}>
               <h2
                 style={{
@@ -362,7 +360,7 @@ export default function EditProfile() {
                 style={{
                   padding: "10px 24px",
                   border: "none",
-                  borderRadius: "20px", // Bo góc mềm mại cho nút Save đúng yêu cầu
+                  borderRadius: "20px",
                   background: isSubmitting ? "#1f6b5a" : "#0b4a3a",
                   color: "#e6f0ee",
                   fontSize: 14,
@@ -401,7 +399,6 @@ export default function EditProfile() {
         </div>
       </div>
 
-      {/* Thẻ style quản lý các trạng thái hover, focus cho input giống hệt ảnh mẫu */}
       <style>{`
         .custom-input {
         width: 100%;

@@ -26,7 +26,7 @@ export const updateUserProfile = async (updateData) => {
   const response = await axios.put(`${API_BASE_URL}/user/profile`, updateData, {
     headers: getAuthHeaders(),
   });
-  return response.data; // Trả về thông tin user mới
+  return response.data;
 };
 
 export const updatePassword = async (passwordData) => {

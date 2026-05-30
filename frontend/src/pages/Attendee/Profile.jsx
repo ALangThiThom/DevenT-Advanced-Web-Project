@@ -225,7 +225,7 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Tabs - full width xám */}
+      {/* Tabs */}
       <div style={{ background: "#f0f2f5", minHeight: "60vh" }}>
         {/* Tab bar */}
         <div style={{ background: "#ffffff" }}>

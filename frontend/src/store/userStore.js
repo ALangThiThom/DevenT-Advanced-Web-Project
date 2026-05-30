@@ -23,7 +23,7 @@ const useUserStore = create((set) => ({
       set({ profile: data, loading: false });
     } catch (err) {
       set({
-        error: err.response?.data?.message || "Không thể tải thông tin profile",
+        error: err.response?.data?.message || "Can't fetch information profile",
         loading: false,
       });
     }
@@ -37,7 +37,7 @@ const useUserStore = create((set) => ({
       set({ profile: data, loading: false });
       return data;
     } catch (err) {
-      const errorMsg = err.response?.data?.message || "Không thể cập nhật thông tin hồ sơ";
+      const errorMsg = err.response?.data?.message || "Can't update profile information";
       set({ error: errorMsg, loading: false });
       throw err;
     }
@@ -50,7 +50,7 @@ const useUserStore = create((set) => ({
       set({ loading: false });
       return data;
     } catch (err) {
-      const errorMsg = err.response?.data?.message || "Không thể thay đổi mật khẩu";
+      const errorMsg = err.response?.data?.message || "Can't update password";
       set({ error: errorMsg, loading: false });
     }
   },
