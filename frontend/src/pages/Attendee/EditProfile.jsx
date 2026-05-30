@@ -6,7 +6,7 @@ import NavBar from "../../components/Layout/NavBar/NavBar.jsx";
 
 export default function EditProfile() {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
   const { profile, loading, error, updateProfile, updatePassword } =
     useUserStore();
 
@@ -71,6 +71,11 @@ export default function EditProfile() {
       };
 
       await updateProfile(updateData);
+
+      updateUser({
+        name: formData.name,
+        email: formData.email,
+      });
 
       if (formData.password) {
         await updatePassword({

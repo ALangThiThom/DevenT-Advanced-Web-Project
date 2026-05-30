@@ -12,6 +12,12 @@ export const useAuthStore = create(
         set({ user, token });
       },
 
+      updateUser: (updatedFields) => {
+        set((state) => ({
+          user: { ...state.user, ...updatedFields },
+        }));
+      },
+
       logout: async () => {
         try {
           await logout();
