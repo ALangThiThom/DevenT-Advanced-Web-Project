@@ -169,29 +169,18 @@ export default function EventDetail() {
   const handleRegister = async () => {
     if (!event) return;
 
-    // Preventive check: Do not allow registration if capacity is reached
-    if (seatsAvailable <= 0) {
-      setToast({
-        show: true,
-        message: "This event has reached its maximum capacity.",
-        type: "danger",
-      });
-      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
-      return;
-    }
-
     try {
       setIsRegistering(true); // Disable button and show loading text
       
       // Call the backend API to register the user
-      await registerForEvent(id);
-      
-      // Show success toast notification
-      setToast({
-        show: true,
-        message: "Successfully registered for the event!",
-        type: "success",
-      });
+          const response = await registerForEvent(id);
+
+          // Show success toast notification
+          setToast({
+            show: true,
+            message: response.message,
+            type: "success",
+          });
       setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
       
       // Instantly update the local event state to reflect the new registration count
@@ -432,77 +421,81 @@ export default function EventDetail() {
               )}
             </div>
           </div>
-
-          {/* Registration Widget / Sidebar */}
           <div className="col-lg-5 col-xl-4">
-            <div className="card border-0 shadow-sm rounded-4 p-4 p-md-4 bg-white sticky-lg-top text-start sticky-widget">
-              <div className="d-flex align-items-center mb-4">
-                <span className="fs-4 me-3 p-2 rounded-3 d-flex align-items-center justify-content-center widget-icon-box">
-                  📅
-                </span>
-                <div>
-                  <small className="text-muted d-block text-uppercase fw-bold widget-label">
-                    Date
-                  </small>
-                  <span className="fw-bold text-dark widget-value-main">
-                    {eventDate}
-                  </span>
-                </div>
-              </div>
-
-              <div className="d-flex align-items-center mb-4">
-                <span className="fs-4 me-3 p-2 rounded-3 d-flex align-items-center justify-content-center widget-icon-box">
-                  🕒
-                </span>
-                <div>
-                  <small className="text-muted d-block text-uppercase fw-bold widget-label">
-                    Time
-                  </small>
-                  <span className="fw-bold text-dark widget-value-main">
-                    {eventTime}
-                  </span>
-                </div>
-              </div>
-
-              <div className="d-flex align-items-start mb-4">
-                <span className="fs-4 me-3 p-2 rounded-3 d-flex align-items-center justify-content-center mt-1 widget-icon-box">
-                  📍
-                </span>
-                <div>
-                  <small className="text-muted d-block text-uppercase fw-bold widget-label">
-                    Location
-                  </small>
-                  <span className="fw-bold text-dark d-block widget-value-main">
-                    {eventLocation}
-                  </span>
-                  <small className="text-muted d-block mt-1 widget-value-sub">
-                    {eventAddress}
-                  </small>
-                </div>
-              </div>
-
-              <hr className="my-4 opacity-25" />
-
-              <div className="mb-4">
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <span className="text-secondary small fw-medium">
-                    Seat status
-                  </span>
-                  <span className="badge fw-bold px-2 py-1 seats-badge">
-                    {seatsAvailable >= 0 ? seatsAvailable : 0} / {seatsTotal}{" "}
-                    seats left
-                  </span>
-                </div>
-              </div>
-
-              {/* Registration Action Button */}
-              <button 
-                className="btn w-100 py-3 fw-bold border-0 shadow-sm rounded-3 text-white btn-register-submit"
-                onClick={handleRegister}
-                disabled={isRegistering || seatsAvailable <= 0}
+            <div className="sidebar-sticky-wrapper" style={{ height: '100%' }}>
+              <div 
+                className="card border-0 shadow-sm rounded-4 p-4 p-md-4 bg-white text-start sticky-widget"
               >
-                {isRegistering ? "Registering..." : (seatsAvailable <= 0 ? "Event Full" : "Register")}
-              </button>
+                <div className="d-flex align-items-center mb-4">
+                  <span className="fs-4 me-3 p-2 rounded-3 d-flex align-items-center justify-content-center widget-icon-box">
+                    📅
+                  </span>
+                  <div>
+                    <small className="text-muted d-block text-uppercase fw-bold widget-label">
+                      Date
+                    </small>
+                    <span className="fw-bold text-dark widget-value-main">
+                      {eventDate}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="d-flex align-items-center mb-4">
+                  <span className="fs-4 me-3 p-2 rounded-3 d-flex align-items-center justify-content-center widget-icon-box">
+                    🕒
+                  </span>
+                  <div>
+                    <small className="text-muted d-block text-uppercase fw-bold widget-label">
+                      Time
+                    </small>
+                    <span className="fw-bold text-dark widget-value-main">
+                      {eventTime}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="d-flex align-items-start mb-4">
+                  <span className="fs-4 me-3 p-2 rounded-3 d-flex align-items-center justify-content-center mt-1 widget-icon-box">
+                    📍
+                  </span>
+                  <div>
+                    <small className="text-muted d-block text-uppercase fw-bold widget-label">
+                      Location
+                    </small>
+                    <span className="fw-bold text-dark d-block widget-value-main">
+                      {eventLocation}
+                    </span>
+                    <small className="text-muted d-block mt-1 widget-value-sub">
+                      {eventAddress}
+                    </small>
+                  </div>
+                </div>
+
+                <hr className="my-4 opacity-25" />
+
+                <div className="mb-4">
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <span className="text-secondary small fw-medium">
+                      Seat status
+                    </span>
+                    <span className="badge fw-bold px-2 py-1 seats-badge">
+                      {seatsAvailable >= 0 ? seatsAvailable : 0} / {seatsTotal} seats left
+                    </span>
+                  </div>
+                </div>
+
+                <button 
+                  className="btn w-100 py-3 fw-bold border-0 shadow-sm rounded-3 text-white btn-register-submit"
+                  onClick={handleRegister}
+                  disabled={isRegistering}
+                >
+                  {isRegistering
+                    ? "Processing..."
+                    : seatsAvailable <= 0
+                      ? "Join Waitlist"
+                      : "Register"}
+                </button>
+              </div>
             </div>
           </div>
         </div>

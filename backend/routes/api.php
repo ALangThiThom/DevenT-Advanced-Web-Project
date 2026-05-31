@@ -50,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Event Registration
     Route::post('/registrations', [\App\Http\Controllers\RegistrationController::class, 'store']);
+    Route::delete('/events/{eventId}/cancel', [\App\Http\Controllers\RegistrationController::class, 'cancel']);
 
     // Event Reviews
     Route::post('/events/{id}/reviews', [\App\Http\Controllers\ReviewController::class, 'store']);
