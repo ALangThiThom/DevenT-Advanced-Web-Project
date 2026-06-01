@@ -13,11 +13,17 @@ export const getDashboardStats = async () => {
   }
 };
 
-export const getOrganizerEvents = async ({ page = 1, status = "" } = {}) => {
+export const getOrganizerEvents = async ({ page = 1, status = "", search = "", categoryId = "" } = {}) => {
   try {
     const params = new URLSearchParams({ page });
     if (status) {
       params.append("status", status);
+    }
+    if (search) {
+      params.append("search", search);
+    }
+    if (categoryId) {
+      params.append("category_id", categoryId);
     }
 
     const response = await api.get(`/organizer/events?${params.toString()}`);
