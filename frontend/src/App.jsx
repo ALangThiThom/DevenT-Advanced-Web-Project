@@ -10,6 +10,7 @@ import Home from "./pages/Public/Home";
 import SearchPage from "./pages/Public/SearchPage/SearchPage";
 import EventDetail from "./pages/Attendee/EventDetail"; // Giữ lại từ file 1
 import About from "./pages/Public/About/About";
+import Contact from "./pages/Public/Contact/Contact";
 
 // Pages - Attendee
 import AttendeeLogin from "./pages/Attendee/Login";
@@ -39,6 +40,7 @@ function App() {
         <Route path="/events/:id" element={<EventDetail />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
       </Route>
 
       {/* Auth Routes */}
