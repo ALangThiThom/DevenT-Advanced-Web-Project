@@ -21,7 +21,7 @@ const CategorySection = ({ selectedCategory, onSelectCategory }) => {
           <div className="category-item__icon-wrapper">
             🌟
           </div>
-          <p className="category-item__name">Tất cả</p>
+          <p className="category-item__name">All Categories</p>
         </button>
         {categories.length > 0 ? (
           categories.map((cat) => (
