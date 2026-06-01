@@ -1,0 +1,110 @@
+
+.event-detail-wrapper {
+  overflow-x: hidden;
+}
+
+.event-banner {
+  background-color: #004d3d;
+  height: 700px;
+  margin-bottom: 100px;
+  padding: 0;
+}
+
+.event-content-container {
+  margin-top: -80px;
+}
+
+
+.event-title {
+  color: #004d3d;
+  font-size: 2.5rem;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.event-section-heading {
+  color: #004d3d;
+  font-size: 1.4rem;
+}
+
+.event-badge-category {
+  background-color: #e6f0ed;
+  color: #004d3d;
+  font-size: 0.8rem;
+}
+
+.event-divider {
+  color: #004d3d;
+}
+
+.event-description-text {
+  font-size: 1.05rem;
+  text-align: justify;
+}
+
+
+.timeline-container {
+  border-color: #e6f0ed !important;
+}
+
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  margin-left: -25px;
+  margin-top: 8px;
+  background-color: #004d3d;
+}
+
+.timeline-time {
+  color: #004d3d;
+}
+
+.timeline-title {
+  color: #004d3d;
+}
+
+
+.sticky-widget {
+  top: 20px;
+}
+
+.widget-icon-box {
+  background-color: #e6f0ed;
+  color: #004d3d;
+  width: 45px;
+  height: 45px;
+}
+
+.widget-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+}
+
+.widget-value-main {
+  font-size: 1.1rem;
+}
+
+.widget-value-sub {
+  font-size: 0.9rem;
+}
+
+
+.seats-badge {
+  background-color: #e02424;
+  color: #ffffff;
+  font-size: 0.8rem;
+}
+
+.progress-bar-fill {
+  background-color: #004d3d;
+}
+
+.btn-register-submit {
+  background-color: #004d3d;
+  font-size: 1rem;
+}
+
+.btn-register-submit:hover {
+  background-color: #003328;
+  color: #ffffff;
+}
