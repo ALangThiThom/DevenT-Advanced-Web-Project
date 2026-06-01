@@ -87,6 +87,7 @@ function App() {
         }
       >
         <Route path="dashboard" element={<OrganizerDashboard />} />
+        <Route path="all-events" element={<EventList />} />
         <Route path="events" element={<EventList />} />
         <Route path="events/create" element={<CreateEvent />} />
         <Route path="events/:id/edit" element={<EditEvent />} />
