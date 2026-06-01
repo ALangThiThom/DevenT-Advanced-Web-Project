@@ -1,39 +1,43 @@
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import styles from "../styles/Organizer.module.css";
 
 const SidebarDropdown = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  
+  const isEventsRouteActive = location.pathname.startsWith("/organizer/events") || location.pathname.startsWith("/organizer/all-events");
+  
+  const [isOpen, setIsOpen] = useState(isEventsRouteActive);
 
-  const currentStatus =
-    new URLSearchParams(location.search).get("status") || "draft";
-  const isEventsRoute =
-    location.pathname === "/organizer/events" ||
-    location.pathname.startsWith("/organizer/events?");
+  useEffect(() => {
+    setIsOpen(isEventsRouteActive);
+  }, [isEventsRouteActive]);
+
+  const currentStatus = new URLSearchParams(location.search).get("status");
 
   const subItems = [
+    { label: "All Events", path: "/organizer/all-events" },
     { label: "Draft Events", status: "draft" },
     { label: "Published Events", status: "published" },
     { label: "Cancelled Events", status: "cancelled" },
     { label: "Ended Events", status: "ended" },
   ];
 
-  const toggleMenu = () => {
-    setIsOpen((prev) => !prev);
-  };
-
-  const handleSelect = (status) => {
-    navigate(`/organizer/events?status=${status}`);
+  const handleNavigation = (item) => {
+    if (item.path) {
+      navigate(item.path);
+    } else if (item.status) {
+      navigate(`/organizer/events?status=${item.status}`);
+    }
   };
 
   return (
     <div className={styles.subNavContainer}>
       <button
         type="button"
-        className={`${styles.navLink} ${isEventsRoute ? styles.navLinkActive : ""}`}
-        onClick={toggleMenu}
+        className={`${styles.navLink} ${isEventsRouteActive ? styles.navLinkActive : ""}`}
+        onClick={() => setIsOpen(prev => !prev)}
         style={{
           justifyContent: "space-between",
           width: "100%",
@@ -56,13 +60,19 @@ const SidebarDropdown = () => {
       {isOpen && (
         <div className={styles.subNavList}>
           {subItems.map((item) => {
-            const active = isEventsRoute && currentStatus === item.status;
+            let active = false;
+            if (item.path) {
+                active = location.pathname === item.path;
+            } else if (item.status) {
+                active = location.pathname.startsWith('/organizer/events') && currentStatus === item.status;
+            }
+
             return (
               <button
-                key={item.status}
+                key={item.label}
                 type="button"
                 className={`${styles.subNavItem} ${active ? styles.subNavItemActive : ""}`}
-                onClick={() => handleSelect(item.status)}
+                onClick={() => handleNavigation(item)}
               >
                 <span
                   className={`${styles.subNavDot} ${active ? styles.subNavDotActive : ""}`}

@@ -58,14 +58,21 @@ class EventController extends Controller
             ->withCount('registrations')
             ->latest();
 
+        // Filter by search query
+        $query->when($request->query('search'), function ($q, $search) {
+            return $q->where('title', 'LIKE', "%{$search}%");
+        });
+
+        // Filter by category
+        $query->when($request->query('category_id'), function ($q, $categoryId) {
+            return $q->where('category_id', $categoryId);
+        });
 
         if ($request->has('status') && $request->status !== '') {
             $query->where('status', $request->status);
         }
 
-
         $events = $query->paginate(8);
-
 
         return response()->json([
             'status' => 'success',
