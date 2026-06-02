@@ -3,7 +3,7 @@ import useEvents from "../../../../hooks/useEvents";
 const FeaturedEvents = ({ selectedCategory }) => {
   
 
-  const { events, loading } = useEvents(selectedCategory); 
+  const { events, loading } = useEvents(selectedCategory, '', 8); 
   
   return (
     <section className="featured-events">

@@ -262,27 +262,37 @@ class EventController extends Controller
     {
         $categoryId = $request->query('category_id');
         $search = $request->query('search');
+        $limit = $request->query('limit');
+
         if (!empty($search) && mb_strlen(trim($search), 'UTF-8') < 4) {
             return response()->json([
                 'success' => true,
                 'data'    => []
             ], 200);
         }
+
         $query = Event::with(['organizer:id,name', 'category'])
             ->withCount('registrations')
             ->where('status', 'published')
+            ->where('end_time', '>=', now())
             ->orderBy('start_time', 'asc');
+
         $query->when($categoryId, function ($q) use ($categoryId) {
             return $q->where('category_id', $categoryId);
         });
+
         $query->when($search, function ($q) use ($search) {
             return $q->where(function ($subQuery) use ($search) {
                 $subQuery->where('title', 'LIKE', "%{$search}%")
                     ->orWhere('description', 'LIKE', "%{$search}%");
             });
         });
-        $events = $query->get();
 
+        if ($limit) {
+            $events = $query->take($limit)->get();
+        } else {
+            $events = $query->get();
+        }
 
         return response()->json([
             'success' => true,
