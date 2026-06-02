@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const useEvents = (categoryId = '', searchKeyword = '') => {
+const useEvents = (categoryId = '', searchKeyword = '', limit = null) => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const fetchEvents = async () => {
     try {
       setLoading(true);
       const response = await axios.get("http://localhost:8000/api/events", {
-        params: { category_id: categoryId, search: searchKeyword } 
+        params: { 
+          category_id: categoryId, 
+          search: searchKeyword,
+          limit: limit
+        } 
       });
 
       if (response.data.success) {
@@ -26,7 +30,7 @@ const useEvents = (categoryId = '', searchKeyword = '') => {
   };
 
   loadData();
-}, [categoryId,searchKeyword]);
+}, [categoryId, searchKeyword, limit]);
 
   return { events, loading };
 };
