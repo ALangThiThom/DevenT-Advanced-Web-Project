@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\AttendeeController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RegistrationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,11 +50,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/logout', [AuthController::class, 'logout']);
 
     // Event Registration
-    Route::post('/registrations', [\App\Http\Controllers\RegistrationController::class, 'store']);
-    Route::delete('/events/{eventId}/cancel', [\App\Http\Controllers\RegistrationController::class, 'cancel']);
-
+    Route::post('/registrations', [RegistrationController::class, 'store']);
     // Event Reviews
-    Route::post('/events/{id}/reviews', [\App\Http\Controllers\ReviewController::class, 'store']);
+    Route::post('/events/{id}/reviews', [ReviewController::class, 'store']);
 
     /*
      * Organizer-only Routes
@@ -71,5 +70,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/events/registered', [AttendeeController::class, 'registeredEvents']);
         Route::get('/events/finished',    [AttendeeController::class, 'finishedEvents']);
         Route::get('/events/cancelled',   [AttendeeController::class, 'cancelledEvents']);
+    });
+
+    Route::middleware('role:attendee')->group(function () {
+        Route::patch('/registrations/{eventId}/cancel', [RegistrationController::class, 'cancel']);
     });
 });

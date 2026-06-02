@@ -1,0 +1,411 @@
+{
+	"info": {
+		"_postman_id": "78b7b2de-e918-4b7d-b6bb-3ce4802c114f",
+		"name": "Community Event API",
+		"description": "Postman collection for Community Event backend API testing.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\",\n    \"role\": \"attendee\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/register",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "register" ]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if(jsonData.token || jsonData.access_token) {",
+									"    var token = jsonData.token ? jsonData.token : jsonData.access_token;",
+									"    pm.collectionVariables.set(\"token\", token);",
+									"    console.log(\"Đã lưu token thành công!\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/login",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "login" ]
+						}
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+						},
+						"method": "POST",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"url": {
+							"raw": "{{baseUrl}}/api/logout",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "logout" ]
+						}
+					}
+				},
+				{
+					"name": "Google Auth URL",
+					"request": {
+						"method": "GET",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/google/url",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "auth", "google", "url" ]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Public API",
+			"item": [
+				{
+					"name": "Get Categories",
+					"request": {
+						"method": "GET",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"url": {
+							"raw": "{{baseUrl}}/api/categories",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "categories" ]
+						}
+					}
+				},
+				{
+					"name": "Get All Events",
+					"request": {
+						"method": "GET",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"url": {
+							"raw": "{{baseUrl}}/api/events",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "events" ]
+						}
+					}
+				},
+				{
+					"name": "Get Event Detail",
+					"request": {
+						"method": "GET",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"url": {
+							"raw": "{{baseUrl}}/api/events/1",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "events", "1" ]
+						}
+					}
+				},
+				{
+					"name": "Get Event Reviews",
+					"request": {
+						"method": "GET",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"url": {
+							"raw": "{{baseUrl}}/api/events/1/reviews",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "events", "1", "reviews" ]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. User & Attendee (Require Login)",
+			"auth": {
+				"type": "bearer",
+				"bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+			},
+			"item": [
+				{
+					"name": "User Profile",
+					"item": [
+						{
+							"name": "Get Profile",
+							"request": {
+								"method": "GET",
+								"header": [ { "key": "Accept", "value": "application/json" } ],
+								"url": {
+									"raw": "{{baseUrl}}/api/user",
+									"host": [ "{{baseUrl}}" ],
+									"path": [ "api", "user" ]
+								}
+							}
+						},
+						{
+							"name": "Update Profile",
+							"request": {
+								"method": "PUT",
+								"header": [ { "key": "Accept", "value": "application/json" } ],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Updated Name\",\n    \"phone\": \"0123456789\"\n}",
+									"options": { "raw": { "language": "json" } }
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/user/profile",
+									"host": [ "{{baseUrl}}" ],
+									"path": [ "api", "user", "profile" ]
+								}
+							}
+						},
+						{
+							"name": "Update Password",
+							"request": {
+								"method": "PUT",
+								"header": [ { "key": "Accept", "value": "application/json" } ],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"current_password\": \"password\",\n    \"password\": \"new_password\",\n    \"password_confirmation\": \"new_password\"\n}",
+									"options": { "raw": { "language": "json" } }
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/user/password",
+									"host": [ "{{baseUrl}}" ],
+									"path": [ "api", "user", "password" ]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Event Actions",
+					"item": [
+						{
+							"name": "Register for Event",
+							"request": {
+								"method": "POST",
+								"header": [ { "key": "Accept", "value": "application/json" } ],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"event_id\": 1\n}",
+									"options": { "raw": { "language": "json" } }
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/registrations",
+									"host": [ "{{baseUrl}}" ],
+									"path": [ "api", "registrations" ]
+								}
+							}
+						},
+						{
+							"name": "Cancel Registration",
+							"request": {
+								"method": "PATCH",
+								"header": [ { "key": "Accept", "value": "application/json" } ],
+								"url": {
+									"raw": "{{baseUrl}}/api/registrations/1/cancel",
+									"host": [ "{{baseUrl}}" ],
+									"path": [ "api", "registrations", "1", "cancel" ]
+								}
+							}
+						},
+						{
+							"name": "Write Review",
+							"request": {
+								"method": "POST",
+								"header": [ { "key": "Accept", "value": "application/json" } ],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"rating\": 5,\n    \"comment\": \"Great event!\"\n}",
+									"options": { "raw": { "language": "json" } }
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/events/1/reviews",
+									"host": [ "{{baseUrl}}" ],
+									"path": [ "api", "events", "1", "reviews" ]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "My Events",
+					"item": [
+						{
+							"name": "Registered Events",
+							"request": {
+								"method": "GET",
+								"header": [ { "key": "Accept", "value": "application/json" } ],
+								"url": {
+									"raw": "{{baseUrl}}/api/attendee/events/registered",
+									"host": [ "{{baseUrl}}" ],
+									"path": [ "api", "attendee", "events", "registered" ]
+								}
+							}
+						},
+						{
+							"name": "Finished Events",
+							"request": {
+								"method": "GET",
+								"header": [ { "key": "Accept", "value": "application/json" } ],
+								"url": {
+									"raw": "{{baseUrl}}/api/attendee/events/finished",
+									"host": [ "{{baseUrl}}" ],
+									"path": [ "api", "attendee", "events", "finished" ]
+								}
+							}
+						},
+						{
+							"name": "Cancelled Events",
+							"request": {
+								"method": "GET",
+								"header": [ { "key": "Accept", "value": "application/json" } ],
+								"url": {
+									"raw": "{{baseUrl}}/api/attendee/events/cancelled",
+									"host": [ "{{baseUrl}}" ],
+									"path": [ "api", "attendee", "events", "cancelled" ]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "4. Organizer (Require Login & Role:organizer)",
+			"auth": {
+				"type": "bearer",
+				"bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+			},
+			"item": [
+				{
+					"name": "Dashboard Stats",
+					"request": {
+						"method": "GET",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"url": {
+							"raw": "{{baseUrl}}/api/organizer/dashboard-stats",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "organizer", "dashboard-stats" ]
+						}
+					}
+				},
+				{
+					"name": "Get My Organizer Events",
+					"request": {
+						"method": "GET",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"url": {
+							"raw": "{{baseUrl}}/api/organizer/events",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "organizer", "events" ]
+						}
+					}
+				},
+				{
+					"name": "Create Event",
+					"request": {
+						"method": "POST",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"New Event Name\",\n    \"description\": \"Description of the event\",\n    \"start_time\": \"2026-06-15 08:00:00\",\n    \"end_time\": \"2026-06-15 17:00:00\",\n    \"location\": \"Hanoi\",\n    \"capacity\": 100,\n    \"category_id\": 1\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/organizer/events",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "organizer", "events" ]
+						}
+					}
+				},
+				{
+					"name": "Get Event Detail (Edit)",
+					"request": {
+						"method": "GET",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"url": {
+							"raw": "{{baseUrl}}/api/organizer/events/1",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "organizer", "events", "1" ]
+						}
+					}
+				},
+				{
+					"name": "Update Event",
+					"request": {
+						"method": "PUT",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated Event Name\",\n    \"description\": \"Updated description\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/organizer/events/1",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "organizer", "events", "1" ]
+						}
+					}
+				},
+				{
+					"name": "Delete Event",
+					"request": {
+						"method": "DELETE",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"url": {
+							"raw": "{{baseUrl}}/api/organizer/events/1",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "organizer", "events", "1" ]
+						}
+					}
+				},
+				{
+					"name": "Cancel Event",
+					"request": {
+						"method": "PATCH",
+						"header": [ { "key": "Accept", "value": "application/json" } ],
+						"url": {
+							"raw": "{{baseUrl}}/api/organizer/events/1/cancel",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "api", "organizer", "events", "1", "cancel" ]
+						}
+					}
+				}
+			]
+		}
+	]
+}
