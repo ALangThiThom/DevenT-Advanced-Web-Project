@@ -6,33 +6,25 @@ import {
   deleteEvent,
 } from "../../services/eventService";
 import styles from "./styles/Organizer.module.css";
+import { useEventFilters } from "../../context/EventFilterContext";
+import useCategories from "../../hooks/useCategories";
 
-/**
- * Component EventList
- * Hiển thị bảng danh sách sự kiện của Ban tổ chức theo các tab (Draft, Published, Cancelled, Ended)
- */
 export default function EventList() {
-  // ========================================================================
-  // 1. ROUTER & CUSTOM HOOKS
-  // ========================================================================
   const location = useLocation();
   const navigate = useNavigate();
 
-  // ========================================================================
-  // 2. STATE MANAGEMENT (Quản lý trạng thái)
-  // ========================================================================
   const [eventsData, setEventsData] = useState(null);
   const [meta, setMeta] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Modals state
   const [cancelModal, setCancelModal] = useState({
     isOpen: false,
     eventId: null,
     eventTitle: "",
   });
   const [isCancelling, setIsCancelling] = useState(false);
-
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     eventId: null,
@@ -40,66 +32,74 @@ export default function EventList() {
   });
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // ========================================================================
-  // 3. DERIVED STATE & CONSTANTS (Biến phái sinh)
-  // ========================================================================
-  const statusParam =
-    new URLSearchParams(location.search).get("status") || "draft";
+  // Get filters from shared context
+  const { debouncedSearchTerm, categoryId, setCategoryId } = useEventFilters();
+  const { categories, loading: categoriesLoading } = useCategories();
+
+  // Determine filtering logic based on route
+  const isAllEventsPage = location.pathname.startsWith("/organizer/all-events");
+  const statusParam = new URLSearchParams(location.search).get("status");
   const validStatuses = ["draft", "published", "cancelled", "ended"];
   const currentStatus = validStatuses.includes(statusParam)
     ? statusParam
-    : "draft";
+    : isAllEventsPage
+      ? ""
+      : "draft";
 
-  const pageTitle =
-    currentStatus === "draft"
-      ? "Draft Events"
-      : currentStatus === "published"
-        ? "Published Events"
-        : currentStatus === "cancelled"
-          ? "Cancelled Events"
-          : "Ended Events";
-
-  // Sử dụng useRef để theo dõi sự thay đổi của status giữa các lần render
-  const prevStatusRef = useRef(currentStatus);
-
-  // ========================================================================
-  // 4. LIFECYCLE & DATA FETCHING (Vòng đời & Gọi API)
-  // ========================================================================
-
-  useEffect(() => {
-    // Nếu status thay đổi so với lần trước đó
-    if (prevStatusRef.current !== currentStatus) {
-      prevStatusRef.current = currentStatus; // Cập nhật lại ref
-
-      // Nếu không phải trang 1 thì reset về 1 và dừng lại (để useEffect chạy lại)
-      if (currentPage !== 1) {
-        setCurrentPage(1);
-        return;
-      }
-    }
-    fetchEvents();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentStatus, currentPage]);
-
-  const fetchEvents = async () => {
-    try {
-      setLoading(true);
-      const data = await getOrganizerEvents({
-        page: currentPage,
-        status: currentStatus,
-      });
-      setEventsData(data.events);
-      setMeta(data.meta);
-    } catch (error) {
-      console.error("Unable to load event list", error);
-    } finally {
-      setLoading(false);
+  const getPageTitle = () => {
+    if (isAllEventsPage) return "All Events";
+    switch (currentStatus) {
+      case "draft":
+        return "Draft Events";
+      case "published":
+        return "Published Events";
+      case "cancelled":
+        return "Cancelled Events";
+      case "ended":
+        return "Ended Events";
+      default:
+        return "My Events";
     }
   };
+  const pageTitle = getPageTitle();
 
-  // ========================================================================
-  // 5. EVENT HANDLERS (Hàm xử lý tương tác UI)
-  // ========================================================================
+  const prevStatusRef = useRef(currentStatus);
+  const prevFilterRef = useRef({ debouncedSearchTerm, categoryId });
+
+  useEffect(() => {
+    const filtersChanged =
+      prevFilterRef.current.debouncedSearchTerm !== debouncedSearchTerm ||
+      prevFilterRef.current.categoryId !== categoryId;
+    if (prevStatusRef.current !== currentStatus || filtersChanged) {
+      if (currentPage !== 1) {
+        setCurrentPage(1);
+      }
+    }
+    prevStatusRef.current = currentStatus;
+    prevFilterRef.current = { debouncedSearchTerm, categoryId };
+  }, [currentStatus, debouncedSearchTerm, categoryId, currentPage]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        const data = await getOrganizerEvents({
+          page: currentPage,
+          status: currentStatus,
+          search: debouncedSearchTerm,
+          categoryId: categoryId,
+        });
+        setEventsData(data.events);
+        setMeta(data.meta);
+      } catch (error) {
+        console.error("Unable to load event list", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, [currentStatus, currentPage, debouncedSearchTerm, categoryId]);
+
   const handleOpenCancelModal = (event) => {
     if (event.status !== "published") return;
     setCancelModal({
@@ -118,13 +118,11 @@ export default function EventList() {
     try {
       await cancelEvent(cancelModal.eventId);
       alert("Event cancelled successfully");
-
       setEventsData((prevEvents) =>
         prevEvents.map((ev) =>
           ev.id === cancelModal.eventId ? { ...ev, status: "cancelled" } : ev,
         ),
       );
-
       handleCloseCancelModal();
     } catch (error) {
       alert("Error: Cannot cancel the event. Please try again!");
@@ -142,6 +140,26 @@ export default function EventList() {
     });
   };
 
+  const handleCloseDeleteModal = () => {
+    setDeleteModal({ isOpen: false, eventId: null, eventTitle: "" });
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteEvent(deleteModal.eventId);
+      alert("Draft event deleted successfully");
+      setEventsData((prevEvents) =>
+        prevEvents.filter((ev) => ev.id !== deleteModal.eventId),
+      );
+      handleCloseDeleteModal();
+    } catch (error) {
+      alert("Error: Cannot delete the event. Please try again!");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
@@ -154,39 +172,11 @@ export default function EventList() {
     }
   };
 
-  const handleCloseDeleteModal = () => {
-    setDeleteModal({ isOpen: false, eventId: null, eventTitle: "" });
-  };
-
-  const handleConfirmDelete = async () => {
-    setIsDeleting(true);
-    try {
-      await deleteEvent(deleteModal.eventId);
-      alert("Draft event deleted successfully");
-
-      setEventsData((prevEvents) =>
-        prevEvents.filter((ev) => ev.id !== deleteModal.eventId),
-      );
-
-      handleCloseDeleteModal();
-    } catch (error) {
-      alert("Error: Cannot delete the event. Please try again!");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  // ========================================================================
-  // 6. UTILITY FUNCTIONS (Hàm tiện ích hỗ trợ định dạng)
-  // ========================================================================
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "short", day: "2-digit" };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
-  // ========================================================================
-  // 7. RENDER (Vẽ Giao diện)
-  // ========================================================================
   return (
     <div className={styles.tableContainer}>
       <div className={styles.tableHeader}>
@@ -200,10 +190,24 @@ export default function EventList() {
         >
           {pageTitle}
         </h2>
-        <button className={styles.secondaryBtn}>
-          <i className="fa-solid fa-filter" style={{ fontSize: "14px" }}></i>{" "}
-          Filter
-        </button>
+        {isAllEventsPage && (
+          <div className="d-flex gap-2">
+            <select
+              className="form-select form-select-sm"
+              style={{ width: "200px" }}
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+              disabled={categoriesLoading}
+            >
+              <option value="">Filter by Category</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       {loading ? (
@@ -234,17 +238,14 @@ export default function EventList() {
               {eventsData?.length > 0 ? (
                 eventsData.map((event) => {
                   const capacity = event.capacity || 0;
-                  const confirmed = event.confirmed_count ?? 0;
-                  const percent = event.registration_percentage ?? 0;
+                  const confirmed = event.registrations_count ?? 0;
+                  const percent =
+                    capacity > 0 ? Math.round((confirmed / capacity) * 100) : 0;
 
                   let barColor = "#22c55e"; // Default Green (< 50%)
-                  if (event.status === "ended") {
-                    barColor = "#d1d5db"; // Faded grey for ended events
-                  } else if (percent >= 90) {
-                    barColor = "#ef4444"; // Red for nearly full (>= 90%)
-                  } else if (percent >= 50) {
-                    barColor = "#f59e0b"; // Orange for half full (>= 50%)
-                  }
+                  if (event.status === "ended") barColor = "#d1d5db";
+                  else if (percent >= 90) barColor = "#ef4444";
+                  else if (percent >= 50) barColor = "#f59e0b";
 
                   return (
                     <tr key={event.id} className={styles.tableRow}>
@@ -283,15 +284,12 @@ export default function EventList() {
                           </span>
                         </div>
                       </td>
-
                       <td style={{ color: "var(--on-surface-variant)" }}>
                         {formatDate(event.start_time)}
                       </td>
-
                       <td style={{ color: "var(--on-surface-variant)" }}>
                         {event.category?.name || "Uncategorized"}
                       </td>
-
                       <td>
                         <span
                           className={
@@ -308,7 +306,6 @@ export default function EventList() {
                             : "Draft"}
                         </span>
                       </td>
-
                       <td>
                         {event.status === "draft" ? (
                           <span
@@ -340,7 +337,7 @@ export default function EventList() {
                             >
                               <span>{percent}%</span>
                               <span>
-                                {confirmed}/{capacity}
+                                {confirmed}/{capacity > 0 ? capacity : "∞"}
                               </span>
                             </div>
                             <div
@@ -364,7 +361,6 @@ export default function EventList() {
                           </div>
                         )}
                       </td>
-
                       <td style={{ textAlign: "right" }}>
                         {event.status === "draft" ||
                         event.status === "published" ? (
@@ -397,7 +393,6 @@ export default function EventList() {
                                 </button>
                               </>
                             )}
-
                             {event.status === "published" && (
                               <button
                                 onClick={() => handleOpenCancelModal(event)}
@@ -451,8 +446,7 @@ export default function EventList() {
                         color: "var(--on-surface-variant)",
                       }}
                     >
-                      You haven't created any events yet. Click "Create New
-                      Event" to get started.
+                      Try adjusting your search or filter criteria.
                     </p>
                   </td>
                 </tr>
@@ -497,7 +491,6 @@ export default function EventList() {
             >
               Previous
             </button>
-
             <button
               className={styles.secondaryBtn}
               style={{
@@ -518,9 +511,6 @@ export default function EventList() {
         </div>
       )}
 
-      {/* ======================================================================== */}
-      {/* 8. MODAL PORTALS (Hộp thoại nổi)                                        */}
-      {/* ======================================================================== */}
       {cancelModal.isOpen && (
         <div
           style={{

@@ -8,7 +8,10 @@ import AttendeeLayout from "./layouts/AttendeeLayout";
 // Pages - Public
 import Home from "./pages/Public/Home";
 import SearchPage from "./pages/Public/SearchPage/SearchPage";
+import EventsPage from "./pages/Public/eventsPage/EventsPage";
 import EventDetail from "./pages/Attendee/EventDetail"; // Giữ lại từ file 1
+import About from "./pages/Public/About/About";
+import Contact from "./pages/Public/Contact/Contact";
 
 // Pages - Attendee
 import AttendeeLogin from "./pages/Attendee/Login";
@@ -35,8 +38,11 @@ function App() {
       {/* Cấu trúc Public Layout */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/events" element={<EventsPage />} />
         <Route path="/events/:id" element={<EventDetail />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
       </Route>
 
       {/* Auth Routes */}
@@ -87,6 +93,7 @@ function App() {
         }
       >
         <Route path="dashboard" element={<OrganizerDashboard />} />
+        <Route path="all-events" element={<EventList />} />
         <Route path="events" element={<EventList />} />
         <Route path="events/create" element={<CreateEvent />} />
         <Route path="events/:id/edit" element={<EditEvent />} />
