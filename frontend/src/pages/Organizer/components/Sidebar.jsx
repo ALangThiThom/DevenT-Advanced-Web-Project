@@ -48,25 +48,6 @@ const Sidebar = () => {
           </Link>
           <SidebarDropdown />
         </div>
-
-        {/* Group 2: Data */}
-        <div className={styles.navGroup}>
-          <span className={styles.navGroupTitle}>Data</span>
-          <Link
-            to="/organizer/attendees"
-            className={`${styles.navLink} ${location.pathname.includes("attendees") ? styles.navLinkActive : ""}`}
-          >
-            <i className="fa-solid fa-users fa-fw"></i>
-            Attendance
-          </Link>
-          <Link
-            to="/organizer/reviews"
-            className={`${styles.navLink} ${location.pathname.includes("reviews") ? styles.navLinkActive : ""}`}
-          >
-            <i className="fa-regular fa-comments fa-fw"></i>
-            Reviews
-          </Link>
-        </div>
       </nav>
 
       {/* Footer Nav */}
