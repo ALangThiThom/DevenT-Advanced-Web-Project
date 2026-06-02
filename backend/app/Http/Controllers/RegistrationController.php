@@ -88,45 +88,66 @@ class RegistrationController extends Controller
     }
     public function cancel(Request $request, $eventId)
     {
-    $user = $request->user();
+        $user = $request->user();
 
-    return DB::transaction(function () use ($user, $eventId) {
+        return DB::transaction(function () use ($user, $eventId) {
 
-        $registration = Registration::where('user_id', $user->id)
-            ->where('event_id', $eventId)
-            ->first();
-
-        if (!$registration) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Registration not found.'
-            ], 404);
-        }
-
-        $event = Event::lockForUpdate()->find($eventId);
-
-        // Nếu là confirmed user
-        if ($registration->status === 'confirmed') {
-
-            $event->decrement('registered_count');
-
-            // Tìm người đầu waitlist
-            $nextWaitlisted = Registration::where('event_id', $eventId)
-                ->where('status', 'waitlisted')
-                ->orderBy('queue_position', 'asc')
+            $registration = Registration::where('user_id', $user->id)
+                ->where('event_id', $eventId)
                 ->first();
 
-            // Promote lên confirmed
-            if ($nextWaitlisted) {
+            if (!$registration) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Registration not found.'
+                ], 404);
+            }
 
-                $nextWaitlisted->update([
-                    'status' => 'confirmed',
-                    'queue_position' => null,
+            $event = Event::lockForUpdate()->find($eventId);
+
+            // Nếu là confirmed user
+            if ($registration->status === 'confirmed') {
+
+                $event->decrement('registered_count');
+
+                // Tìm người đầu waitlist
+                $nextWaitlisted = Registration::where('event_id', $eventId)
+                    ->where('status', 'waitlisted')
+                    ->orderBy('queue_position', 'asc')
+                    ->first();
+
+                // Promote lên confirmed
+                if ($nextWaitlisted) {
+
+                    $nextWaitlisted->update([
+                        'status' => 'confirmed',
+                        'queue_position' => null,
+                    ]);
+
+                    $event->increment('registered_count');
+
+                    // Update lại queue
+                    $remainingWaitlist = Registration::where('event_id', $eventId)
+                        ->where('status', 'waitlisted')
+                        ->orderBy('queue_position')
+                        ->get();
+
+                    foreach ($remainingWaitlist as $index => $waitlistedUser) {
+                        $waitlistedUser->update([
+                            'queue_position' => $index + 1
+                        ]);
+                    }
+                }
+            }
+
+            // Nếu user đang waitlist
+            if ($registration->status === 'waitlisted') {
+
+                $registration->update([
+                    'status' => 'cancelled'
                 ]);
 
-                $event->increment('registered_count');
-
-                // Update lại queue
+                // Update queue lại
                 $remainingWaitlist = Registration::where('event_id', $eventId)
                     ->where('status', 'waitlisted')
                     ->orderBy('queue_position')
@@ -137,43 +158,22 @@ class RegistrationController extends Controller
                         'queue_position' => $index + 1
                     ]);
                 }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Waitlist registration cancelled.'
+                ]);
             }
-        }
 
-        // Nếu user đang waitlist
-        if ($registration->status === 'waitlisted') {
-
+            // Cancel confirmed registration
             $registration->update([
                 'status' => 'cancelled'
             ]);
 
-            // Update queue lại
-            $remainingWaitlist = Registration::where('event_id', $eventId)
-                ->where('status', 'waitlisted')
-                ->orderBy('queue_position')
-                ->get();
-
-            foreach ($remainingWaitlist as $index => $waitlistedUser) {
-                $waitlistedUser->update([
-                    'queue_position' => $index + 1
-                ]);
-            }
-
             return response()->json([
                 'status' => 'success',
-                'message' => 'Waitlist registration cancelled.'
+                'message' => 'Registration cancelled successfully.'
             ]);
-        }
-
-        // Cancel confirmed registration
-        $registration->update([
-            'status' => 'cancelled'
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Registration cancelled successfully.'
-        ]);
-    });
-}
+        });
+    }
 }

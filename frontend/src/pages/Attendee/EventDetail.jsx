@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPublicEventById, registerForEvent, getEventReviews, submitEventReview } from "../../services/eventService";
+import { getPublicEventById, registerForEvent, getEventReviews, submitEventReview, cancelRegistration } from "../../services/eventService";
 import { useAuthStore } from "../../store/authStore";
+import useUserStore from "../../store/userStore";
+import CancelRegistrationModal from "./components/CancelRegistrationModal";
 import "./styles/EventDetail.css";
 
 /**
@@ -13,6 +15,7 @@ import "./styles/EventDetail.css";
 export default function EventDetail() {
   const { id } = useParams();
   const { user } = useAuthStore();
+  const { registeredEvents, fetchRegisteredEvents, fetchCancelledEvents } = useUserStore();
   
   // State management for event data, loading status, and errors
   const [event, setEvent] = useState(null);
@@ -29,6 +32,20 @@ export default function EventDetail() {
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isReviewedSuccess, setIsReviewedSuccess] = useState(false);
+
+  // Cancellation states
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      fetchRegisteredEvents();
+    }
+  }, [user, fetchRegisteredEvents]);
+
+  // Determine if user is registered
+  const currentRegistration = registeredEvents?.find(e => e.id === Number(id));
+  const isRegistered = currentRegistration && currentRegistration.registration_status !== 'cancelled';
 
   // Check if current user has already reviewed this event
   const hasAlreadyReviewed = user && Array.isArray(reviews) && reviews.some(r => r.user_id === user.id);
@@ -189,6 +206,11 @@ export default function EventDetail() {
         ...prev,
         registrations_count: (prev.registrations_count || 0) + 1
       }));
+
+      // Fetch registered events again to update isRegistered state
+      if (user) {
+        fetchRegisteredEvents();
+      }
     } catch (err) {
       setToast({
         show: true,
@@ -198,6 +220,41 @@ export default function EventDetail() {
       setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
     } finally {
       setIsRegistering(false);
+    }
+  };
+
+  /**
+   * Handles cancelling the registration
+   */
+  const handleCancelRegistration = async () => {
+    try {
+      setIsCancelling(true);
+      const response = await cancelRegistration(id);
+      
+      setToast({ show: true, message: response.message || "Registration cancelled successfully.", type: "success" });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+      
+      setShowCancelModal(false);
+      
+      setEvent(prev => ({
+        ...prev,
+        registrations_count: Math.max(0, (prev.registrations_count || 0) - 1)
+      }));
+      
+      if (user) {
+        fetchRegisteredEvents();
+        fetchCancelledEvents();
+      }
+
+    } catch (err) {
+      setToast({
+        show: true,
+        message: err?.response?.data?.message || "Failed to cancel registration.",
+        type: "danger",
+      });
+      setTimeout(() => setToast(prev => ({ ...prev, show: false })), 3000);
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -484,17 +541,34 @@ export default function EventDetail() {
                   </div>
                 </div>
 
-                <button 
-                  className="btn w-100 py-3 fw-bold border-0 shadow-sm rounded-3 text-white btn-register-submit"
-                  onClick={handleRegister}
-                  disabled={isRegistering}
-                >
-                  {isRegistering
-                    ? "Processing..."
-                    : seatsAvailable <= 0
-                      ? "Join Waitlist"
-                      : "Register"}
-                </button>
+                {isRegistered ? (
+                  <>
+                    <button 
+                      className="btn w-100 py-3 fw-bold border-0 shadow-sm rounded-3 text-white bg-danger"
+                      onClick={() => setShowCancelModal(true)}
+                    >
+                      Cancel Registration
+                    </button>
+                    <CancelRegistrationModal 
+                      show={showCancelModal}
+                      onHide={() => setShowCancelModal(false)}
+                      onConfirm={handleCancelRegistration}
+                      isCancelling={isCancelling}
+                    />
+                  </>
+                ) : (
+                  <button 
+                    className="btn w-100 py-3 fw-bold border-0 shadow-sm rounded-3 text-white btn-register-submit"
+                    onClick={handleRegister}
+                    disabled={isRegistering}
+                  >
+                    {isRegistering
+                      ? "Processing..."
+                      : seatsAvailable <= 0
+                        ? "Join Waitlist"
+                        : "Register"}
+                  </button>
+                )}
               </div>
             </div>
           </div>
