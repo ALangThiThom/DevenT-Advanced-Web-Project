@@ -98,6 +98,15 @@ export const registerForEvent = async (id) => {
 };
 
 /**
+ * Attendee: Cancel registration for an event
+ * @param {number} id - Event ID
+ */
+export const cancelRegistration = async (id) => {
+  const response = await api.patch(`/registrations/${id}/cancel`);
+  return response.data;
+};
+
+/**
  * Fetch reviews for an event
  * @param {number} eventId - ID of the event
  */
